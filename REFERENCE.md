@@ -45,4 +45,4 @@
 
 *The Feynman Technique
 
-<Refer to; http://blog.sina.com.cn/s/blog_97c84ad60101d8hb.html>
+<http://blog.sina.com.cn/s/blog_97c84ad60101d8hb.html>

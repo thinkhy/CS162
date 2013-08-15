@@ -3,11 +3,9 @@
 ## CS162:  Operating Systems and Systems Programming
 
 *2010~2012 course materials*
-
 <http://www.infocobuild.com/education/audio-video-courses/computer-science/cs162-fall2010-berkeley.html>
 
-**rchive*
-
+*rchive*
 <http://inst.eecs.berkeley.edu/~cs162/archives.html>
 
 **fficial site:*

@@ -1,33 +1,37 @@
 =================================================================================================================
 
-	CS162:  Operating Systems and Systems Programming
+## CS162:  Operating Systems and Systems Programming
 
-	2010~2012 course materials
-	http://www.infocobuild.com/education/audio-video-courses/computer-science/cs162-fall2010-berkeley.html
+**2010~2012 course materials**
+<http://www.infocobuild.com/education/audio-video-courses/computer-science/cs162-fall2010-berkeley.html>
 
-	Archive
-	http://inst.eecs.berkeley.edu/~cs162/archives.html
+**Archive**
+<http://inst.eecs.berkeley.edu/~cs162/archives.html>
 
-	Official site:
-	http://inst.eecs.berkeley.edu/~cs162/fa12/
+**Official site:**
+<http://inst.eecs.berkeley.edu/~cs162/fa12/>
 
-	Video:
-	http://www.youtube.com/watch?v=XgQo4JkN4Bw&feature=relmfu
-mit (Uploaded in 2010)
-	Corresponding course site in 2010:  http://inst.eecs.berkeley.edu/~cs162/fa10/
-
-	 Website: http://inst.eecs.berkeley.edu/~cs162
-	 Mirror:    http://www.cs.berkeley.edu/~kubitron/cs162
-	 Webcast: http://webcast.berkeley.edu/course/index.php
-
-	How to Write a Design Document?
-	http://inst.eecs.berkeley.edu/~cs162/fa12/design.html
+**Video:**
+<http://www.youtube.com/watch?v=XgQo4JkN4Bw&feature=relmfumit> (Uploaded in 2010)
 	
-	Design Document for a Chess Program
-	http://inst.eecs.berkeley.edu/~cs162/fa12/Nachos/chess.html
+**Corresponding course site in 2010**
+<ttp://inst.eecs.berkeley.edu/~cs162/fa10/>
 
-	Example Design Document: Elevator Coordination Problem
-	http://inst.eecs.berkeley.edu/~cs162/fa12/Nachos/elevator.html
 
-	The Feynman Technique
-	Refer to; http://blog.sina.com.cn/s/blog_97c84ad60101d8hb.html
+**Mirror:**
+<http://www.cs.berkeley.edu/~kubitron/cs162>
+	 
+**Webcast:**
+<http://webcast.berkeley.edu/course/index.php>
+
+**How to Write a Design Document?**
+<http://inst.eecs.berkeley.edu/~cs162/fa12/design.html>
+	
+**Design Document for a Chess Program**
+<http://inst.eecs.berkeley.edu/~cs162/fa12/Nachos/chess.html>
+
+**Example Design Document: Elevator Coordination Problem**
+<http://inst.eecs.berkeley.edu/~cs162/fa12/Nachos/elevator.html>
+
+**The Feynman Technique**
+<Refer to; http://blog.sina.com.cn/s/blog_97c84ad60101d8hb.html>

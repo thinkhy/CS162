@@ -44,7 +44,7 @@ public class Lock {
         // commented by hy 3/7/2013
         // In Nachos, since ints are disabled when you call sleep: 
         //   - Responsibility of the next thread to re-enable ints
-        //   - When he sleeping thread wakes up, returns to acquire and re-enables interrupts.
+        //   - When the sleeping thread wakes up, returns to acquire and re-enables interrupts.
         //
         // KThread::begin that invoked by KThread::runThread will enbale interrupt.
 	    KThread.sleep();

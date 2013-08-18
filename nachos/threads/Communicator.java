@@ -27,6 +27,19 @@ public class Communicator {
      * @param	word	the integer to transfer.
      */
     public void speak(int word) {
+        lock.acquire();
+
+        while (this.word != 0) {   // hy+
+            condition.sleep();     // hy+
+        }                          // hy+ 
+
+        this.word = word;          // hy+ 
+
+        condition.wakeAll();       // hy+ 
+        condition.sleep();         // hy+ 
+
+
+        lock.release();            // hy+ 
     }
 
     /**
@@ -36,6 +49,25 @@ public class Communicator {
      * @return	the integer transferred.
      */    
     public int listen() {
-	return 0;
+        lock.acquire();
+
+        while(this.word == 0) {   // hy+  
+            condition.sleep();    // hy+  
+        }                         // hy+
+
+        int word = this.word;     // hy+   
+        this.word = 0;            // hy+
+
+        condition.wakeAll();      // hy+
+        lock.release();           // hy+
+
+        return word;              // hy+ 
+
+        return 0;
     }
+
+
+    int word = 0;
+    Lock lock = new Lock();
+    Condition2 condition = new Condition2(lock); 
 }

@@ -1,0 +1,424 @@
+
+<!-- saved from url=(0060)http://inst.eecs.berkeley.edu/~cs162/fa10/Nachos/phase1.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>CS 162 Project Phase 1</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h1 align="center">Phase 1: Build a thread system</h1>
+
+<p>
+Stock Nachos has an incomplete thread system.  In this assignment, 
+your job is to complete it, and then use it to solve several
+synchronization problems.
+
+</p><p>
+The first step is to read and understand the partial thread system we have
+written for you. This thread system implements thread fork,
+thread completion, and semaphores for synchronization. It also provides locks
+and condition variables built on top of semaphores.
+
+</p><p>
+After installing the Nachos distribution, run the program <tt>nachos</tt>
+(in the proj1 subdirectory) for a simple test of our code. This causes the 
+methods of <tt>nachos.threads.ThreadedKernel</tt> to be called in the order 
+listed in <tt>threads/ThreadedKernel.java</tt>:
+</p><ol>
+<li>The <tt>ThreadedKernel</tt> constructor is invoked to create the Nachos
+kernel.
+</li><li>This kernel is initialized with <tt>initialize()</tt>.
+</li><li>This kernel is tested with <tt>selfTest()</tt>.
+</li><li>This kernel is finally "run" with <tt>run()</tt>. For now, <tt>run()</tt>
+does nothing, since our kernel is not yet able to run user programs.
+</li></ol>
+
+<p>
+Trace the execution path (by hand) for the simple test cases we provide.
+When you trace the execution path, it is helpful
+to keep track of the state of each thread and which procedures
+are on each thread's execution stack. You will notice that when
+one thread calls <tt>TCB.contextSwitch()</tt>, that thread
+stops executing, and another thread starts running.  
+The first thing the new thread does is to return from 
+<tt>TCB.contextSwitch()</tt>. We realize this comment will 
+seem cryptic to you at this point, but you will understand 
+threads once you understand why the <tt>TCB.contextSwitch()</tt> 
+that gets called is different from the <tt>TCB.contextSwitch()</tt> 
+that returns.
+
+</p><p>
+Properly synchronized code should work no matter what order the
+scheduler chooses to run the threads on the ready list. In other
+words, we should be able to put a call to <tt>KThread.yield()</tt>
+(causing the scheduler to choose another thread to run) anywhere in your code
+where interrupts are enabled, and your code should still be correct.
+You will be asked to write properly synchronized code
+as part of the later assignments, so understanding how to do this is
+crucial to being able to do the project.
+
+</p><p>
+To aid you in this, code linked in with Nachos will cause
+<tt>KThread.yield()</tt> to be called on your
+behalf in a repeatable (but sometimes unpredictable) way. Nachos code is
+repeatable in that if you call it repeatedly with the same
+arguments, it will do exactly the same thing each time.
+However, if you invoke "<tt>nachos -s <i>&lt;some-long-value&gt;</i></tt>",
+with a different number each time,
+calls to <tt>KThread.yield()</tt> will be inserted at
+different places in the code.
+
+</p><p>
+You are encouraged to add new classes to your solution as you see fit; the
+code we provide you is not a complete skeleton for the project.
+Also, there should be no busy-waiting in any
+of your solutions to this assignment.
+
+</p><p>
+Your project code will be automatically graded. There are two reasons
+for this:
+</p><ol>
+<li>An autograder can test your code a lot more thoroughly than a TA can,
+yielding more fair results.
+</li><li>An autograder can test your code a lot faster than a TA can.
+</li></ol>
+
+<p>
+Of course, there is a downside. Everything that will be tested needs to have a
+standard interface that the autograder can use, leaving slightly less room for
+you to be creative. Your code must strictly follow these interfaces (the
+documented <tt><i>*</i>Interface</tt> classes).
+
+</p><p>
+In order for you to verify that your code is compatible with the autograder,
+there are some simple compatibility tests you can run before you submit.
+
+</p><p>
+Since your submissions will be processed by a program, there are some very
+important things you must do, as well as things you must not do.
+
+</p><p>
+For <i>all</i> of the projects in this class...
+</p><ol>
+<li><i>Do not</i> modify <tt>Makefile</tt>, <b>except</b> to add source files.
+You will not be submitting this file (<tt>javac</tt> automatically finds
+source files to compile, so we don't need you to submit <tt>Makefile</tt>).
+
+</li><li>Only modify <tt>nachos.conf</tt> according to the project specifications.
+You will not be submitting this file either. Do not rely on any additional keys
+being in this file.
+
+</li><li><i>Do not</i> modify any classes in the <tt>nachos.machine</tt> package,
+the <tt>nachos.ag</tt> package, or the <tt>nachos.security</tt> package.
+You will not be submitting any of these classes.
+
+</li><li><i>Do not</i> add any new packages to your project.
+All the classes you submit must reside in the packages we provide.
+
+</li><li><i>Do not</i> modify the API for methods that the autograder uses. This is
+enforced every time you run Nachos by <tt>Machine.checkUserClasses()</tt>.
+If an assertion fails there, you'll know you've modified an interface that
+needs to stay the way it was given to you.
+
+</li><li><i>Do not</i> directly use Java threads (the <tt>java.lang.Thread</tt>
+class). The Nachos security manager will not permit it. All the threads you
+use should be managed by TCB objects (see the documentation for
+<tt>nachos.machine.TCB</tt>).
+
+</li><li><i>Do not</i> use the <tt>synchronized</tt> keyword in any of your code. We
+will <tt>grep</tt> for it and reject any submission that contains it.
+
+</li><li><i>Do not</i> directly use Java <tt>File</tt> objects (in the
+<tt>java.io</tt> package). In later projects, when we start dealing with files,
+you will use a Nachos file system layer.
+</li></ol>
+
+When you want to add source files to your project, simply add entries to your
+<tt>Makefile</tt>.
+
+<p>
+In this project,
+</p><ol>
+<li>The only package you will submit is <tt>nachos.threads</tt>, so don't add
+any source files to any other package.
+
+</li><li>The autograder will <i>not</i> call <tt>ThreadedKernel.selfTest()</tt>
+or <tt>ThreadedKernel.run()</tt>. If there is any kernel initialization you
+need to do, you should finish it before
+<tt>ThreadedKernel.initialize()</tt> returns.
+
+</li><li>There are some mandatory autograder calls in the <tt>KThread</tt> code.
+Leave them as they are.
+
+
+
+<h2>Design Reviews:</h2>
+
+    <p>To make sure that you have a working design before you attempt to implement 
+      it, you should meet with a TA to review your design. These meetings will 
+      be held around ten days before the due date, and should take around 20-25 
+      minutes. Please bring a copy of your design for the TA to read. In addition, 
+      you will turn in your final design document reflecting the actual implementation 
+      one day after the phase is due (might not change from the design review 
+      document if you design well).</p>
+
+<h2>Submission:</h2>
+
+<p>To submit your code, run the
+command <tt>submit proj1-code</tt> from within the <tt>nachos</tt>
+directory. It will only take files from the threads directory. We will
+grade only the last submission by any member of your group (though the
+autograder will mail you test results from all submissions).
+
+</p><h2>Tasks:</h2> 
+
+<ol type="I">
+<p></p><li>
+(5%, 5 lines) Implement <tt>KThread.join()</tt>. Note that another thread 
+does not have to call <tt>join()</tt>, but if it is called, it must be
+called only once. The result of calling
+<tt>join()</tt> a second time on the same thread is undefined, even if 
+the second caller is a different thread than the first caller.
+A thread must finish executing normally whether or not it is joined.
+
+<p></p></li><li>
+(5%, 20 lines) Implement condition variables directly, by using
+interrupt enable and disable to provide atomicity.
+We have provided a sample implementation that uses
+ semaphores; your job is to provide an equivalent implementation
+without directly using semaphores (you may of course still use locks, even
+though they indirectly use semaphores). Once you are done, you will
+ have two alternative implementations that provide the exact same
+functionality. Your second implementation of condition variables
+must reside in class <tt>nachos.threads.Condition2</tt>.
+
+<p>
+      </p></li><li> (10%, 40 lines) Complete the implementation of the <tt>Alarm</tt> class, 
+        by implementing the <tt>waitUntil(long x)</tt> method. A thread calls <tt>waitUntil</tt> 
+        to suspend its own execution until time has advanced to at least now + 
+        x. This is useful for threads that operate in real-time, for example, 
+        for blinking the cursor once per second. There is no requirement that 
+        threads start running immediately after waking up; just put them on the 
+        ready queue <i>in the timer interrupt handler</i> after they have waited 
+        for at least the right amount of time. Do not fork any additional threads 
+        to implement <tt>waitUntil()</tt>; you need only modify <tt>waitUntil()</tt> 
+        and the timer interrupt handler. <tt>waitUntil</tt> is not limited to 
+        one thread; any number of threads may call it and be suspended at any 
+        one time. 
+        <p></p></li><li>
+(20%, 40 lines) Implement synchronous send and receive of one word
+messages (also known as Ada-style rendezvous), using
+<b>condition variables</b> (don't use semaphores!). Implement
+the <tt>Communicator</tt> class with operations,
+<tt>void speak(int word)</tt> and <tt>int listen()</tt>.
+
+<p>
+<tt>speak()</tt> atomically waits until <tt>listen()</tt> is called on the same
+<tt>Communicator</tt> object, and then transfers the word over to <tt>listen()</tt>.
+Once the transfer is made, both can return.
+Similarly, <tt>listen()</tt> waits until <tt>speak()</tt> is called,
+at which point the transfer is made, and both can return
+(<tt>listen()</tt> returns the word). 
+Your solution should work even if there are multiple <tt>speak</tt>ers and
+<tt>listen</tt>ers for the same <tt>Communicator</tt>
+(note: this is equivalent to a zero-length bounded buffer;
+since the buffer has no room, the producer and consumer
+ must interact directly, requiring that they wait for one another).
+Each communicator should only use exactly <b>one</b> lock. If you're using
+more than one lock, you're making things too complicated.
+
+</p><p></p></li><li>
+(35%, 125 lines) Implement priority scheduling in Nachos by completing the
+<tt>PriorityScheduler</tt> class. Priority scheduling is a key building block
+in real-time systems. Note that in order to use your priority
+scheduler, you will need to change a line in <tt>nachos.conf</tt> that
+specifies the scheduler class to use. The <tt>ThreadedKernel.scheduler</tt>
+key is initially equal to <tt>nachos.threads.RoundRobinScheduler</tt>.  You
+need to change this to <tt>nachos.threads.PriorityScheduler</tt> when you're
+ready to run Nachos with priority scheduling.
+
+<p>
+Note that all scheduler classes extend the abstract class
+<tt>nachos.threads.Scheduler</tt>. You must implement the methods
+<tt>getPriority()</tt>, <tt>getEffectivePriority()</tt>, and
+<tt>setPriority()</tt>. You may optionally also implement
+<tt>increasePriority()</tt> and <tt>decreasePriority()</tt> (these are not
+required). In choosing which thread to dequeue, the scheduler should always
+choose a thread of the highest effective priority. If multiple threads 
+with the same highest priority are waiting, the scheduler should choose 
+the one that has been waiting in the queue the longest.
+
+</p><p>
+An issue with priority scheduling is <i>priority inversion</i>. If a high
+priority thread needs to wait for a low priority thread (for instance, for a
+lock held by a low priority thread), and another high priority thread is on the
+ready list, then the high priority thread will never get the CPU because the
+low priority thread will not get any CPU time. A partial fix for this problem
+is to have the waiting thread <i>donate</i> its priority to the low priority
+thread while it is holding the lock.
+
+</p><p>
+Implement the priority scheduler so that it donates priority, where possible.
+Be sure to implement <tt>Scheduler.getEffectivePriority()</tt>, which returns
+the priority of a thread after taking into account all the donations it is
+receiving.
+
+</p><p>
+Note that while solving the priority donation problem, you will find a
+point where you can easily calculate the effective priority for a
+thread, but this calculation takes a long time. To receive full credit
+for the design aspect of this project, you need to speed this up by
+caching the effective priority and only recalculating a thread's
+effective priority when it is possible for it to change.</p>
+
+<p>It is important that you do not break the abstraction barriers while
+doing this part -- the Lock class does not need to be modified.
+Priority donation should be accomplished by creating a subclass of
+ThreadQueue that will accomplish priority donation when used with the
+existing Lock class, and still work correctly when used with the
+existing Semaphore and Condition classes.</p>
+
+<!--
+<p>
+You will probably find that there are two completely different ways to
+implement priority donation; one is extraordinarily simple and extraordinarily
+slow, and the other is much faster but a little more complicated. You will not
+receive full points on your design if you choose the easy route here. However,
+you will also not receive full points on your design if your solution is
+unnecessarily complicated, because it's better to do things correctly and
+slowly than to do them incorrectly and quickly. [I have an update to
+this paragraph at home, but my cable is down. update soon.]
+-->
+
+<p>
+      </p></li><li>(25%, 150 lines) Now that you have all of these synchronization devices, 
+        use them to solve this problem. You will find condition variables to be 
+        the most useful synchronization method for this problem. 
+        <p>A number of Hawaiian adults and children are trying to get from Oahu
+to Molokai. Unfortunately, they have only one boat which can carry
+maximally two children or one adult (but <i>not</i> one child and one
+adult). The boat can be rowed back to Oahu, but it requires a pilot to
+do so.
+
+</p><p>Arrange a solution to transfer everyone from Oahu to Molokai. You
+may assume that there are at least two children.
+
+</p><p>The method Boat.begin() should fork off a thread for each child or
+adult. Your mechanism cannot rely on knowing how many children or
+adults are present beforehand, although you are free to attempt to
+determine this among the threads (i.e. you can't pass the values to
+your threads, but you are free to have each thread increment a shared
+variable, if you wish).
+
+</p><p>To show that the trip is properly synchronized, make calls to the
+appropriate BoatGrader methods every time someone crosses the
+channel. When a child pilots the boat from Oahu to Molokai, call
+ChildRowToMolokai. When a child rides as a passenger from Oahu to
+Molokai, call ChildRideToMolokai. Make sure that when a boat with two
+people on it crosses, the pilot calls the ...RowTo... method before the
+passenger calls the ...RideTo... method.</p>
+
+        <p>Your solution must have no busy waiting, and it must eventually end. 
+          Note that it is not necessary to terminate all the threads -- you can 
+          leave them blocked waiting for a condition variable. The threads representing 
+          the adults and children cannot have access to the numbers of threads 
+          that were created, but you will probably need to use these number in 
+          begin() in order to determine when all the adults and children are across 
+          and you can return.</p>
+<p>
+The idea behind this task is to use independent threads to solve
+a problem.  You are to program the logic that a child or an adult
+would follow if that person were in this situation.  For example,
+it is reasonable to allow a person to see how many children
+or adults are on the same island they are on.  A person could see
+whether the boat is at their island.  A person can know which island
+they are on.  All of this information may be stored with each
+individual thread or in shared variables.  So a counter that holds
+the number of children on Oahu would be allowed, so long as only
+threads that represent people on Oahu could access it.</p>
+
+<p>
+What is not allowed is a thread which executes a "top-down"
+strategy for the simulation.  For example, you may not create
+threads for children and adults, then have a controller thread
+simply send commands to them through communicators.  The threads
+must act as if they were individuals.
+
+</p><p>
+Information which is not possible in the real world is also not
+allowed.  For example, a child on Molokai cannot magically see 
+all of the people on Oahu.  That child may remember the number 
+of people that he or she has seen leaving, but the child may 
+not view people on Oahu as if it were there.  (Assume that the
+people do not have any technology other than a boat!)
+
+</p><p>
+You will reach a point in your simulation where the adult and 
+child threads believe that everyone is across on Molokai. At this point, 
+you are allowed to do one-way communication from the threads to begin() in 
+order to inform it that the simulation may be over. It may be possible, 
+however, that your adult and child threads are incorrect. Your 
+simulation must handle this case without requiring explict or implict 
+communication from begin() to the threads.
+
+
+<!--
+Not using elevators this semester -KDP
+<p><li>
+(25%, 300 lines) Putting all of this together, you are to implement a
+controller for a bank of elevators, such as in Soda Hall.
+See <tt>nachos.machine.ElevatorBank</tt> for details on the hardware interface,
+and <tt>nachos.threads.ElevatorController</tt> for details on what you are to
+implement. Create a thread for each elevator; these threads
+talk to the elevator hardware (through the interface defined 
+in <tt>nachos.machine.ElevatorControls</tt>) to
+open and close the elevator doors, move the
+elevator between floors, etc. The elevator threads should coordinate
+with each other to make sure that exactly one elevator goes to pick up each 
+set of passengers. For synchronizing the elevator threads, you are free to use 
+semaphores, condition variables, or even the <tt>Communicator</tt> 
+if you want (though in my experience, using a <tt>Communicator</tt> only makes
+things harder). You will also need to use <tt>Alarm.waitUntil()</tt> 
+to hold open the doors for a fixed amount of time (you should hold them open
+for <tt>timeDoorsOpen</tt> ticks).
+
+<p><li>
+(15%, 100 lines) Since you will need to test out your code before you
+turn it in, you will also be required to implement elevator riders. See
+<tt>nachos.threads.Rider</tt> for details on what you are to implement. This
+part is considerably easier, because each rider is independent of all other
+riders, and each rider gets its own <tt>nachos.machine.RiderControls</tt>
+object (as opposed to the elevator controller, which has one controls object
+for all the elevators, and requires synchronization).
+Of course, the only communication possible between the elevator riders
+and the elevator controller is via the physical elevator device.
+The elevator threads should not share any memory
+or synchronization variables with the rider threads.
+
+<p>
+To test your riders and elevators, you must first call
+<tt>Machine.bank().init()</tt>. Then call <tt>Machine.bank().addRider()</tt>
+once for each rider. Finally, call <tt>Machine.bank().run()</tt> to run the
+simulation (this method returns when the simulation is complete).
+
+<p>
+We have provided a GUI to help you to test your elevators and riders together.
+To enable it, simply call <tt>Machine.bank().enableGui()</tt> <i>before</i>
+<tt>Machine.bank().run()</tt>.
+-->
+
+</p></li></ol>
+
+<h2>Design Questions:</h2> 
+
+    <p>Please answer the following questions in your design document (due <em>one 
+      day after the code for this phase is due). 
+    </em></p><ol><em>
+<li>Why is it fortunate that we did not ask you to implement priority 
+donation for semaphores?
+</li><li>A student proposes to solve the boats problem by use of a counter, AdultsOnOahu. Since this number isn't known initially, it will be started at zero, and incremented by each adult thread before they do anything else. Is this solution likely to work? Why or why not?
+</li></em></ol><em>
+
+</em></li></ol><em>
+
+</em></body></html>

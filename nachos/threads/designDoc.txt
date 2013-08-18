@@ -1,0 +1,23 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>CS 162 Project Phase 1</title>
+</head>
+ 
+<body bgcolor="#FFFFFF">
+    <h1 align="center">Phase 1: Build a thread system</h1>
+    <div>
+        <h2>(5%, 5 lines) Implement KThread.join(). </h2>
+        <p>
+        (5%, 5 lines) Implement KThread.join(). Note that another thread does not have to call join(), but if it is called, it must be called only once. The result of calling join() a second time on the same thread is undefined, even if the second caller is a different thread than the first caller. A thread must finish executing normally whether or not it is joined. 
+        </p>
+    </div>
+    <div>
+        <h2>(5%, 20 lines) Implement condition variables directly</h2>
+        <p(5%, 20 lines) Implement condition variables directly, by using interrupt enable and disable to provide atomicity. We have provided a sample implementation that uses semaphores; your job is to provide an equivalent implementation without directly using semaphores (you may of course still use locks, even though they indirectly use semaphores). Once you are done, you will have two alternative implementations that provide the exact same functionality. Your second implementation of condition variables must reside in class nachos.threads.Condition2>
+        </p>
+    </div>
+
+
+</body>
+</html>

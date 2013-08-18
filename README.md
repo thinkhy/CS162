@@ -1,7 +1,9 @@
 CS162
 =====
 
-###Study notes for online course [UCB CS162]<http://inst.eecs.berkeley.edu/~cs162/>
+###Study notes for online course UCB CS162
+
+[UCB CS162]<http://inst.eecs.berkeley.edu/~cs162/>
 
 **Projects Notes**
 

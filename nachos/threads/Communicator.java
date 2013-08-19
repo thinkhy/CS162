@@ -27,17 +27,21 @@ public class Communicator {
      * @param	word	the integer to transfer.
      */
     public void speak(int word) {
-        lock.acquire();
+        lock.acquire();           // hy+
 
-        while (this.word != 0) {   // hy+
-            condition.sleep();     // hy+
+        speaker++;
+
+        while (listener == 0) {   // hy+
+            speakerCond.sleep();     // hy+
         }                          // hy+ 
 
         this.word = word;          // hy+ 
 
-        condition.wakeAll();       // hy+ 
-        condition.sleep();         // hy+ 
+        listenerCond.wake();       // hy+ 
 
+        speakerCond.sleep();    // hy+  
+
+        speaker--;              // hy+
 
         lock.release();            // hy+ 
     }
@@ -51,14 +55,18 @@ public class Communicator {
     public int listen() {
         lock.acquire();
 
-        while(this.word == 0) {   // hy+  
-            condition.sleep();    // hy+  
+        listen++;
+
+        while(speaker == 0) {   // hy+  
+            listenerCond.sleep();    // hy+  
         }                         // hy+
 
         int word = this.word;     // hy+   
-        this.word = 0;            // hy+
 
-        condition.wakeAll();      // hy+
+        speakerCond.wake();      // hy+
+
+        listener--;            // hy+
+
         lock.release();           // hy+
 
         return word;              // hy+ 
@@ -66,8 +74,13 @@ public class Communicator {
         return 0;
     }
 
-
+    int speaker  = 0;
+    int listener = 0;
     int word = 0;
     Lock lock = new Lock();
-    Condition2 condition = new Condition2(lock); 
+
+    Condition2 speakerCond  = new Condition2(lock); 
+    Condition2 listenerCond = new Condition2(lock); 
 }
+
+

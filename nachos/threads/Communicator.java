@@ -1,86 +1,84 @@
 package nachos.threads;
 
-import nachos.machine.*;
+import nachos.machine.*;
+
+/**
+ * A <i>communicator</i> allows threads to synchronously exchange 32-bit
+ * messages. Multiple threads can be waiting to <i>speak</i>,
+ * and multiple threads can be waiting to <i>listen</i>. But there should never
+ * be a time when both a speaker and a listener are waiting, because the two
+ * threads can be paired off at this point.
+ */
+public class Communicator {
+    /**
+     * Allocate a new communicator.
+     */
+    public Communicator() {
+    }
+
+    /**
+     * Wait for a thread to listen through this communicator, and then transfer
+     * <i>word</i> to the listener.
+     *
+     * <p>
+     * Does not return until this thread is paired up with a listening thread.
+     * Exactly one listener should receive <i>word</i>.
+     *
+     * @param	word	the integer to transfer.
+     */
+    public void speak(int word) {
+        lock.acquire();            // hy+
+
+        while (listener == 0) {    // hy+
+            speakerCond.sleep();   // hy+
+        }                          // hy+ 
+
+        this.word = word;          // hy+ 
+
+        wordReady = true; 
+        listenerCond.wake();       // hy+ 
+
+        lock.release();            // hy+ 
+    }
+
 
-/**
- * A <i>communicator</i> allows threads to synchronously exchange 32-bit
- * messages. Multiple threads can be waiting to <i>speak</i>,
- * and multiple threads can be waiting to <i>listen</i>. But there should never
- * be a time when both a speaker and a listener are waiting, because the two
- * threads can be paired off at this point.
- */
-public class Communicator {
-    /**
-     * Allocate a new communicator.
-     */
-    public Communicator() {
-    }
+    /**
+     * Wait for a thread to speak through this communicator, and then return
+     * the <i>word</i> that thread passed to <tt>speak()</tt>.
+     *
+     * @return	the integer transferred.
+     */    
+    public int listen() {
 
-    /**
-     * Wait for a thread to listen through this communicator, and then transfer
-     * <i>word</i> to the listener.
-     *
-     * <p>
-     * Does not return until this thread is paired up with a listening thread.
-     * Exactly one listener should receive <i>word</i>.
-     *
-     * @param	word	the integer to transfer.
-     */
-    public void speak(int word) {
-        lock.acquire();           // hy+
+        // Refer to: http://neuron.csie.ntust.edu.tw/homework/94/os/homework/homework2/OS%E4%BD%9C%E6%A5%AD2%20%20A9415013%20A9415014%20A9415028%20A9415058(new)/OS%E4%BD%9C%E6%A5%AD2%20%20A9415013%20A9415014%20A9415028%20A9415058(new).files/Page647.htm
+        lock.acquire();
 
-        speaker++;
+        listener++;
 
-        while (listener == 0) {   // hy+
-            speakerCond.sleep();     // hy+
-        }                          // hy+ 
+        speakerCond.wake();
 
-        this.word = word;          // hy+ 
+        while(!wordReady) {     // hy+  
+            listenerCond.sleep();    // hy+  
+        }                         // hy+
 
-        listenerCond.wake();       // hy+ 
+        int word = this.word;     // hy+   
+        wordRead = false;
 
-        speakerCond.sleep();    // hy+  
+        listener--;
+        lock.release();           // hy+
 
-        speaker--;              // hy+
+        return word;              // hy+ 
 
-        lock.release();            // hy+ 
-    }
+        return 0;
+    }
 
-    /**
-     * Wait for a thread to speak through this communicator, and then return
-     * the <i>word</i> that thread passed to <tt>speak()</tt>.
-     *
-     * @return	the integer transferred.
-     */    
-    public int listen() {
-        lock.acquire();
+    int listener = 0;
+    bool wordReady = false;
+    int word = 0;
+    Lock lock = new Lock();
 
-        listen++;
-
-        while(speaker == 0) {   // hy+  
-            listenerCond.sleep();    // hy+  
-        }                         // hy+
-
-        int word = this.word;     // hy+   
-
-        speakerCond.wake();      // hy+
-
-        listener--;            // hy+
-
-        lock.release();           // hy+
-
-        return word;              // hy+ 
-
-        return 0;
-    }
-
-    int speaker  = 0;
-    int listener = 0;
-    int word = 0;
-    Lock lock = new Lock();
-
-    Condition2 speakerCond  = new Condition2(lock); 
-    Condition2 listenerCond = new Condition2(lock); 
+    Condition2 speakerCond  = new Condition2(lock); 
+    Condition2 listenerCond = new Condition2(lock); 
 }
 
 

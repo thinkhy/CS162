@@ -90,7 +90,6 @@ public class Condition2 {
 
         lock.release();
         System.out.print(KThread.currentThread().getName() + " released lock \n");	
-
 	}
 
     private Lock lock; 

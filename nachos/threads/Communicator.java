@@ -47,6 +47,7 @@ public class Communicator {
         // set flag that word is ready
         isWordReady = true;       // hy+  
 
+
         // wake up a listener
         listenerCond.wake();      // hy+  
 
@@ -65,6 +66,9 @@ public class Communicator {
 
         // increase the number of listener by one
         listener++;               // hy+
+
+        // inform speacker I have come 
+        speakerCond.wake();      // hy+  
 
         // while word is not ready, listener goes to sleep
         while(isWordReady == false) {   // hy+  
@@ -87,16 +91,18 @@ public class Communicator {
 
     // Test code added by hy
     private static class Speaker implements Runnable {
-	Speaker(Communicator comm) {
+	Speaker(Communicator comm, int word) {
         this.comm = comm; 
+        this.word = word;
 	}
 	
-	public void run(int word) {
+	public void run() {
         System.out.print(KThread.currentThread().getName() 
-                + "will speak " + word + "\n");	
-        comm.speak(word);
+                + "will speak " + this.word + "\n");	
+        comm.speak(this.word);
 	}
 
+    private int word = 0;
     private Communicator comm; 
     }
 
@@ -105,11 +111,13 @@ public class Communicator {
         this.comm = comm; 
 	}
 	
-	public int run(int word) {
+	public void run() {
         System.out.print(KThread.currentThread().getName() 
-                + "will listen \n");	
+                + " will listen \n");	
 
-        return comm.listen();
+        int word = comm.listen();
+
+        System.out.print("Listen a word: " + word + " \n"); 
 	}
 
     private Communicator comm; 
@@ -122,14 +130,18 @@ public class Communicator {
 
     System.out.print("Enter Communicator.selfTest\n");	
 
-    Communicator comm;
-    KThread threadSpeaker =  new KThread(Speaker);
-    KThread threadListener = new KThread(Listener);
+    Communicator comm = new Communicator();
+    KThread threadSpeaker =  new KThread(new Speaker(comm, 100));
+    threadSpeaker.setName("Thread speaker").fork();
 
-    threadSpeaker.speak(100);
-    int word = threadListener.listen();
+    KThread threadListener = new KThread(new Listener(comm));
+    threadListener.setName("Thread listner").fork();
 
-    System.out.print("Receive: " +  word + "\n");	
+    KThread.yield();
+
+    threadListener.join();
+    threadSpeaker.join();
+
     System.out.print("Leave Communicator.selfTest\n");	
 
     }

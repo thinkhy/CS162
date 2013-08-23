@@ -127,7 +127,7 @@ public class Condition2 {
     System.out.print("Leave Condition2.selfTest\n");	
 
     t[9].join();
-
+        
     }
     private Lock conditionLock;
     private LinkedList<KThread> waitQueue;  // +hy+

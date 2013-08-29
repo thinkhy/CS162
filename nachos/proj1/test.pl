@@ -29,5 +29,6 @@ while(1) {
     while(<$pipe>) {
         die "Test case failed\n" if (/(failure)|(error)/i);
     }
+
 }
 

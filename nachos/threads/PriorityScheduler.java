@@ -170,6 +170,9 @@ public class PriorityScheduler extends Scheduler {
          */
         public boolean transferPriority;
 
+
+        private LinkedList<KThread> waitQueue = new LinkedList<KThread>();  // hy+
+
     } /* PriorityQueue */
 
     /**
@@ -180,6 +183,7 @@ public class PriorityScheduler extends Scheduler {
      * @see	nachos.threads.KThread#schedulingState
      */
     protected class ThreadState {
+
 	/**
 	 * Allocate a new <tt>ThreadState</tt> object and associate it with the
 	 * specified thread.

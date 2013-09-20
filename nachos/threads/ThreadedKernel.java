@@ -47,9 +47,12 @@ public class ThreadedKernel extends Kernel {
     public void selfTest() {
 	// KThread.selfTest(); commented out by thinkhy [2/24/2013]
     
-    KThread.selfTest2();
+    // KThread.selfTest2();
+    
+    // added by hy [ 9/20/2013 ]
+    MyTester.selfTest();
 
-    Communicator.selfTest();
+    // Communicator.selfTest();
     // Condition2.selfTest();
     // Alarm.selfTest();
     // Semaphore.selfTest();
@@ -88,4 +91,5 @@ public class ThreadedKernel extends Kernel {
     private static Communicator dummy5 = null;
     private static Rider dummy6 = null;
     private static ElevatorController dummy7 = null;
+    private static MyTester dummy8 = null;
 }

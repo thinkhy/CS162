@@ -1,6 +1,8 @@
 package nachos.threads;
 
 import nachos.machine.*;
+import java.util.LinkedList; // +hy+
+import java.util.Iterator;   // +hy+
 
 import java.util.TreeSet;
 import java.util.HashSet;
@@ -135,7 +137,6 @@ public class PriorityScheduler extends Scheduler {
             getThreadState(thread).waitForAccess(this);
         }
 
-
         public void acquire(KThread thread) {
             Lib.assertTrue(Machine.interrupt().disabled());
             getThreadState(thread).acquire(this);
@@ -143,8 +144,36 @@ public class PriorityScheduler extends Scheduler {
 
         public KThread nextThread() {
             Lib.assertTrue(Machine.interrupt().disabled());
-            // implement me
+
+            if (waitQueue.isEmpty())
             return null;
+
+            // [begin] hy, 9/20/2013
+            
+            // loop through threads in waitQueue, find the thread that has the highest priority
+            KThread highestThread = null;
+            int highestPriority = PriorityScheduler.priorityMinimum - 1;
+
+            for (Iterator<KThread> it = waitQueue.iterator(); it.hasNext();) {  
+                KThread currentThread = it.next(); 
+                int     priority = getThreadState(currentThread).getPriority();
+
+                if (priority > highestPriority) {
+                    highestPriority = priority;
+                    highestThread = currentThread;
+                }
+            }
+
+            if (highestThread != null) {
+                Lib.debug('t', " Highest Priority: " + highestPriority);
+                Lib.assertTrue(waitQueue.remove(highestThread));
+                return highestThread;
+            }
+            else {
+                return null;
+            }
+
+            // [end] hy, 9/20/2013
         }
 
         /**
@@ -170,7 +199,7 @@ public class PriorityScheduler extends Scheduler {
          */
         public boolean transferPriority;
 
-
+        /** The queue the threads waiting for */
         private LinkedList<KThread> waitQueue = new LinkedList<KThread>();  // hy+
 
     } /* PriorityQueue */
@@ -242,7 +271,16 @@ public class PriorityScheduler extends Scheduler {
 	 * @see	nachos.threads.ThreadQueue#waitForAccess
 	 */
 	public void waitForAccess(PriorityQueue waitQueue) {
+
 	    // implement me
+        
+        // [begin] hy, 9/20/2013
+        
+	    Lib.assertTrue(Machine.interrupt().disabled());
+
+	    waitQueue.waitQueue.add(thread);
+
+        // [end] hy, 9/20/2013
 	}
 
 	/**
@@ -257,11 +295,17 @@ public class PriorityScheduler extends Scheduler {
 	 */
 	public void acquire(PriorityQueue waitQueue) {
 	    // implement me
+        // [begin] hy, 9/20/2013
+	    Lib.assertTrue(Machine.interrupt().disabled());
+		       
+	    Lib.assertTrue(waitQueue.waitQueue.isEmpty());
+        // [end] hy, 9/20/2013
 	}	
 
 	/** The thread with which this object is associated. */	   
 	protected KThread thread;
 	/** The priority of the associated thread. */
 	protected int priority;
+
     }
 }

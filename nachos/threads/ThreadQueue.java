@@ -44,6 +44,7 @@ package nachos.threads;
 public abstract class ThreadQueue {
     /**
      * Notify this thread queue that the specified thread is waiting for
+     *
      * access. This method should only be called if the thread cannot
      * immediately obtain access (e.g. if the thread wants to acquire a lock
      * but another thread already holds the lock).

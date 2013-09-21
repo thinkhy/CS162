@@ -148,7 +148,7 @@ public class PriorityScheduler extends Scheduler {
             if (waitQueue.isEmpty())
             return null;
 
-            // [begin] hy, 9/20/2013
+
             
             // loop through threads in waitQueue, find the thread that has the highest priority
             KThread highestThread = null;
@@ -166,6 +166,12 @@ public class PriorityScheduler extends Scheduler {
 
             if (highestThread != null) {
                 Lib.debug('t', " Highest Priority: " + highestPriority);
+
+                // hy, 9/21/2013
+                // Once the resource is released, 
+                // the low priority task continues at its original priority level
+                // TODO
+
                 Lib.assertTrue(waitQueue.remove(highestThread));
                 return highestThread;
             }
@@ -278,15 +284,11 @@ public class PriorityScheduler extends Scheduler {
 	 * @see	nachos.threads.ThreadQueue#waitForAccess
 	 */
 	public void waitForAccess(PriorityQueue waitQueue) {
-
 	    // implement me
         
         // [begin] hy, 9/20/2013
-        
 	    Lib.assertTrue(Machine.interrupt().disabled());
-
 	    waitQueue.waitQueue.add(thread);
-
         // [end] hy, 9/20/2013
 	}
 
@@ -302,6 +304,7 @@ public class PriorityScheduler extends Scheduler {
 	 */
 	public void acquire(PriorityQueue waitQueue) {
 	    // implement me
+        
         // [begin] hy, 9/20/2013
 	    Lib.assertTrue(Machine.interrupt().disabled());
 		       
@@ -311,8 +314,11 @@ public class PriorityScheduler extends Scheduler {
 
 	/** The thread with which this object is associated. */	   
 	protected KThread thread;
+
 	/** The priority of the associated thread. */
 	protected int priority;
+
+	protected int effectivePriority;
 
     }
 }

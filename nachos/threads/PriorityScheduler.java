@@ -212,8 +212,20 @@ public class PriorityScheduler extends Scheduler {
          */
         public boolean transferPriority;
 
-        /** The queue the threads waiting for */
+        /** The queue  waiting on this resource */
         private LinkedList<KThread> waitQueue = new LinkedList<KThread>();  // hy+
+
+        /** The ThreadState corresponds to the holder of the resource */
+        private ThreadState holder;             // hy+
+
+        /** Set to true when a new thread is added to the queue, 
+         *  or any of the queues in the waitQueue flag themselves as dirty */
+        private boolean dirty;                  // hy+ 
+
+        /** The cached highest of the effective priorities in the waitQueue. 
+         *  This value is invalidated while dirty is true */
+        private int effectivePriority; 
+
 
     } /* PriorityQueue */
 
@@ -318,7 +330,18 @@ public class PriorityScheduler extends Scheduler {
 	/** The priority of the associated thread. */
 	protected int priority;
 
-	protected int effectivePriority;
+	protected int effectivePriority;            // hy+
+
+    /** Collection of PriorityQueues that signify the Locks or other
+     *  resource that this thread currently holds */
+    protected LinkedList<KThread> myResource = new LinkedList<ThreadQueue>();  // hy+
+
+    /** PriorityQueue corresponding to resources that this thread has attepmted to acquire but could not */
+    protected ThreadQueue waitingOn; 
+
+    /** Set to true when this thread's priority is changed, 
+     * or when one of the queues in myResources flags itself as dirty */
+    private boolean dirty;                  // hy+ 
 
     }
 }

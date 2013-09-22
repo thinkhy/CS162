@@ -92,5 +92,4 @@ public class ThreadedKernel extends Kernel {
     private static Communicator dummy5 = null;
     private static Rider dummy6 = null;
     private static ElevatorController dummy7 = null;
-    private static MyTester dummy8 = null;
 }

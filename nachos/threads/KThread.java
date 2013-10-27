@@ -47,7 +47,10 @@ public class KThread {
 	    tcb = new TCB();
 	}	    
 	else {
+        // To test priority-inverse problem, set priority queue transfer=true [hy 10/27/2013]
 	    readyQueue = ThreadedKernel.scheduler.newThreadQueue(false);
+	    //readyQueue = ThreadedKernel.scheduler.newThreadQueue(true);  
+
 	    readyQueue.acquire(this);	    
 
 	    currentThread = this;

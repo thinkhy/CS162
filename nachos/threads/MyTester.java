@@ -82,13 +82,13 @@ public class MyTester {
         System.out.print("PriopritySchedulerVAR3\n");
 
         Runnable myrunnable1 = new Runnable() {
-        public void run() { 
-            int i = 0;
-            while(i < 10) { 
-                System.out.println("*** in while1 loop " + i + " ***");
-                i++;
-            } /*yield();*/ 
-        }
+            public void run() { 
+                int i = 0;
+                while(i < 10) { 
+                    System.out.println("*** in while1 loop " + i + " ***");
+                    i++;
+                } /*yield();*/ 
+            }
         }; 
 
         KThread testThread;
@@ -111,7 +111,6 @@ public class MyTester {
              t[i].setName("Thread" + i).fork();
 
              ThreadedKernel.scheduler.setPriority(t[i], (i+1)%8);
-
         }
 
         Random rand = new Random();
@@ -134,11 +133,17 @@ public class MyTester {
         }
         public void run() { 
             lock.acquire();
-            KThread.currentThread().yield();
+            while (true) {
+                KThread.currentThread().yield();
+                if (isOpen ) {
+                    break;
+                }
+            }
             lock.release();
         }
 
         Lock lock;
+        boolean isOpen = false;
         } 
     /**
      * VAR4: Create a scenario to hit the priority inverse problem.
@@ -149,18 +154,14 @@ public class MyTester {
 
         Lock lock = new Lock();
 
-
         Runnable myrunnable1 = new Runnable1(lock);
-
         Runnable myrunnable2 = new Runnable() {
-        public void run() { 
-            while(true) {
-                KThread.currentThread().yield();
-    KThread.
+            public void run() { 
+                while(true) {
+                    KThread.currentThread().yield();
+                }
             }
-        }
         }; 
-
 
         KThread low = new KThread(myrunnable1);
         low.fork();
@@ -168,6 +169,7 @@ public class MyTester {
         ThreadedKernel.scheduler.setPriority(low, 1);
         KThread.currentThread().yield();
 
+        // High priority thread "high" waits for low priority thread "low" because they use the same lock.
         KThread high = new KThread(myrunnable1);
         high.fork();
         high.setName("high");

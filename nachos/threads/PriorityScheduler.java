@@ -44,6 +44,7 @@ public class PriorityScheduler extends Scheduler {
      * @return	a new priority thread queue.
      */
     public ThreadQueue newThreadQueue(boolean transferPriority) {
+    //System.out.print("ThreadQueue.newThreadQueue: " + transferPriority + "\n");  // debug
 	return new PriorityQueue(transferPriority);
     }
 
@@ -63,7 +64,7 @@ public class PriorityScheduler extends Scheduler {
 	Lib.assertTrue(Machine.interrupt().disabled());
 		       
 	Lib.assertTrue(priority >= priorityMinimum &&
-		   priority <= priorityMaximum);
+                       priority <= priorityMaximum);
 	
 	getThreadState(thread).setPriority(priority);
     }
@@ -183,22 +184,37 @@ public class PriorityScheduler extends Scheduler {
          *		return.
          */
         protected KThread pickNextThread() {
-            KThread ret = null;
+            KThread nextThread = null;
+
+            //this.print(); // debug
+
+            // System.out.print("Inside 'pickNextThread:' transferPriority: " + transferPriority + "\n"); // debug
 
             for (Iterator<KThread> ts = waitQueue.iterator(); ts.hasNext();) {  
                 KThread thread = ts.next(); 
                 int priority = getThreadState(thread).getEffectivePriority();
-                if (ret == null || priority > getThreadState(ret).getEffectivePriority()) { 
-                    ret = thread;
+                
+                System.out.print("Inside 'pickNextThread:' Thread: " + thread 
+                                    + "\t  Priority: " + priority + "\n");
+
+                if (nextThread == null || priority > getThreadState(nextThread).getEffectivePriority()) { 
+                    nextThread = thread;
                 }
             }
 
-            return ret;
+            // System.out.print("Inside 'pickNextThread:' return Thread: " 
+            //        + nextThread + "\n"); // debug
+            
+            return nextThread;
         }
         
         public int getEffectivePriority() {
+
+            // System.out.print("[Inside getEffectivePriority] transferPriority: " + transferPriority + "\n"); // debug
+
             // if do not transfer priority, return minimum priority
             if (transferPriority == false) {
+            // System.out.print("Inside 'getEffectivePriority:' false branch\n" ); // debug
                 return priorityMinimum;
             }
 
@@ -241,7 +257,6 @@ public class PriorityScheduler extends Scheduler {
             }
         }
 
-
         /**
          * <tt>true</tt> if this queue should transfer priority from waiting
          * threads to the owning thread.
@@ -262,12 +277,7 @@ public class PriorityScheduler extends Scheduler {
          *  This value is invalidated while dirty is true */
         private int effectivePriority; 
 
-
     } /* PriorityQueue */
-
-
-
-
 
 
     /**
@@ -330,7 +340,7 @@ public class PriorityScheduler extends Scheduler {
 	 */
 	public void setPriority(int priority) {
 	    if (this.priority == priority)
-		return;
+            return;
 	    
 	    this.priority = priority;
 	    

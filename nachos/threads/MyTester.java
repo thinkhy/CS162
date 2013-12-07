@@ -126,25 +126,66 @@ public class MyTester {
         KThread.yield();
     }
 
-        private static class Runnable1 implements Runnable  {
+    private static class Runnable1 implements Runnable  {
 
-        Runnable1(Lock lock) {
+        Runnable1(Lock lock, boolean isOpen) {
             this.lock = lock;
+            this.isOpen = isOpen;
         }
+
         public void run() { 
             lock.acquire();
-            while (true) {
+            while (this.isOpen == false) {
+                System.out.print("Low thread is blocked, please open the door.\n");
                 KThread.currentThread().yield();
-                if (isOpen ) {
-                    break;
-                }
             }
+            this.isOpen = false;
+            System.out.print("Low thread released, close the door.\n");
             lock.release();
         }
 
         Lock lock;
-        boolean isOpen = false;
-        } 
+        static public boolean isOpen = false;
+    } 
+
+    private static class Runnable2 implements Runnable  {
+
+        Runnable2(Lock lock) {
+            this.lock = lock;
+        }
+
+        public void run() { 
+            Runnable1.isOpen = true;
+
+            lock.acquire();
+            while (Runnable1.isOpen == true) {
+                System.out.print("High thread is blocked, please close the door.\n");
+                KThread.currentThread().yield();
+            }
+
+            Runnable1.isOpen = true;
+            System.out.print("High thread released, close the door.\n");
+            lock.release();
+        }
+
+        Lock lock;
+        static public boolean isOpen = false;
+    } 
+
+    private static class Runnable3 implements Runnable  {
+        Runnable3() {
+        }
+
+        public void run() { 
+            while(Runnable1.isOpen == false) {
+                System.out.print("Medium thread is blocked, please open the door.\n");
+                KThread.currentThread().yield();
+            }
+
+            System.out.print("Medium thread released, looks good.\n");
+        }
+    }
+
     /**
      * VAR4: Create a scenario to hit the priority inverse problem.
      * Verify the highest thread is blocked by lower priority thread.
@@ -154,35 +195,32 @@ public class MyTester {
 
         Lock lock = new Lock();
 
-        Runnable myrunnable1 = new Runnable1(lock);
-        Runnable myrunnable2 = new Runnable() {
-            public void run() { 
-                while(true) {
-                    KThread.currentThread().yield();
-                }
-            }
-        }; 
 
-        KThread low = new KThread(myrunnable1);
+        // low priority thread closes the door
+        KThread low = new KThread(new Runnable1(lock, false));
         low.fork();
         low.setName("low");
         ThreadedKernel.scheduler.setPriority(low, 1);
         KThread.currentThread().yield();
 
         // High priority thread "high" waits for low priority thread "low" because they use the same lock.
-        KThread high = new KThread(myrunnable1);
+        
+        // high priority thread opens the door
+        KThread high = new KThread(new Runnable2(lock));
         high.fork();
         high.setName("high");
         ThreadedKernel.scheduler.setPriority(high, 7);
 
-
-        KThread medium = new KThread(myrunnable2);
+        // medium priority thread waits for closing the door
+        KThread medium = new KThread(new Runnable3());
         medium.fork();
         medium.setName("medium");
         ThreadedKernel.scheduler.setPriority(medium, 6);
+
         KThread.currentThread().yield();
-
     }
-
+     
     static private char dbgFlag = 't';
 }
+
+

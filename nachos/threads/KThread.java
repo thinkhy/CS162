@@ -43,23 +43,20 @@ public class KThread {
      * create an idle thread as well.
      */
     public KThread() {
-	if (currentThread != null) {
-	    tcb = new TCB();
-	}	    
-	else {
-        // To test priority-inverse problem, set priority queue transfer=true [hy 10/27/2013]
-	    readyQueue = ThreadedKernel.scheduler.newThreadQueue(false);
-	    //readyQueue = ThreadedKernel.scheduler.newThreadQueue(true);  
+        if (currentThread != null) {
+            tcb = new TCB();
+        }	    
+        else {
+            readyQueue = ThreadedKernel.scheduler.newThreadQueue(false);
+            readyQueue.acquire(this);	    
 
-	    readyQueue.acquire(this);	    
+            currentThread = this;
+            tcb = TCB.currentTCB();
+            name = "main";
+            restoreState();
 
-	    currentThread = this;
-	    tcb = TCB.currentTCB();
-	    name = "main";
-	    restoreState();
-
-	    createIdleThread();
-	}
+            createIdleThread();
+        }
     }
 
     /**
@@ -194,10 +191,10 @@ public class KThread {
 
 	Machine.autoGrader().finishingCurrentThread();
 
+
 	Lib.assertTrue(toBeDestroyed == null);
 	toBeDestroyed = currentThread;
-
-
+    
 	currentThread.status = statusFinished;
 	
 	sleep();
@@ -276,9 +273,9 @@ public class KThread {
     }
 
     /**
-     * Waits for this thread to finish. If this thread is already finished,
-     * return immediately. This method must only be called once; the second
-     * call is not guaranteed to return. This thread must not be the current
+     * waits for this thread to finish. if this thread is already finished,
+     * return immediately. this method must only be called once; the second
+     * call is not guaranteed to return. this thread must not be the current
      * thread.
      */
     public void join() {
@@ -292,18 +289,26 @@ public class KThread {
      * wait queue placed inside the TCB
      *
      */
+     
+             
 
 	boolean intStatus = Machine.interrupt().disable();
-
-    while (status != statusFinished) {
-        currentThread.yield();
+     
+    // lazy init joinQueue
+    if (joinQueue == null) {
+            // add a queue to store joined on me thread [12/8/2013 HY]
+            // note: join queue should transfer priority 
+            joinQueue = ThreadedKernel.scheduler.newThreadQueue(true);  
+            joinQueue.acquire(this);
+    }   
+        
+    if (currentThread != this && status != statusFinished) {
         // add this thread to ready queue
-	    // readyQueue.waitForAccess(currentThread);
-
-        // then dispatch the CPU to the thread in ready queue 
-        // currentThread.runNextThread();
+	    joinQueue.waitForAccess(currentThread);
+         
+        currentThread.sleep();
     }
-	
+
 	Machine.interrupt().restore(intStatus);
 
     }
@@ -338,7 +343,7 @@ public class KThread {
 	KThread nextThread = readyQueue.nextThread();
 	if (nextThread == null)
     {
-        System.out.println("####### runNextThread: runNextThread #######n"); 
+        System.out.println("####### runNextThread: runNextThread #######"); 
 	    nextThread = idleThread;
     }
 
@@ -382,6 +387,17 @@ public class KThread {
 
     // notify this tcb and block current tcb [hy 3/4/2013]
 	tcb.contextSwitch();
+
+    // added by hy 12/8/2013
+    // for project1 - task1 - join
+    if (joinQueue != null) {
+        KThread thread = joinQueue.nextThread();
+        while(thread != null) {
+            thread.ready();
+            thread = joinQueue.nextThread();
+            System.out.println("I'm here\n");
+        }
+    }
 
     // Set running flag and associate nachos thread with JAVA thread [3/3/2013 hy]
 	currentThread.restoreState();
@@ -534,6 +550,7 @@ public class KThread {
     private String name = "(unnamed thread)";
     private Runnable target;
     private TCB tcb;
+    private ThreadQueue joinQueue  = null; // added by hy [12/8/2013]
 
     /**
      * Unique identifer for this thread. Used to deterministically compare

@@ -12,13 +12,13 @@ public class MyTester {
 
     public static void TestPrioprityScheduler() {
         Lib.debug(dbgFlag, "Enter TestPrioprityScheduler");
-        // PriopritySchedulerVAR1();
-        // PriopritySchedulerVAR2();
-        // PriopritySchedulerVAR3();
+        PriopritySchedulerVAR1();
+        PriopritySchedulerVAR2();
+        PriopritySchedulerVAR3();
         PriopritySchedulerVAR4();
         Lib.debug(dbgFlag, "Leave TestPrioprityScheduler");
     }
-
+                                                            
     /**
      *  VAR1: Create several(>2) threads, verify these threads can be run successfully.
      */
@@ -194,7 +194,6 @@ public class MyTester {
         System.out.print("PriopritySchedulerVAR4\n");
 
         Lock lock = new Lock();
-
 
         // low priority thread closes the door
         KThread low = new KThread(new Runnable1(lock, false));

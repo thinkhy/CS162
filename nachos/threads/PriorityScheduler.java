@@ -194,9 +194,6 @@ public class PriorityScheduler extends Scheduler {
                 KThread thread = ts.next(); 
                 int priority = getThreadState(thread).getEffectivePriority();
                 
-                System.out.print("Inside 'pickNextThread:' Thread: " + thread 
-                                    + "\t  Priority: " + priority + "\n");
-
                 if (nextThread == null || priority > getThreadState(nextThread).getEffectivePriority()) { 
                     nextThread = thread;
                 }
@@ -362,11 +359,9 @@ public class PriorityScheduler extends Scheduler {
 	public void waitForAccess(PriorityQueue waitQueue) {
         
 	    Lib.assertTrue(Machine.interrupt().disabled());
-
 	    Lib.assertTrue(waitQueue.waitQueue.indexOf(thread) == -1);
 
 	    waitQueue.waitQueue.add(thread);
-
         waitQueue.setDirty();
 
         // set waitingOn
@@ -379,7 +374,6 @@ public class PriorityScheduler extends Scheduler {
             myResource.remove(waitQueue);
             waitQueue.holder = null;
         }
-
 	}
 
 	/**

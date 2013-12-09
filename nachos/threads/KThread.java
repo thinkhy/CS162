@@ -189,8 +189,19 @@ public class KThread {
 	
 	Machine.interrupt().disable();
 
-	Machine.autoGrader().finishingCurrentThread();
+    // added by hy 12/8/2013
+    // for project1 - task1 - join
+    ThreadQueue curJoinQueue = currentThread.joinQueue;
 
+    if (curJoinQueue != null) {
+        KThread thread = curJoinQueue.nextThread();
+        while(thread != null) {
+            thread.ready();
+            thread = curJoinQueue.nextThread();
+        }
+    }
+
+	Machine.autoGrader().finishingCurrentThread();
 
 	Lib.assertTrue(toBeDestroyed == null);
 	toBeDestroyed = currentThread;
@@ -290,8 +301,6 @@ public class KThread {
      *
      */
      
-             
-
 	boolean intStatus = Machine.interrupt().disable();
      
     // lazy init joinQueue
@@ -388,16 +397,6 @@ public class KThread {
     // notify this tcb and block current tcb [hy 3/4/2013]
 	tcb.contextSwitch();
 
-    // added by hy 12/8/2013
-    // for project1 - task1 - join
-    if (joinQueue != null) {
-        KThread thread = joinQueue.nextThread();
-        while(thread != null) {
-            thread.ready();
-            thread = joinQueue.nextThread();
-            System.out.println("I'm here\n");
-        }
-    }
 
     // Set running flag and associate nachos thread with JAVA thread [3/3/2013 hy]
 	currentThread.restoreState();

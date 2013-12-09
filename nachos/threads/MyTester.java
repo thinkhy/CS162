@@ -41,14 +41,15 @@ public class MyTester {
         testThread.setName("child 1");
 
         testThread.fork();
+        testThread.join();
 
         KThread testThread2;
         testThread2 = new KThread(myrunnable1);
         testThread2.setName("child 2");
 
         testThread2.fork();
-
-        testThread.join();
+        KThread.yield();
+        testThread2.join();
 
         KThread t[] = new KThread[10];
         for (int i=0; i<10; i++) {

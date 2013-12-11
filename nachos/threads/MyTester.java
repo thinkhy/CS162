@@ -7,7 +7,21 @@ import java.util.Random;
 public class MyTester {
 
     public static void selfTest() {
-        TestPrioprityScheduler();
+        // TestPrioprityScheduler();
+        
+        // Test Boating solution
+        TestBoatingSolution();
+        
+    }
+
+    public static void TestBoatingSolution() {
+
+        System.out.println("\n***  Enter TestBoatingSolution");
+
+        Boat boat = new Boat();
+        boat.selfTest();
+
+        System.out.println("\n***  Leave TestBoatingSolution");
     }
 
     public static void TestPrioprityScheduler() {
@@ -220,6 +234,9 @@ public class MyTester {
         KThread.currentThread().yield();
     }
      
+
+
+
     static private char dbgFlag = 't';
 }
 

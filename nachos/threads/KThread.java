@@ -312,7 +312,7 @@ public class KThread {
     }   
         
     if (currentThread != this && status != statusFinished) {
-        // add this thread to ready queue
+        // add this thread to join queue
 	    joinQueue.waitForAccess(currentThread);
          
         currentThread.sleep();

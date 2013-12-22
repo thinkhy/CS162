@@ -392,7 +392,6 @@ public class Communicator {
 
     }
 
-
     private int listener = 0;             // hy+
     private int speaker  = 0;             // hy+
     private int word = 0;                 // hy+ 

@@ -39,13 +39,13 @@ public class Communicator {
         speaker++;                // hy+  
         // now speader acquires the lock 
 
-        System.out.print("Listener: " + listener + "\n");	
+        // System.out.print("Listener: " + listener + "\n");	
 
         // while no available listener or word is ready(but listener hasn't fetched it)
         while (isWordReady || listener == 0) {   // hy+
             speakerCond.sleep();  // hy+
         }                         // hy+ 
-        System.out.print("Speaker waken up \n");	
+        // System.out.print("Speaker waken up \n");	
 
         // speaker says a word
         this.word = word;         // hy+ 
@@ -74,11 +74,11 @@ public class Communicator {
         // increase the number of listener by one
         listener++;               // hy+
 
-        System.out.print("Speaker: " + speaker + "\n");	
+        // System.out.print("Speaker: " + speaker + "\n");	
 
         // at this point, don't know if any speaker is waiting, just try to wake up all the speakers
 
-        System.out.print("isWordReady: " + isWordReady + "\n");	
+        // System.out.print("isWordReady: " + isWordReady + "\n");	
 
         // while word is not ready, listener goes to sleep
         while(isWordReady == false) {   // hy+  
@@ -108,8 +108,8 @@ public class Communicator {
 	}
 	
 	public void run() {
-        System.out.print(KThread.currentThread().getName() 
-                + " will speak " + this.word + "\n");	
+        // System.out.print(KThread.currentThread().getName() 
+        //        + " will speak " + this.word + "\n");	
         comm.speak(this.word);
 	}
 
@@ -123,12 +123,12 @@ public class Communicator {
 	}
 	
 	public void run() {
-        System.out.print(KThread.currentThread().getName() 
-                + " will listen \n");	
+        // System.out.print(KThread.currentThread().getName() 
+        //          + " will listen \n");	
 
         int word = comm.listen();
 
-        System.out.print("Listen a word: " + word + " \n"); 
+        // System.out.print("Listen a word: " + word + " \n"); 
 	}
 
     private Communicator comm; 

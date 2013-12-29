@@ -300,7 +300,6 @@ public class KThread {
      * wait queue placed inside the TCB
      *
      */
-     
 	boolean intStatus = Machine.interrupt().disable();
      
     // lazy init joinQueue

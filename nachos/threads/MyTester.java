@@ -17,8 +17,7 @@ public class MyTester {
 
         System.out.println("\n***  Enter TestBoatingSolution");
 
-        Boat boat = new Boat();
-        boat.selfTest();
+        Boat.selfTest();
 
         System.out.println("\n***  Leave TestBoatingSolution");
     }

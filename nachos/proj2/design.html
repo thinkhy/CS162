@@ -1,0 +1,59 @@
+<h1>Phase 2: Multiprogramming</h1>
+
+<h2>Overview</h2>
+
+<p>The second phase of Nachos is to support multiprogramming. As in the first assignment, we give you some of the code you need; your job is to complete the system and enhance it.</p>
+
+<h2>Setup</h2>
+
+<ul>
+<li><p>Step 1 </p>
+
+<blockquote>
+  <p>to read and understand the part of the system we have written for you</p>
+  
+  <ul>
+  <li>UserKernel.java - a multiprogramming kernel.</li>
+  <li>UserProcess.java - a user process; manages the address space, and loads a program into virtual memory.</li>
+  <li>UThread.java - a thread capable of executing user MIPS code.</li>
+  <li>SynchConsole.java - a synchronized console; makes it possible to share the machine's serial console among multiple threads.</li>
+  </ul>
+</blockquote></li>
+<li><p>This test program is found in test/halt.c and represents the simplest supported MIPS program.</p>
+
+<blockquote>
+  <p>The test directory includes C source files (.c files) and Nachos user program binaries (.coff files). The binaries can be built while in the test directory by running gmake, or from the proj2 directory by running gmake test.</p>
+</blockquote></li>
+<li><p>To run the halt program, go to the test directory and gmake; then go to the proj2 directory, gmake, and run nachos <code>-d ma</code>. Trace what happens as the user program gets loaded, runs, and invokes a system call (the 'm' debug flag enables MIPS disassembly, and the 'a' debug flag prints process loading information).</p></li>
+<li><p>There are multiple stages to building a Nachos-compatible MIPS binary (all of which are handled by the test Makefile):</p>
+
+<ol>
+<li>Source files (<em>.c) are compiled into object files (</em>.o) by mips-gcc.</li>
+<li>Some of the object files are linked into libnachos.a, the Nachos standard library.</li>
+<li>start.s is preprocessed and assembled into start.o. This file contains the assembly-language code to initialize a process. It also provides the system call "stub code" which allows system calls to be invoked. </li>
+<li>An object file is linked with libnachos.a to produce a Nachos-compatible MIPS binary, which has the extension *.coff. (COFF stands for Common Object File Format and is an industry-standard binary format which the Nachos kernel understands.)</li>
+<li>Note that if you create a new test file (*.c), you will need to append your program name to the variable TARGETS in the Makefile inside test directory</li>
+</ol></li>
+<li><p>You can run other test programs by running</p>
+
+<p><code>nachos -x PROGNAME.coff</code></p>
+
+<p>where PROGNAME.coff is the name of the MIPS program binary in the test directory. </p></li>
+</ul>
+
+<h2>Task I: Implement the file system calls</h2>
+
+<p>(30%, 125 lines) Implement the file system calls (creat, open, read, write, close, and unlink, documented in syscall.h). You will see the code for halt in UserProcess.java; it is best for you to place your new system calls here too. Note that you are not implementing a file system; rather, you are simply giving user processes the ability to access a file system that we have implemented for you.</p>
+
+<ul>
+<li><p>We have provided you the assembly code necessary to invoke system calls from user programs (see start.s; the SYSCALLSTUB macro generates assembly code for each syscall).</p></li>
+<li><p>You will need to bullet-proof the Nachos kernel from user program errors; there should be nothing a user program can do to crash the operating system (with the exception of explicitly invoking the halt() syscall). In other words, you must be sure that user programs do not pass bogus arguments to the kernel which causes the kernel to corrupt its internal state or that of other processes. Also, you must take steps to ensure that if a user process does anything illegal -- such as attempting to access unmapped memory or jumping to a bad address -- that the process will be killed cleanly and its resources freed.</p></li>
+<li><p>You should make it so that the halt() system call can only be invoked by the "root" process -- that is, the first process in the system. If another process attempts to invoke halt(), the system call should be ignored and return immediately.
+Since the memory addresses passed as arguments to the system calls are virtual addresses, you need to use UserProcess.readVirtualMemory and UserProcess.writeVirtualMemory to transfer memory between the user process and the kernel.
+User processes store filenames and other string arguments as null-terminated strings in their virtual address space. The maximum length of for strings passed as arguments to system calls is 256 bytes.</p></li>
+<li><p>When a system call wishes to indicate an error condition to the user, it should return -1 (not throw an exception within the kernel!). Otherwise, the system call should return the appropriate value as documented in test/syscall.h.
+When any process is started, its file descriptors 0 and 1 must refer to standard input and standard output. Use UserKernel.console.openForReading() and UserKernel.console.openForWriting() to make this easier. A user process is allowed to close these descriptors, just like descriptors returned by open().</p></li>
+<li><p>A stub file system interface to the UNIX file system is already provided for you; the interface is given by the class machine/FileSystem.java. You can access the stub filesystem through the static field ThreadedKernel.fileSystem. (Note that since UserKernel extends ThreadedKernel, you can still access this field.) This filesystem is capable of accessing the test directory in your Nachos distribution, which is going to be useful when you want to support the exec system call (see below). You do not need to implement any file system functionality. You should examine carefully the specifications for FileSystem and StubFileSystem in order to determine what functionality you should provide in your syscalls, and what is handled by the file system.</p></li>
+<li><p>Do not implement any kind of file locking; this is the file system's responsibility. If ThreadedKernel.fileSystem.open() returns a non-null OpenFile, then the user process is allowed to access the given file; otherwise, you should signal an error. Likewise, you do not need to worry about the details of what happens if multiple processes attempt to access the same file at once; the stub filesystem handles these details for you.</p></li>
+<li><p>Your implementation should support up to 16 concurrently open files per process, including stdin and stdout. Each file that a process has opened should have a unique file descriptor associated with it (see syscall.h for details). The file descriptor should be a non-negative integer that is simply used to index into a table of currently-open files by that process. Note that a given file descriptor can be reused if the file associated with it is closed, and that different processes can use the same file descriptor (i.e. integer) to refer to different files.</p></li>
+</ul>

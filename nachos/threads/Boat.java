@@ -10,9 +10,11 @@ public class Boat
 {
     static BoatGrader bg;
                     
+    // define two location
     static final int Oahu = 0;
     static final int Molokai = 1;
-    static int boatLocation = Oahu; // place is Oahu or Molokai
+
+    static int boatLocation = Oahu;        // where is the boat
     static int cntPassengers = 0; 
                             
     static Lock boatLock = new Lock();     // boat holds a lock
@@ -31,8 +33,11 @@ public class Boat
 	BoatGrader b = new BoatGrader();
 	 
 	System.out.println("\n***Testing Boats with only 2 children***");
+
 	// begin(0, 2, b);
+    
 	begin(1, 2, b);
+
     /*
 	begin(2, 2, b);
 	begin(3, 2, b);
@@ -152,7 +157,7 @@ public class Boat
                }
 
                // wait until available seat on boat
-               while (cntPassengers > 2) 
+               while (cntPassengers >= 2) 
                { 
                    waitingOnOahu.sleep();
                }
@@ -201,10 +206,10 @@ public class Boat
                         boatLocation = Molokai;
                         reporter.speak(MolokaiChildren+MolokaiAdults);
 
+                        // Children arrive in Molokai, wake up all persons on Molokai
                         waitingOnMolokai.wakeAll();
                     }
 
-                    // Children arrive in Molokai, wake up all persons on Molokai
                     // current child is sleeping
                     waitingOnMolokai.sleep();
                }

@@ -1,6 +1,5 @@
 package nachos.threads;
 
-
 import nachos.machine.*;
 
 /**
@@ -51,7 +50,7 @@ public class ThreadedKernel extends Kernel {
     // KThread.selfTest2();
     
     // added by hy [ 9/20/2013 ]
-    MyTester.selfTest();
+    // MyTester.selfTest();
 
     // Communicator.selfTest();
     // Condition2.selfTest();

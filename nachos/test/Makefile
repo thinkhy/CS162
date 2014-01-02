@@ -9,14 +9,17 @@
 #		setenv ARCHDIR ../mips-x86.win32-xgcc
 
 # you need to point to the right executables
-GCCDIR = $(ARCHDIR)/mips-
+ARCHDIR = ..
+#GCCDIR = $(ARCHDIR)/mips-x86.win32-xgcc/
+GCCDIR = e:/tool/bin/mips-x86.win32-xgcc/
 
 ASFLAGS = -mips1
 CPPFLAGS =
 CFLAGS = -O2 -B$(GCCDIR) -G 0 -Wa,-mips1 -nostdlib -ffreestanding
 LDFLAGS = -s -T script -N -warn-common -warn-constructors -warn-multiple-gp
 
-CC = $(GCCDIR)gcc
+#CC = $(GCCDIR)gcc
+CC = $(GCCDIR)mips-gcc
 AS = $(GCCDIR)as
 LD = $(GCCDIR)ld
 CPP = $(GCCDIR)cpp

@@ -1,21 +1,21 @@
 /**
- * The Nachos system call interface. These are Nachos kernel operations that
+ * the nachos system call interface. these are nachos kernel operations that
  * can be invoked from user programs using the syscall instruction.
  * 
- * This interface is derived from the UNIX syscalls. This information is
- * largely copied from the UNIX man pages.
+ * this interface is derived from the unix syscalls. this information is
+ * largely copied from the unix man pages.
  */
 
-#ifndef SYSCALL_H
-#define SYSCALL_H
+#ifndef syscall_h
+#define syscall_h
 
 /**
- * System call codes, passed in $r0 to tell the kernel which system call to do.
+ * system call codes, passed in $r0 to tell the kernel which system call to do.
  */
-#define	syscallHalt		0
-#define	syscallExit		1
-#define	syscallExec		2
-#define	syscallJoin		3
+#define	syscallhalt		0
+#define	syscallexit		1
+#define	syscallexec		2
+#define	syscalljoin		3
 #define	syscallCreate		4
 #define	syscallOpen		5
 #define	syscallRead		6
@@ -200,6 +200,7 @@ int write(int fileDescriptor, void *buffer, int count);
  */
 int close(int fileDescriptor);
 
+
 /**
  * Delete a file from the file system. If no processes have the file open, the
  * file is deleted immediately and the space it was using is made available for
@@ -213,6 +214,7 @@ int close(int fileDescriptor);
  * Returns 0 on success, or -1 if an error occurred.
  */
 int unlink(char *name);
+
 
 /**
  * Map the file referenced by fileDescriptor into memory at address. The file
@@ -228,6 +230,7 @@ int unlink(char *name);
  */
 int mmap(int fileDescriptor, char *address);
 
+
 /**
  * Attempt to initiate a new connection to the specified port on the specified
  * remote host, and return a new file descriptor referring to the connection.
@@ -236,6 +239,7 @@ int mmap(int fileDescriptor, char *address);
  * Returns the new file descriptor, or -1 if an error occurred.
  */
 int connect(int host, int port);
+
 
 /**
  * Attempt to accept a single connection on the specified local port and return
@@ -260,3 +264,5 @@ int accept(int port);
 #endif /* START_S */
 
 #endif /* SYSCALL_H */
+
+

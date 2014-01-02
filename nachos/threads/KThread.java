@@ -351,11 +351,10 @@ public class KThread {
 	KThread nextThread = readyQueue.nextThread();
 	if (nextThread == null)
     {
-        System.out.println("####### runNextThread: runNextThread #######"); 
 	    nextThread = idleThread;
     }
 
-    System.out.println("####### runNextThread: nextThread = " + nextThread.getName());
+    Lib.debug(dbgThread, "####### runNextThread: nextThread = " + nextThread.getName());
 	nextThread.run();
     }
 
@@ -415,8 +414,8 @@ public class KThread {
 
 	Machine.autoGrader().runningThread(this);
     // autoGrader::runningThread
-	//    privilege.tcb.associateThread(thread); to associate nachosThread with JAVA thread.
-	//    currentThread = thread;
+	//  privilege.tcb.associateThread(thread); to associate nachosThread with JAVA thread.
+	//  currentThread = thread;
 	
 	status = statusRunning;
 

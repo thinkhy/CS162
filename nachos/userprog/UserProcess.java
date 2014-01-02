@@ -341,14 +341,42 @@ public class UserProcess {
     private int handleHalt() {
 
 	Machine.halt();
-	
 	Lib.assertNotReached("Machine.halt() did not halt machine!");
 	return 0;
     }
 
+    private int handleCreate() {
+	    Lib.debug(dbgProcess, "handleCreate()");
+        return 0;
+    }
+
+    private int handleOpen() {
+	    Lib.debug(dbgProcess, "handleOpen()");
+        return 0;
+    }
+
+    private int handleRead() {
+	    Lib.debug(dbgProcess, "handleRead()");
+        return 0;
+    }
+
+    private int handleWrite() {
+	    Lib.debug(dbgProcess, "handleWrite()");
+        return 0;
+    }
+
+    private int handleClose() {
+	    Lib.debug(dbgProcess, "handleWrite()");
+        return 0;
+    }
+
+    private int handleUnlink() {
+	    Lib.debug(dbgProcess, "handleUnlink()");
+        return 0;
+    }
 
     private static final int
-        syscallHalt = 0,
+    syscallHalt = 0,
 	syscallExit = 1,
 	syscallExec = 2,
 	syscallJoin = 3,
@@ -392,6 +420,25 @@ public class UserProcess {
 	case syscallHalt:
 	    return handleHalt();
 
+    // [added by hy 12/31/2013]
+    
+    case syscallCreate:
+	    return handleCreate();
+
+    case syscallOpen:
+	    return handleOpen();
+
+    case syscallRead:
+	    return handleRead();
+
+    case syscallWrite:
+	    return handleWrite();
+
+    case syscallClose:
+	    return handleClose();
+
+    case syscallUnlink:
+	    return handleUnlink();
 
 	default:
 	    Lib.debug(dbgProcess, "Unknown syscall " + syscall);
@@ -446,4 +493,5 @@ public class UserProcess {
 	
     private static final int pageSize = Processor.pageSize;
     private static final char dbgProcess = 'a';
+
 }

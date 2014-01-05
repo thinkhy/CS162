@@ -7,6 +7,7 @@ CS162
 **Projects Notes**
 
 * [Project 1](https://github.com/thinkhy/CS162/wiki/Note-for-Project-1)
+* [Project 2](https://github.com/thinkhy/CS162/wiki/Note-for-Project-2)
 
 
 **TODO**

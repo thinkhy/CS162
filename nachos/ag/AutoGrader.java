@@ -150,7 +150,7 @@ public class AutoGrader {
     
     void run() {
     // commented selfTest, run User program directly [ hy+ 12/31/2013 ]
-	// kernel.selfTest();
+	kernel.selfTest();
 	kernel.run();
 	kernel.terminate();
     }

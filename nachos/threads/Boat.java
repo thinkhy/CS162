@@ -18,8 +18,10 @@ public class Boat
     static int cntPassengers = 0; 
                             
     static Lock boatLock = new Lock();     // boat holds a lock
-    static Condition2 waitingOnOahu    = new Condition2(boatLock);
-    static Condition2 waitingOnMolokai = new Condition2(boatLock);
+    static Condition2 waitingOnOahu     = new Condition2(boatLock);
+    static Condition2 waitingOnMolokai  = new Condition2(boatLock);
+    static Condition2 waitingOnBoatFull = new Condition2(boatLock);
+    
      
     static int OahuChildren = 0;
     static int OahuAdults = 0;
@@ -36,7 +38,53 @@ public class Boat
 
 	// begin(0, 2, b);
     
-	begin(1, 2, b);
+    // Var1: just one child 
+    // expected result: OK
+	// begin(0, 1, b);
+
+    // Var2: two child 
+    // expected result: OK
+	// begin(0, 2, b);
+
+    // Var3: three child 
+    // expected result: OK
+	// begin(0, 3, b);
+
+    // Var4: one adult
+    // expected result: Failed
+	// begin(1, 0, b);
+    //
+    // Var5: one adult, one child
+    // expected result: Failed
+	// begin(1, 1, b);
+
+    // Var6: one adult, two child
+    // expected result: OK
+	// begin(1, 2, b);
+    
+    // Var7: one adult, three child
+    // expected result: OK
+	// begin(1, 3, b);
+    
+    // Var8: two adult, two child
+    // expected result: OK
+	// begin(2, 2, b);
+    //
+    // Var9: two adult, two child
+    // expected result: OK
+	// begin(3, 2, b);
+
+    // Var10: lots of adult, two child
+    // expected result: OK
+	// begin(10, 2, b);
+
+    // Var11: lots of adult, lots of child
+    // expected result: OK
+	// begin(10, 20, b);
+
+    // Var12: stress testing
+    // expected result: OK
+	begin(100, 50, b);
 
     /*
 	begin(2, 2, b);
@@ -133,86 +181,107 @@ public class Boat
        boatLock.acquire(); 
 
        while (true) {
+
+            if (location == 123)
+            {
+               // unreachable path
+               Lib.assertTrue(false);
+               break; // ploace a break to cheat JAVA compiler
+            }
+
             if (location == Oahu)
             {
-               // wait until boat's arrival
-               while (boatLocation != Oahu) 
+
+               // wait until boat's arrival and available seat on boat
+               // if only one child left in Oahu, adults go first
+               while (boatLocation != Oahu || cntPassengers >= 2
+                       || (OahuAdults > 0 && OahuChildren == 1) ) 
                {
                    waitingOnOahu.sleep();
                }
 
                waitingOnOahu.wakeAll();
+                
+               // if no adult and only one child left in Oahu, the child row to Molokai directly 
+               if (OahuAdults == 0 && OahuChildren == 1) 
+               {
+                   OahuChildren--;
+                   bg.ChildRowToMolokai();
 
-               // if nobody is in Oahu, Child will return to Molokai
-               if (OahuChildren == 0 && OahuAdults == 0) 
-               {  
-                   bg.ChildRideToMolokai();
-
-                   boatLocation = Oahu;
+                   boatLocation = Molokai;
+                   location = Molokai; 
                    MolokaiChildren++;
-                   location = Molokai;
 
-                   System.out.println("\n***[Game Over]***");
-                   break;
+                   // clear passenger number after arrival
+                   cntPassengers = 0;
+
+                   // collate the number of people in Molokai
+                   reporter.speak(MolokaiChildren+MolokaiAdults);
+
+                   // child arrives in Molokai, to wake up one person in Molokai
+                   waitingOnMolokai.wakeAll();
+                    
+                   // current child is sleeping in Molokai
+                   waitingOnMolokai.sleep();
+                    
                }
+               else if (OahuChildren > 1) // send children to Molokai first
+               {
 
-               // wait until available seat on boat
-               while (cntPassengers >= 2) 
-               { 
-                   waitingOnOahu.sleep();
-               }
+                   // book the seat on boat
+                   cntPassengers++;
 
-               // book the seat on boat
-               cntPassengers++;
+                   // two children on boat, the second child rides to Molokai
+                   if (cntPassengers == 2) 
+                   {  
 
-               System.out.println("cntPassengers:"+cntPassengers+"\n");
+                        // notify the fisrt guy to row to Molokai
+                        waitingOnBoatFull.wake();
 
-               // two children on boat, the second children ride to Molokai
-               if (cntPassengers == 2) 
-               {  
-                    // clear passenger number
-                    cntPassengers = 0;
+                        waitingOnBoatFull.sleep();
 
-                    bg.ChildRideToMolokai();
-                    OahuChildren--;
+                        // then ride myself to Molokai
+                        OahuChildren--;
+                        bg.ChildRideToMolokai();
 
-                    boatLocation = Molokai;
-                    MolokaiChildren++;
+                        // all the children get off boat, decrease passenger number
+                        cntPassengers = cntPassengers - 2;
 
-                    location = Molokai; 
-                    reporter.speak(MolokaiChildren+MolokaiAdults);
-
-                    // children arrive in Molokai, wake up all persons on Molokai
-                    waitingOnMolokai.wakeAll();
-
-                    // current child is sleeping
-                    waitingOnMolokai.sleep();
-               }
-               // the first passenger(pilot) rows to Molokai
-               else if (cntPassengers == 1) 
-               {      
-
-                    bg.ChildRowToMolokai();
-                    OahuChildren--;
-                    location = Molokai; 
-                    MolokaiChildren++;
-
-                    // no child left in Oahu, only send one child to Molokai
-                    if (OahuChildren == 0) 
-                    {
-                        // clear passenger number
-                        cntPassengers = 0;
-
+                        // note, now boat arrives on Molokai
                         boatLocation = Molokai;
+
+                        location = Molokai; 
+
+                        MolokaiChildren++;
+
                         reporter.speak(MolokaiChildren+MolokaiAdults);
 
-                        // Children arrive in Molokai, wake up all persons on Molokai
+                        // two children arrive in Molokai, wake up one child in Molokai
                         waitingOnMolokai.wakeAll();
-                    }
 
-                    // current child is sleeping
-                    waitingOnMolokai.sleep();
-               }
+                        // current child is sleeping
+                        waitingOnMolokai.sleep();
+                   }
+                   // the first passenger(pilot) rows to Molokai
+                   else if (cntPassengers == 1) 
+                   {      
+                        // only one child on board, wait for next child(passenger)  comming
+                        waitingOnBoatFull.sleep();
+                        
+                        OahuChildren--;
+                        
+                        bg.ChildRowToMolokai();
+
+                        location = Molokai; 
+                        MolokaiChildren++;
+                        
+                        // notify another passenger on baord to leave
+                        waitingOnBoatFull.wake();
+
+                        // current child is sleeping
+                        waitingOnMolokai.sleep();
+                   }
+               } // if OahuChildren > 1
             }
             else if (location == Molokai) 
             {
@@ -222,8 +291,6 @@ public class Boat
                {
                    waitingOnMolokai.sleep();
                }
-
-               waitingOnMolokai.wakeAll();
 
                // note, just need one child pilot back to Oahu
                MolokaiChildren--;
@@ -235,14 +302,12 @@ public class Boat
 
                waitingOnOahu.wakeAll();
                waitingOnOahu.sleep();
-               
             }
 
-        } // while (1);
+        } // while (true)
 
         boatLock.release(); 
     }
-
 
     static void AdultItinerary(int location)
     {
@@ -254,7 +319,8 @@ public class Boat
            {
                // child first, then send adults to Molokai
                // but leave one child in Oahu
-               while (cntPassengers > 0 || OahuChildren > 1 || boatLocation != Oahu) 
+               while (cntPassengers > 0 
+                       || OahuChildren > 1 || boatLocation != Oahu) 
                {
                    waitingOnOahu.sleep();
                }
@@ -268,7 +334,9 @@ public class Boat
                location = Molokai; 
                reporter.speak(MolokaiChildren+MolokaiAdults);
 
-               // adult arrive in Molokai, wake up all persons on Molokai
+               Lib.assertTrue(MolokaiChildren > 0);
+
+               // adult arrive in Molokai, wake up one child in Molokai
                waitingOnMolokai.wakeAll();
 
                // current adult is sleeping
@@ -276,12 +344,13 @@ public class Boat
            }
            else if (location == Molokai)
            {
-               // Do nothing
                waitingOnMolokai.sleep();
            }
            else 
            {
-               break;
+               // unreachable path
+               Lib.assertTrue(false);
+               break; // ploace a break to cheat JAVA compiler
            }
        }
 

@@ -10,8 +10,7 @@
 
 # you need to point to the right executables
 ARCHDIR = ..
-#GCCDIR = $(ARCHDIR)/mips-x86.win32-xgcc/
-GCCDIR = e:/tool/bin/mips-x86.win32-xgcc/
+GCCDIR = $(ARCHDIR)/mips-x86.linux-xgcc/
 
 ASFLAGS = -mips1
 CPPFLAGS =
@@ -20,11 +19,11 @@ LDFLAGS = -s -T script -N -warn-common -warn-constructors -warn-multiple-gp
 
 #CC = $(GCCDIR)gcc
 CC = $(GCCDIR)mips-gcc
-AS = $(GCCDIR)as
-LD = $(GCCDIR)ld
-CPP = $(GCCDIR)cpp
-AR = $(GCCDIR)ar
-RANLIB = $(GCCDIR)ranlib
+AS = $(GCCDIR)mips-as
+LD = $(GCCDIR)mips-ld
+CPP = $(GCCDIR)mips-cpp
+AR = $(GCCDIR)mips-ar
+RANLIB = $(GCCDIR)mips-ranlib
 
 STDLIB_H = stdio.h stdlib.h ag.h
 STDLIB_C = stdio.c stdlib.c
@@ -52,6 +51,7 @@ $(NLIB): $(patsubst %,$(NLIB)(%.o),$(LIB)) start.o
 
 start.o: start.s syscall.h
 	$(CPP) $(CPPFLAGS) start.s > strt.s
+	$(CPP) $(CPPFLAGS) start.s > debug.s
 	$(AS) $(ASFLAGS) -o start.o strt.s
 	rm strt.s
 

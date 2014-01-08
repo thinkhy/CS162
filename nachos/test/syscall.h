@@ -12,10 +12,10 @@
 /**
  * system call codes, passed in $r0 to tell the kernel which system call to do.
  */
-#define	syscallhalt		0
-#define	syscallexit		1
-#define	syscallexec		2
-#define	syscalljoin		3
+#define	syscallHalt		0
+#define	syscallExit		1
+#define	syscallExec		2
+#define	syscallJoin		3
 #define	syscallCreate		4
 #define	syscallOpen		5
 #define	syscallRead		6

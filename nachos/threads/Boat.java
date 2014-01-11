@@ -22,7 +22,6 @@ public class Boat
     static Condition2 waitingOnMolokai  = new Condition2(boatLock);
     static Condition2 waitingOnBoatFull = new Condition2(boatLock);
     
-     
     static int OahuChildren = 0;
     static int OahuAdults = 0;
     static int MolokaiChildren = 0;
@@ -34,7 +33,7 @@ public class Boat
     {
 	BoatGrader b = new BoatGrader();
 	 
-	System.out.println("\n***Testing Boats with only 2 children***");
+	System.out.println("\n***Testing Boats with VARs***");
 
 	// begin(0, 2, b);
     
@@ -102,7 +101,6 @@ public class Boat
      
     // System.out.println("\n ***Testing Boats with 3 children, 3 adults***");
     //   begin(3, 3, b);
-    
     }
      
     public static void begin( int adults, int children, BoatGrader b)
@@ -169,20 +167,13 @@ public class Boat
     static void ChildItinerary(int location)
     {
        System.out.println("***** ChildItinerary, place: " + location);
-        /* This is where you should put your solutions. Make calls
-           to the BoatGrader to show that it is synchronized. For
-           example:
-               bg.AdultRowToMolokai();
-           indicates that an adult has rowed the boat across to Molokai
-        */
-
-       System.out.println("cntPassengers:" + cntPassengers + "\n");
 
        boatLock.acquire(); 
 
        while (true) {
 
-            if (location == 123)
+            // below block is to cheat Java compiler, otherwise the code doesn't compile 
+            if (location == 12345678)
             {
                // unreachable path
                Lib.assertTrue(false);
@@ -219,7 +210,8 @@ public class Boat
                    reporter.speak(MolokaiChildren+MolokaiAdults);
 
                    // child arrives in Molokai, to wake up one person in Molokai
-                   waitingOnMolokai.wakeAll();
+                   // at this point, all the persons should be on Molokai
+                   // waitingOnMolokai.wakeAll();
                     
                    // current child is sleeping in Molokai
                    waitingOnMolokai.sleep();
@@ -265,7 +257,7 @@ public class Boat
                    // the first passenger(pilot) rows to Molokai
                    else if (cntPassengers == 1) 
                    {      
-                        // only one child on board, wait for next child(passenger)  comming
+                        // only one child on boat, wait for next child(passenger)  coming
                         waitingOnBoatFull.sleep();
                         
                         OahuChildren--;
@@ -364,6 +356,7 @@ public class Boat
         // have a single thread calculate a solution and then just play
         // it back at the autograder -- you will be caught.
         System.out.println("\n ***Everyone piles on the boat and goes to Molokai***");
+
         bg.AdultRowToMolokai();
         bg.ChildRideToMolokai();
         bg.AdultRideToMolokai();

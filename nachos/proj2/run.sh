@@ -1,4 +1,3 @@
 #!/bin/sh
 
-REM make
-java nachos.machine.Machine %* 
+java nachos.machine.Machine $*

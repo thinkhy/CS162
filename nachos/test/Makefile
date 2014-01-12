@@ -9,6 +9,8 @@
 #		setenv ARCHDIR ../mips-x86.win32-xgcc
 
 # you need to point to the right executables
+# HY 1/12/2014  add syscall to test code of syscall
+# ##############################################################################
 ARCHDIR = ..
 GCCDIR = $(ARCHDIR)/mips-x86.linux-xgcc/
 
@@ -32,7 +34,7 @@ STDLIB_O = start.o stdio.o stdlib.o
 LIB = assert atoi printf readline stdio strncmp strcat strcmp strcpy strlen memcpy memset
 NLIB = libnachos.a
 
-TARGETS = halt sh matmult sort echo cat cp mv rm #chat chatserver
+TARGETS = halt sh matmult sort echo cat cp mv rm syscall #chat chatserver
 
 .SECONDARY: $(patsubst %.c,%.o,$(wildcard *.c))
 
@@ -51,7 +53,6 @@ $(NLIB): $(patsubst %,$(NLIB)(%.o),$(LIB)) start.o
 
 start.o: start.s syscall.h
 	$(CPP) $(CPPFLAGS) start.s > strt.s
-	$(CPP) $(CPPFLAGS) start.s > debug.s
 	$(AS) $(ASFLAGS) -o start.o strt.s
 	rm strt.s
 

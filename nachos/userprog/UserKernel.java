@@ -38,6 +38,8 @@ public class UserKernel extends ThreadedKernel {
 	System.out.println("Testing the console device. Typed characters");
 	System.out.println("will be echoed until q is typed.");
 
+    // commented by HY [1/12/2014]
+    /*
 	char c;
 
 	do {
@@ -47,6 +49,7 @@ public class UserKernel extends ThreadedKernel {
 	while (c != 'q');
 
 	System.out.println("");
+    */
     }
 
     /**

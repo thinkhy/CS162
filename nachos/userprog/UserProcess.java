@@ -420,6 +420,10 @@ public class UserProcess {
 	case syscallHalt:
 	    return handleHalt();
 
+    // [added by hy 1/12/2014]
+	case syscallExit:
+	    return handleHalt();
+
     // [added by hy 12/31/2013]
     
     case syscallCreate:

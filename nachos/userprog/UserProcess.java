@@ -345,9 +345,32 @@ public class UserProcess {
 	return 0;
     }
 
-    private int handleCreate() {
+    /**
+     * Attempt to open the named disk file, creating it if does not exist,    *
+     * and return a file descriptor that can be used to access the file.      *
+     * Note that creat() can only be used to create files on disk; creat()    *
+     * will never return a file descriptor referrring to a stream             *
+     * Returns the new file descriptor, or -1 if an error occurred            *
+     *                                                                        *
+     * added by hy 1/18/2014                                                  *
+     *
+     */
+    private int handleCreate(int a0) {
+        // private int handleCreate() {
 	    Lib.debug(dbgProcess, "handleCreate()");
-        return 0;
+
+        // a0 is address of filename 
+        String filename = readVirtualMemoryString(a0, MAXSTRLEN);
+
+	    Lib.debug(dbgProcess, "filename: "+filename);
+
+        // invoke open through stubFilesystem
+        OpenFile  retval = UserKernel.fileSystem.open(filename, true);
+
+        if (retval == null)
+            return -1;
+        else
+            return 0;
     }
 
     private int handleOpen() {
@@ -424,10 +447,8 @@ public class UserProcess {
 	case syscallExit:
 	    return handleHalt();
 
-    // [added by hy 12/31/2013]
-    
     case syscallCreate:
-	    return handleCreate();
+	    return handleCreate(a0); // the first argument is filename
 
     case syscallOpen:
 	    return handleOpen();
@@ -448,6 +469,7 @@ public class UserProcess {
 	    Lib.debug(dbgProcess, "Unknown syscall " + syscall);
 	    Lib.assertNotReached("Unknown system call!");
 	}
+
 	return 0;
     }
 
@@ -498,4 +520,26 @@ public class UserProcess {
     private static final int pageSize = Processor.pageSize;
     private static final char dbgProcess = 'a';
 
+    /**
+     * variables added by Huang Ye 1/18/2014 *
+     */
+
+    /* maximum number of opened files per process */
+    public static final int MAXFD = 16; 
+
+    /* standard input file descriptor */
+    public static final int STDIN = 0; 
+
+    /* standard output file descriptor */
+    public static final int STDOUT = 1; 
+
+    /* maximum length of strings passed as arguments to system calls */
+    public static final int MAXSTRLEN = 256; 
+
+    
+    /* file descriptors per process*/
+    private int[] fd = new int[MAXFD];
+
 }
+
+

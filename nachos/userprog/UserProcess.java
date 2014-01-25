@@ -6,6 +6,14 @@ import nachos.userprog.*;
 
 import java.io.EOFException;
 
+/**************************************************************************
+ *
+ * 01* CHANGE-ACTIVITY:
+ *                                                                        
+ *  $BA=PROJECT2 TASK1, 140125, THINKHY: Implement the file system calls  
+ *                                                                        
+ **************************************************************************/
+
 /**
  * Encapsulates the state of a user process that is not contained in its
  * user thread (or threads). This includes its address translation state, a
@@ -27,6 +35,18 @@ public class UserProcess {
 	pageTable = new TranslationEntry[numPhysPages];
 	for (int i=0; i<numPhysPages; i++)
 	    pageTable[i] = new TranslationEntry(i,i, true,false,false,false);
+    
+     
+    /*************************************************************************/
+    /* Create STDIN and STDOUT                                          @BAA */
+    /*************************************************************************/
+    fd[STDIN] = UserKernel.console.openForReading();              /*@BAA*/
+	Lib.assertTrue(fd[STDIN] != null);                                 /*@BAA*/  
+    fd[STDOUT] = UserKernel.console.openForWriting();             /*@BAA*/
+	Lib.assertTrue(fd[STDOUT] != null);                                /*@BAA*/ 
+    cntOpenedFiles = 2;                                                /*@BAA*/
+
+
     }
     
     /**
@@ -356,21 +376,24 @@ public class UserProcess {
      *
      */
     private int handleCreate(int a0) {
-        // private int handleCreate() {
-	    Lib.debug(dbgProcess, "handleCreate()");
+        // private int handleCreate() {                                 
+	    Lib.debug(dbgProcess, "handleCreate()");                           /*@BAA*/
 
         // a0 is address of filename 
-        String filename = readVirtualMemoryString(a0, MAXSTRLEN);
+        String filename = readVirtualMemoryString(a0, MAXSTRLEN);          /*@BAA*/
 
-	    Lib.debug(dbgProcess, "filename: "+filename);
+	    Lib.debug(dbgProcess, "filename: "+filename);                      /*@BAA*/
 
         // invoke open through stubFilesystem
-        OpenFile  retval = UserKernel.fileSystem.open(filename, true);
+        OpenFile retval  = UserKernel.fileSystem.open(filename, true);     /*@BAA*/
 
-        if (retval == null)
-            return -1;
-        else
-            return 0;
+        if (retval == null) {                                              /*@BAA*/
+            return -1;                                                     /*@BAA*/
+        }                                                                  /*@BAA*/
+        else {                                                             /*@BAA*/
+            fd[cntOpenedFiles++] = retval;                                 /*@BAA*/
+            return cntOpenedFiles - 1;                                     /*@BAA*/
+        }
     }
 
     private int handleOpen() {
@@ -527,7 +550,7 @@ public class UserProcess {
     /* maximum number of opened files per process */
     public static final int MAXFD = 16; 
 
-    /* standard input file descriptor */
+    /* standard input file descriptor  */
     public static final int STDIN = 0; 
 
     /* standard output file descriptor */
@@ -536,9 +559,11 @@ public class UserProcess {
     /* maximum length of strings passed as arguments to system calls */
     public static final int MAXSTRLEN = 256; 
 
-    
-    /* file descriptors per process*/
-    private int[] fd = new int[MAXFD];
+    /* file descriptors per process */
+    private OpenFile[] fd = new OpenFile[MAXFD];
+
+    /* number of opened files       */
+    private int cntOpenedFiles = 0;
 
 }
 

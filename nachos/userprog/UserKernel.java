@@ -5,7 +5,7 @@ import nachos.threads.*;
 import nachos.userprog.*;
 
 /**
- * A kernel that can support multiple user processes.
+ * A kernel that can support multiple user processes
  */
 public class UserKernel extends ThreadedKernel {
     /**
@@ -27,6 +27,8 @@ public class UserKernel extends ThreadedKernel {
 	Machine.processor().setExceptionHandler(new Runnable() {
 		public void run() { exceptionHandler(); }
 	    });
+
+
     }
 
     /**
@@ -116,6 +118,7 @@ public class UserKernel extends ThreadedKernel {
 
     /** Globally accessible reference to the synchronized console. */
     public static SynchConsole console;
+        
 
     // dummy variables to make javac smarter
     private static Coff dummy1 = null;

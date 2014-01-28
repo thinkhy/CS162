@@ -53,7 +53,7 @@ public class Communicator {
         // set flag that word is ready
         isWordReady = true;       // hy+  
 
-        // wake up a listener
+        // wake up all listeners
         listenerCond.wakeAll();      // hy+  
 
         speaker--;                // hy+

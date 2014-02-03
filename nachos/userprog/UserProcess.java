@@ -428,8 +428,8 @@ public class UserProcess {
             if (fileHandle < 0)                                           /*@BAB*/ 
                 return -1;                                                /*@BAB*/ 
             else {                                                        /*@BAB*/
-                fd[fileHandle].file = retval;                             /*@BAB*/
-                fd[fileHandle].position = 0;                              /*@BAB*/
+                fds[fileHandle].file = retval;                             /*@BAB*/
+                fds[fileHandle].position = 0;                              /*@BAB*/
                 return fileHandle;                                        /*@BAB*/
             }                                                             /*@BAB*/ 
         }                                                                 /*@BAB*/
@@ -481,6 +481,7 @@ public class UserProcess {
         // TODO 1/26/2014
 
 
+        return 0;
     }                                                                     /*@BAC*/
 
 
@@ -612,7 +613,7 @@ public class UserProcess {
     /* Find the first empty position in FD array         @BAA */
     private int findFileDescriptor() {                /* @BAA */
         for (int i = 0; i < MAXFD; i++) {             /* @BAA */
-            if (fds[i].file == null)                   /* @BAA */
+            if (fds[i].file == null)                  /* @BAA */
                 return i;                             /* @BAA */
         }                                             /* @BAA */
 
@@ -641,10 +642,10 @@ public class UserProcess {
      * variables added by Huang Ye 1/18/2014 *
      */
 
-    private class FileDescriptor {                  /*@BAC*/
-        private OpenFile file;      // opened file  /*@BAC*/
-        private int      position;  // IO position  /*@BAC*/
-    }                                               /*@BAC*/
+    private class FileDescriptor {                                /*@BAC*/
+        public  OpenFile file = null;             // opened file  /*@BAC*/
+        public  int      position = -1;           // IO position  /*@BAC*/
+    }                                                             /*@BAC*/
 
 
     /* maximum number of opened files per process */

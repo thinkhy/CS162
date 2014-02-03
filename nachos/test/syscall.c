@@ -1,19 +1,21 @@
-/**
- * Test the nachos system call interfaces. these are nachos kernel operations that
- * can be invoked from user programs using the syscall instruction.
- * 
- * this interface is derived from the unix syscalls.
- */
 #include "syscall.h"
 #include "stdio.h"
 
+#define BUFSIZE 1024
+
+char buf[BUFSIZE];
+
 int main() {
-            
-    /* test syscall create */
+
+    int fd, amount;
+
     char *filename = "abc";
-    creat(filename);
-    open(filename);
-    /* printf("%d\n",fh); */
+
+    fd = open(filename);
+
+    while((amount = read(fd, buf, BUFSIZE)) > 0) {
+        write(1, buf, amount);
+    }
 
     return 0;
-}
+} 

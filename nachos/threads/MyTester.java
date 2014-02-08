@@ -69,9 +69,7 @@ public class MyTester {
              t[i].setName("Thread" + i).fork();
         }
 
-
         KThread.yield();
-
     }
 
     /**

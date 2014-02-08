@@ -20,6 +20,7 @@ public class CoffSection {
      * @param	readOnly	<tt>true</tt> if this section is read-only.
      * @param	numPages	the number of virtual pages in this section.
      * @param	firstVPN	the first virtual page number used by this.
+     *
      */
     protected CoffSection(Coff coff, String name, boolean executable,
 			  boolean readOnly, int numPages, int firstVPN) {

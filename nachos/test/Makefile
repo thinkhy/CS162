@@ -12,7 +12,8 @@
 # HY 1/12/2014  add syscall to test code of syscall
 # ##############################################################################
 ARCHDIR = ..
-GCCDIR = $(ARCHDIR)/mips-x86.linux-xgcc/
+#GCCDIR = $(ARCHDIR)/mips-x86.linux-xgcc/
+GCCDIR = $(ARCHDIR)/mips-x86.win32-xgcc/
 
 ASFLAGS = -mips1
 CPPFLAGS =

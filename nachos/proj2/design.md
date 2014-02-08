@@ -160,7 +160,42 @@ Task I: Implement the file system calls
    >
    > Returns 0 on success, or -1 if an error occurred.
     
+
+Task II: Implement support for multiprogramming
+----------------------------------------------------
     
-    
-    
-    
+(25%, 100 lines) Implement support for multiprogramming. The code we have given you is restricted to running one user process at a time; your job is to make it work for multiple user processes.
+
+Come up with a way of allocating the machine's physical memory so that different processes do not overlap in their memory usage. Note that **the user programs do not make use of malloc() or free(), meaning that user programs effectively have no dynamic memory allocation needs (and therefore, no heap).** What this means is that you know the complete memory needs of a process when it is created. You can allocate a fixed number of pages for the processe's stack; 8 pages should be sufficient.
+
+We suggest **maintaining a global linked list of free physical pages (perhaps as part of the UserKernel class).**  Be sure to use synchronization where necessary when accessing this list. Your solution must make efficient use of memory by allocating pages for the new process wherever possible. This means that it is not acceptable to only allocate pages in a contiguous block; **your solution must be able to make use of "gaps" in the free memory pool.**
+
+Also be sure that **all of a process's memory is freed on exit** (whether it exits normally, via the syscall exit(), or abnormally, due to an illegal operation).
+
+Modify UserProcess.readVirtualMemory and UserProcess.writeVirtualMemory, which copy data between the kernel and the user's virtual address space, so that they work with multiple user processes.
+
+The physical memory of the MIPS machine is accessed through the method **Machine.processor().getMemory()**; the total number of physical pages is **Machine.processor().getNumPhysPages()**. You should maintain the pageTable for each user process, which maps the user's virtual addresses to physical addresses. The TranslationEntry class represents a single virtual-to-physical page translation.
+
+**The field TranslationEntry.readOnly should be set to true if the page is coming from a COFF section which is marked as read-only.** You can determine this using the method CoffSection.isReadOnly().
+
+Note that **these methods should not throw exceptions when they fail; instead, they must always return the number of bytes transferred (even if that number is zero).**
+
+**Modify UserProcess.loadSections() so that it allocates the number of pages that it needs** (that is, based on the size of the user program), using the allocation policy that you decided upon above. This method should also set up the pageTable structure for the process so that the process is loaded into the correct physical memory pages. If the new user process cannot fit into physical memory, exec() should return an error.
+
+Note that the user threads (see the UThread class) already save and restore user machine state, as well as process state, on context switches. So, you are not responsible for these details.
+
+
+**TODO**
+   * We suggest maintaining a global linked list of free physical pages (perhaps as part of the UserKernel class). Be sure to use synchronization where necessary when accessing this list.
+   * Modify UserProcess.readVirtualMemory and UserProcess.writeVirtualMemory
+   * Modify UserProcess.loadSections() so that it allocates the number of pages that it needs  
+   * The field TranslationEntry.readOnly should be set to true if the page is coming from a COFF section which is marked as read-only.    
+   * You should maintain the pageTable for each user process, which maps the user's virtual addresses to physical addresses. 
+
+
+   * You can allocate a fixed number of pages for the processe's stack; 8 pages should be sufficient.    
+
+      /** The number of pages in the program's stack. */
+      protected final int stackPages = 8;
+
+

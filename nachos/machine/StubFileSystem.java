@@ -17,6 +17,7 @@ public class StubFileSystem implements FileSystem {
     /**
      * Allocate a new stub file system.
      *
+     *
      * @param	privilege      	encapsulates privileged access to the Nachos
      *				machine.
      * @param	directory	the root directory of the stub file system.
@@ -122,12 +123,15 @@ public class StubFileSystem implements FileSystem {
 	}
 	
 	public int write(int pos, byte[] buf, int offset, int length) {
+        // [Debug by Huang Ye 140203]
+        System.out.println("inside write: " + length);
+
 	    if (!open)
 		return -1;
 	    
 	    try {
 		delay();
-		
+
 		file.seek(pos);
 		file.write(buf, offset, length);
 		return length;

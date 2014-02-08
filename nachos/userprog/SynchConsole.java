@@ -79,6 +79,10 @@ public class SynchConsole {
     public void writeByte(int value) {
 	writeLock.acquire();
 	console.writeByte(value);
+
+    // [Debug by Huang Ye 140203]
+    System.out.println("value: " + value + "\n");
+
 	writeWait.P();
 	writeLock.release();
     }
@@ -97,7 +101,6 @@ public class SynchConsole {
     }
 
     private boolean charAvailable = false;
-
     private SerialConsole console;
     private Lock readLock = new Lock();
     private Lock writeLock = new Lock();
@@ -110,6 +113,9 @@ public class SynchConsole {
 	    
 	    this.canRead = canRead;
 	    this.canWrite = canWrite;
+
+        // [Debug by Huang Ye 140203]
+        System.out.println("File.File()");
 	}
 	
 	public void close() {
@@ -136,6 +142,9 @@ public class SynchConsole {
 	    if (!canWrite)
 		return 0;
 	    
+        // [Debug by Huang Ye 140203]
+        System.out.println("inside SynchConsole.write: " + length);
+
 	    for (int i=0; i<length; i++)
 		SynchConsole.this.writeByte(buf[offset+i]);
 	    

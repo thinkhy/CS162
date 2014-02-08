@@ -74,6 +74,10 @@ public class OpenFile {
      *		failure.
      */    
     public int write(int pos, byte[] buf, int offset, int length) {
+
+        // [Debug by Huang Ye 140203]
+        System.out.println("OpenFile.write");
+
 	return -1;
     }
 

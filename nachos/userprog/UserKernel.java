@@ -4,6 +4,14 @@ import nachos.machine.*;
 import nachos.threads.*;
 import nachos.userprog.*;
 
+/**************************************************************************
+ *
+ * 01* CHANGE-ACTIVITY:
+ *                                                                        
+ *  $BA=PROJECT2 TASK1, 140125, THINKHY: Implement the file system calls  
+ *                                                                        
+ **************************************************************************/
+
 /**
  * A kernel that can support multiple user processes
  */
@@ -27,15 +35,13 @@ public class UserKernel extends ThreadedKernel {
 	Machine.processor().setExceptionHandler(new Runnable() {
 		public void run() { exceptionHandler(); }
 	    });
-
-
     }
 
     /**
      * Test the console device.
      */	
     public void selfTest() {
-	super.selfTest();
+	super.selfTest(); // @BAD
 
 	System.out.println("Testing the console device. Typed characters");
 	System.out.println("will be echoed until q is typed.");

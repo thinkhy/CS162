@@ -35,7 +35,9 @@ PACKAGES := $(patsubst %,nachos.%,$(ALLDIRS))
 
 CLASSFILES := $(foreach dir,$(DIRS),$(patsubst %,nachos/$(dir)/%.class,$($(dir))))
 
-.PHONY: all rmtemp clean doc hwdoc swdoc去的d
+NACHOSFLAGS := mac
+
+.PHONY: all rmtemp clean doc hwdoc swdocd
 all: $(CLASSFILES)
 
 nachos/%.class: ../%.java
@@ -52,3 +54,18 @@ test:
 	cd ../test ; gmake
 
 ag:	$(patsubst ../ag/%.java,nachos/ag/%.class,$(wildcard ../ag/*.java))
+
+user:
+	java nachos.machine.Machine -d $(NACHOSFLAGS) -x cat.coff
+	java nachos.machine.Machine -d $(NACHOSFLAGS) cp.coff
+	java nachos.machine.Machine -d $(NACHOSFLAGS) echo.coff
+	java nachos.machine.Machine -d $(NACHOSFLAGS) halt.coff
+	java nachos.machine.Machine -d $(NACHOSFLAGS) matmult.coff
+	java nachos.machine.Machine -d $(NACHOSFLAGS) mv.coff
+	java nachos.machine.Machine -d $(NACHOSFLAGS) rm.coff
+	java nachos.machine.Machine -d $(NACHOSFLAGS) sh.coff
+	java nachos.machine.Machine -d $(NACHOSFLAGS) sort.coff
+
+
+
+

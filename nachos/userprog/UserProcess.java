@@ -6,13 +6,14 @@ import nachos.userprog.*;
 
 import java.io.EOFException;
 
-/**************************************************************************
+/********************************************************************************
  *
  * 01* CHANGE-ACTIVITY:
  *                                                                        
  *  $BA=PROJECT2 TASK1, 140125, THINKHY: Implement the file system calls  
+ *  $BB=PROJECT2 TASK2, 140205, THINKHY: Implement support for multiprogramming  
  *                                                                        
- **************************************************************************/
+ ********************************************************************************/
 
 /**
  * Encapsulates the state of a user process that is not contained in its
@@ -36,17 +37,32 @@ public class UserProcess {
 	for (int i=0; i<numPhysPages; i++)
 	    pageTable[i] = new TranslationEntry(i,i, true,false,false,false);
     
-     
+    /**************************************************************************/
+    /* Need to create elements of fds one by one, any better code here?  @BAA */
+    /**************************************************************************/
+    for (int i=0; i<MAXFD; i++) {                                       /*@BAA*/
+         fds[i] = new FileDescriptor();                                 /*@BAA*/
+    }                                                                   /*@BAA*/
+
     /**************************************************************************/
     /* Create STDIN and STDOUT                                           @BAA */
     /**************************************************************************/
-    fds[STDIN].file = UserKernel.console.openForReading();               /*@BAA*/
-	Lib.assertTrue(fds[STDIN] != null);                                  /*@BAA*/  
-    fds[STDOUT].file = UserKernel.console.openForWriting();              /*@BAA*/
-	Lib.assertTrue(fds[STDOUT] != null);                                 /*@BAA*/ 
+    fds[STDIN].file = UserKernel.console.openForReading();              /*@BAA*/
+    fds[STDIN].position = 0;
+	Lib.assertTrue(fds[STDIN] != null);                                 /*@BAA*/  
 
+    /* fds[STDOUT].file = UserKernel.console.openForWriting();*/        /*@BAA*/
+    /* fds[STDOUT].position = 0; */
+	/* Lib.assertTrue(fds[STDOUT] != null); */                          /*@BAA*/ 
 
-    }
+    // Just for TEST!!! [140203 hy]                                     /*@BAA*/
+    OpenFile retval  = UserKernel.fileSystem.open("out", false);        /*@BAA*/
+
+    int fileHandle = findEmptyFileDescriptor();                         /*@BAA*/ 
+    System.out.println("*** File handle: " + fileHandle);               /*@BAA*/
+    fds[fileHandle].file = retval;                                      /*@BAA*/
+    fds[fileHandle].position = 0;                                       /*@BAA*/
+    }                                                                   /*@BAA*/
     
     /**
      * Allocate and return a new process of the correct class. The class name
@@ -311,8 +327,8 @@ public class UserProcess {
 	for (int s=0; s<coff.getNumSections(); s++) {
 	    CoffSection section = coff.getSection(s);
 	    
-	    Lib.debug(dbgProcess, "\tinitializing " + section.getName()
-		      + " section (" + section.getLength() + " pages)");
+        Lib.debug(dbgProcess, "\tinitializing " + section.getName()
+                + " section (" + section.getLength() + " pages)");
 
 	    for (int i=0; i<section.getLength(); i++) {
 		int vpn = section.getFirstVPN()+i;
@@ -390,10 +406,11 @@ public class UserProcess {
             return -1;                                                     /*@BAA*/
         }                                                                  /*@BAA*/
         else {                                                             /*@BAA*/
-            int fileHandle = findFileDescriptor();                         /*@BAA*/ 
+            int fileHandle = findEmptyFileDescriptor();                    /*@BAA*/ 
             if (fileHandle < 0)                                            /*@BAA*/ 
                 return -1;                                                 /*@BAA*/ 
             else {                                                         /*@BAA*/
+                fds[fileHandle].filename = filename;                       /*@BAA*/
                 fds[fileHandle].file = retval;                             /*@BAA*/
                 fds[fileHandle].position = 0;                              /*@BAA*/
                 return fileHandle;                                         /*@BAA*/
@@ -410,30 +427,31 @@ public class UserProcess {
      * Returns the new file descriptor, or -1 if an error occurred.
      */
     private int handleOpen(int a0) {
-	    Lib.debug(dbgProcess, "handleOpen()");                            /*@BAB*/
+	    Lib.debug(dbgProcess, "handleOpen()");                            /*@BAA*/
 
         // a0 is address of filename 
-        String filename = readVirtualMemoryString(a0, MAXSTRLEN);         /*@BAB*/
+        String filename = readVirtualMemoryString(a0, MAXSTRLEN);         /*@BAA*/
 
-	    Lib.debug(dbgProcess, "filename: "+filename);                     /*@BAB*/
+	    Lib.debug(dbgProcess, "filename: "+filename);                     /*@BAA*/
 
         // invoke open through stubFilesystem, truncate flag is set to false
-        OpenFile retval  = UserKernel.fileSystem.open(filename, false);   /*@BAB*/
+        OpenFile retval  = UserKernel.fileSystem.open(filename, false);   /*@BAA*/
 
-        if (retval == null) {                                             /*@BAB*/
-            return -1;                                                    /*@BAB*/
-        }                                                                 /*@BAB*/
-        else {                                                            /*@BAB*/
-            int fileHandle = findFileDescriptor();                        /*@BAB*/ 
-            if (fileHandle < 0)                                           /*@BAB*/ 
-                return -1;                                                /*@BAB*/ 
-            else {                                                        /*@BAB*/
-                fds[fileHandle].file = retval;                             /*@BAB*/
-                fds[fileHandle].position = 0;                              /*@BAB*/
-                return fileHandle;                                        /*@BAB*/
-            }                                                             /*@BAB*/ 
-        }                                                                 /*@BAB*/
-    }                                                                     /*@BAB*/
+        if (retval == null) {                                             /*@BAA*/
+            return -1;                                                    /*@BAA*/
+        }                                                                 /*@BAA*/
+        else {                                                            /*@BAA*/
+            int fileHandle = findEmptyFileDescriptor();                   /*@BAA*/ 
+            if (fileHandle < 0)                                           /*@BAA*/ 
+                return -1;                                                /*@BAA*/ 
+            else {                                                        /*@BAA*/
+                fds[fileHandle].filename = filename;                      /*@BAA*/
+                fds[fileHandle].file = retval;                            /*@BAA*/
+                fds[fileHandle].position = 0;                             /*@BAA*/
+                return fileHandle;                                        /*@BAA*/
+            }                                                             /*@BAA*/ 
+        }                                                                 /*@BAA*/
+    }                                                                     /*@BAA*/
 
 
     /**
@@ -456,48 +474,182 @@ public class UserProcess {
      * invalid, or if a network stream has been terminated by the remote host and
      * no more data is available.
      */
-    private int handleRead(int a0, int a1, int a2) {                      /*@BAC*/
-	    Lib.debug(dbgProcess, "handleRead()");                            /*@BAC*/
+    private int handleRead(int a0, int a1, int a2) {                      /*@BAA*/
+	    Lib.debug(dbgProcess, "handleRead()");                            /*@BAA*/
          
-        int handle = a0;                                                  /* a0 is file descriptor handle @BAC*/
-        int vaddr = a1;                                                   /* a1 is buf address            @BAC*/
-        int bufsize = a2;                                                 /* a2 is buf size               @BAC*/
+        int handle = a0;                                                  /* a0 is file descriptor handle @BAA*/
+        int vaddr = a1;                                                   /* a1 is buf address            @BAA*/
+        int bufsize = a2;                                                 /* a2 is buf size               @BAA*/
 
-	    Lib.debug(dbgProcess, "handle: " + handle);                       /*@BAC*/
-	    Lib.debug(dbgProcess, "buf address: " + vaddr);                   /*@BAC*/
-	    Lib.debug(dbgProcess, "buf size: " + bufsize);                    /*@BAC*/
+	    Lib.debug(dbgProcess, "handle: " + handle);                       /*@BAA*/
+	    Lib.debug(dbgProcess, "buf address: " + vaddr);                   /*@BAA*/
+	    Lib.debug(dbgProcess, "buf size: " + bufsize);                    /*@BAA*/
 
         // get data regarding to file descriptor
-        if (handle < 0 || handle > MAXFD                                  /*@BAC*/
-                || fds[handle].file == null)                              /*@BAC*/
-            return -1;                                                    /*@BAC*/
+        if (handle < 0 || handle > MAXFD                                  /*@BAA*/
+                || fds[handle].file == null)                              /*@BAA*/
+            return -1;                                                    /*@BAA*/
 
-        FileDescriptor fd = fds[handle];                                  /*@BAC*/
-        
-        byte[] buf = new byte[bufsize];                                   /*@BAC*/
+        FileDescriptor fd = fds[handle];                                  /*@BAA*/
+        byte[] buf = new byte[bufsize];                                   /*@BAA*/
 
         // invoke read through stubFilesystem
-        // int retval = UserKernel.fileSystem.read(fd.position, fd.file, buf, 0, 0); /*@BAC*/
-        // TODO 1/26/2014
+        int retval = fd.file.read(fd.position, buf, 0, bufsize);          /*@BAA*/
 
+        if (retval < 0) {                                                 /*@BAA*/
+            return -1;                                                    /*@BAA*/
+        }                                                                 /*@BAA*/
+        else {                                                            /*@BAA*/
+            int number = writeVirtualMemory(vaddr, buf);                  /*@BAA*/
+            fd.position = fd.position + number;                           /*@BAA*/
+            return retval;                                                /*@BAA*/
+        }                                                                 /*@BAA*/
+    }                                                                     /*@BAA*/
+    
+    /**
+     * Attempt to write up to count bytes from buffer to the file or stream
+     * referred to by fileDescriptor. write() can return before the bytes are
+     * actually flushed to the file or stream. A write to a stream can block,
+     * however, if kernel queues are temporarily full.
+     *
+     * On success, the number of bytes written is returned (zero indicates nothing
+     * was written), and the file position is advanced by this number. It IS an
+     * error if this number is smaller than the number of bytes requested. For
+     * disk files, this indicates that the disk is full. For streams, this
+     * indicates the stream was terminated by the remote host before all the data
+     * was transferred.
+     *
+     * On error, -1 is returned, and the new file position is undefined. This can
+     * happen if fileDescriptor is invalid, if part of the buffer is invalid, or
+     * if a network stream has already been terminated by the remote host.
+     *
+     * Syscall: int write(int fileDescriptor, void *buffer, int count);
+     *
+     */
+     private int handleWrite(int a0, int a1, int a2) {
+	    Lib.debug(dbgProcess, "handleWrite()");                           /*@BAA*/
+         
+        int handle = a0;                                                  /* a0 is file descriptor handle @BAA*/
+        int vaddr = a1;                                                   /* a1 is buf address            @BAA*/
+        int bufsize = a2;                                                 /* a2 is buf size               @BAA*/
 
-        return 0;
-    }                                                                     /*@BAC*/
+	    Lib.debug(dbgProcess, "handle: " + handle);                       /*@BAA*/
+	    Lib.debug(dbgProcess, "buf address: " + vaddr);                   /*@BAA*/
+	    Lib.debug(dbgProcess, "buf size: " + bufsize);                    /*@BAA*/
 
+        // get data regarding to file descriptor
+        if (handle < 0 || handle > MAXFD                                  /*@BAA*/
+                || fds[handle].file == null)                              /*@BAA*/
+            return -1;                                                    /*@BAA*/
 
-    private int handleWrite() {
-	    Lib.debug(dbgProcess, "handleWrite()");
-        return 0;
+        FileDescriptor fd = fds[handle];                                  /*@BAA*/
+
+        byte[] buf = new byte[bufsize];                                   /*@BAA*/  
+
+        int bytesRead = readVirtualMemory(vaddr, buf);                    /*@BAA*/
+
+        // invoke read through stubFilesystem                             /*@BAA*/
+        int retval = fd.file.write(fd.position, buf, 0, bytesRead);       /*@BAA*/
+
+        if (retval < 0) {                                                 /*@BAA*/
+            return -1;                                                    /*@BAA*/
+        }                                                                 /*@BAA*/
+        else {                                                            /*@BAA*/
+            fd.position = fd.position + retval;                           /*@BAA*/
+            return retval;                                                /*@BAA*/
+        }                                                                 /*@BAA*/
     }
 
-    private int handleClose() {
-	    Lib.debug(dbgProcess, "handleWrite()");
-        return 0;
-    }
+    /**
+     * Close a file descriptor, so that it no longer refers to any file or stream
+     * and may be reused.
+     *
+     * If the file descriptor refers to a file, all data written to it by write()
+     * will be flushed to disk before close() returns.
+     * If the file descriptor refers to a stream, all data written to it by write()
+     * will eventually be flushed (unless the stream is terminated remotely), but
+     * not necessarily before close() returns.
+     *
+     * The resources associated with the file descriptor are released. If the
+     * descriptor is the last reference to a disk file which has been removed using
+     * unlink, the file is deleted (this detail is handled by the file system
+     * implementation).
+     *
+     * Returns 0 on success, or -1 if an error occurred.
+     */
+    private int handleClose(int a0) {                                     /*@BAA*/
+	    Lib.debug(dbgProcess, "handleClose()");                           /*@BAA*/
+        
+        int handle = a0;                                                  /*@BAA*/
+        if (a0 < 0 || a0 >= MAXFD)                                        /*@BAA*/
+            return -1;                                                    /*@BAA*/
 
-    private int handleUnlink() {
+        boolean retval = true;                                            /*@BAA*/
+
+        FileDescriptor fd = fds[handle];                                  /*@BAA*/
+
+        fd.position = 0;                                                  /*@BAA*/
+        fd.file.close();                                                  /*@BAA*/
+
+        // remove this file if necessary                                  /*@BAA*/
+        if (fd.toRemove) {                                                /*@BAA*/
+            retval = UserKernel.fileSystem.remove(fd.filename);           /*@BAA*/
+            fd.toRemove = false;                                          /*@BAA*/  
+        }                                                                 /*@BAA*/
+
+        fd.filename = "";                                                 /*@BAA*/
+
+        return retval ? 0 : -1;                                           /*@BAA*/
+    }                                                                     /*@BAA*/
+
+    /**
+     * Delete a file from the file system. If no processes have the file open, the
+     * file is deleted immediately and the space it was using is made available for
+     * reuse.
+     *
+     * If any processes still have the file open, the file will remain in existence
+     * until the last file descriptor referring to it is closed. However, creat()
+     * and open() will not be able to return new file descriptors for the file
+     * until it is deleted.
+     *
+     * Returns 0 on success, or -1 if an error occurred.
+     */
+    private int handleUnlink(int a0) {
 	    Lib.debug(dbgProcess, "handleUnlink()");
-        return 0;
+
+        boolean retval = true;
+
+        // a0 is address of filename 
+        String filename = readVirtualMemoryString(a0, MAXSTRLEN);         /*@BAA*/
+
+	    Lib.debug(dbgProcess, "filename: " + filename);                   /*@BAA*/
+
+        int fileHandle = findFileDescriptorByName(filename);              /*@BAA*/ 
+        if (fileHandle < 0) {                                             /*@BAA*/  
+           /* invoke open through stubFilesystem, truncate flag is set to false
+            * If no processes have the file open, the file is deleted immediately 
+            * and the space it was using is made available for reuse.
+            */
+            retval = UserKernel.fileSystem.remove(fds[fileHandle].filename); /*@BAA*/
+        }                                                                    /*@BAA*/ 
+        else {                                                               /*@BAA*/
+            /* If any processes still have the file open, 
+             * the file will remain in existence until the 
+             * last file descriptor referring to it is closed.
+             * However, creat() and open() will not be able to 
+             * return new file descriptors for the file until 
+             * it is deleted.
+             */
+            /* 
+             * TODO: If any processes still have the file open, 
+             * the file will remain in existence until the 
+             * last file descriptor referring to it is closed.
+             * 2/4/2014 HY
+             */
+             fds[fileHandle].toRemove = true;                             /*@BAA*/  
+        }                                                                 /*@BAA*/
+
+        return retval ? 0 : -1;                                           /*@BAA*/  
     }
 
     private static final int
@@ -554,23 +706,28 @@ public class UserProcess {
 	    return handleCreate(a0); 
 
     case syscallOpen:
-        // the first argument is filename              @BAB
+        // the first argument is filename              @BAA
 	    return handleOpen(a0);   
 
     case syscallRead:
-        // the first argument is filename              @BAC
-        // the second argument is buf address          @BAC
-        // the third argument is buf size              @BAC
+        // the first argument is filename              @BAA
+        // the second argument is buf address          @BAA
+        // the third argument is buf size              @BAA
 	    return handleRead(a0, a1, a2); 
-
+         
     case syscallWrite:
-	    return handleWrite();
+        // the first argument is filename              @BAA
+        // the second argument is buf address          @BAA
+        // the third argument is buf size              @BAA
+	    return handleWrite(a0, a1, a2);
 
     case syscallClose:
-	    return handleClose();
+        // the first argument is file handle           @BAA
+	    return handleClose(a0);
 
     case syscallUnlink:
-	    return handleUnlink();
+        // the first argument is filename              @BAA
+	    return handleUnlink(a0);                     //@BAA
 
 	default:
 	    Lib.debug(dbgProcess, "Unknown syscall " + syscall);
@@ -610,22 +767,32 @@ public class UserProcess {
 	}
     }
 
-    /* Find the first empty position in FD array         @BAA */
-    private int findFileDescriptor() {                /* @BAA */
-        for (int i = 0; i < MAXFD; i++) {             /* @BAA */
-            if (fds[i].file == null)                  /* @BAA */
-                return i;                             /* @BAA */
-        }                                             /* @BAA */
+    /* Find the first empty position in FD array               @BAA */
+    private int findEmptyFileDescriptor() {                 /* @BAA */
+        for (int i = 0; i < MAXFD; i++) {                   /* @BAA */
+            if (fds[i].file == null)                        /* @BAA */
+                return i;                                   /* @BAA */
+        }                                                   /* @BAA */
 
-        return -1;                                    /* @BAA */
-    }                                                 /* @BAA */
-     
+        return -1;                                          /*@BAA */
+    }                                                       /*@BAA */
+
+    /* Find the first empty position in FD array by filename  @BAA */
+    private int findFileDescriptorByName(String filename) { /*@BAA */
+        for (int i = 0; i < MAXFD; i++) {                   /*@BAA */
+            if (fds[i].filename == filename)                /*@BAA */
+                return i;                                   /*@BAA */
+        }                                                   /*@BAA */
+
+        return -1;                                          /*@BAA */
+    }                                                       /*@BAA */
 
     /** The program being run by this process. */
     protected Coff coff;
 
     /** This process's page table. */
     protected TranslationEntry[] pageTable;
+
     /** The number of contiguous pages occupied by the program. */
     protected int numPages;
 
@@ -641,12 +808,17 @@ public class UserProcess {
     /**
      * variables added by Huang Ye 1/18/2014 *
      */
+    public class FileDescriptor {                                 /*@BAA*/
+        public FileDescriptor() {                                 /*@BAA*/ 
+        }                                                         /*@BAA*/
+        private  String   filename = "";   // opened file name    /*@BAA*/
+        private  OpenFile file = null;     // opened file object  /*@BAA*/
+        private  int      position = 0;    // IO position         /*@BAA*/
 
-    private class FileDescriptor {                                /*@BAC*/
-        public  OpenFile file = null;             // opened file  /*@BAC*/
-        public  int      position = -1;           // IO position  /*@BAC*/
-    }                                                             /*@BAC*/
-
+        private  boolean  toRemove = false;// if need to remove
+                                           // this file           /*@BAA*/
+                                            
+    }                                                             /*@BAA*/
 
     /* maximum number of opened files per process */
     public static final int MAXFD = 16;                           /*@BAA*/
@@ -661,12 +833,11 @@ public class UserProcess {
     public static final int MAXSTRLEN = 256;                      /*@BAA*/  
 
     /* file descriptors per process */
-    private FileDescriptor[] fds = new FileDescriptor[MAXFD];     /*@BAA*/ 
+    private FileDescriptor fds[] = new FileDescriptor[MAXFD];     /*@BAA*/   
 
     /* number of opened files       */
     private int cntOpenedFiles = 0;                               /*@BAA*/
 }
-
 
 
 

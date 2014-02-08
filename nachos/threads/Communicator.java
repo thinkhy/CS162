@@ -76,9 +76,9 @@ public class Communicator {
 
         // System.out.print("Speaker: " + speaker + "\n");	
 
-        // at this point, don't know if any speaker is waiting, just try to wake up all the speakers
-
-        // System.out.print("isWordReady: " + isWordReady + "\n");	
+        // at this point, don't know if any speaker is waiting, just try to wake up all the speakers.
+        // if use speakerCond.wake() instead, it will hit exception at LinkedList.removeFirst because 
+        // no element to be removed.
 
         // while word is not ready, listener goes to sleep
         while(isWordReady == false) {   // hy+  

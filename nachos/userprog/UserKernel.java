@@ -4,11 +4,15 @@ import nachos.machine.*;
 import nachos.threads.*;
 import nachos.userprog.*;
 
+import java.util.LinkedList; 
+import java.util.Iterator;   
+
 /**************************************************************************
  *
  * 01* CHANGE-ACTIVITY:
  *                                                                        
  *  $BA=PROJECT2 TASK1, 140125, THINKHY: Implement the file system calls  
+ *  $BB=PROJECT2 TASK2, 140222, THINKHY: Implement support for multiprogramming  
  *                                                                        
  **************************************************************************/
 
@@ -122,10 +126,33 @@ public class UserKernel extends ThreadedKernel {
 	super.terminate();
     }
 
+    /**
+     * Return a free page.
+     */
+    public TranslationEntry getFreePage() {
+    TranslationEntry page = null;
+
+    // traverse page table to find a free page
+    for (Iterator<TranslationEntry> it = pageTable.iterator(); it.hasNext();) { 
+        page = (TranslationEntry)(it.next());  
+        if (page.used == false)
+            break; 
+    }
+    
+    return page;
+    }
+
     /** Globally accessible reference to the synchronized console. */
     public static SynchConsole console;
         
-
-    // dummy variables to make javac smarter
+    /** dummy variables to make javac smarter. */
     private static Coff dummy1 = null;
+
+    /** maintain a global linked list of free physical pages. */
+    private static LinkedList<TranslationEntry> pageTable        // @BBA
+                         = new LinkedList<TranslationEntry>();   // @BBA
+
 }
+
+
+

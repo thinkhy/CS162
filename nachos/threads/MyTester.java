@@ -31,6 +31,7 @@ public class MyTester {
         Lib.debug(dbgFlag, "Leave TestPrioprityScheduler");
     }
                                                             
+
     /**
      *  VAR1: Create several(>2) threads, verify these threads can be run successfully.
      */
@@ -230,9 +231,6 @@ public class MyTester {
         KThread.currentThread().yield();
     }
      
-
-
-
     static private char dbgFlag = 't';
 }
 

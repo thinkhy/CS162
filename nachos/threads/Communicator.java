@@ -101,6 +101,7 @@ public class Communicator {
     }
 
     // Test code added by hy
+    //
     private static class Speaker implements Runnable {
 	Speaker(Communicator comm, int word) {
         this.comm = comm; 

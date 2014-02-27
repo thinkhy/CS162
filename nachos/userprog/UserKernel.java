@@ -39,6 +39,12 @@ public class UserKernel extends ThreadedKernel {
 	Machine.processor().setExceptionHandler(new Runnable() {
 		public void run() { exceptionHandler(); }
 	    });
+
+    int numPhysPages = Machine.processor().getNumPhysPages();     // @BAA
+    for(int i = 0; i < numPhysPages; i++)                         // @BAA              
+        pageTable.add(i);                                         // @BAA
+
+
     }
 
     /**
@@ -127,20 +133,32 @@ public class UserKernel extends ThreadedKernel {
     }
 
     /**
-     * Return a free page.
+     * Return number of a free page.
+     * If page talbe is empty, return -1 otherwise return free page number.
      */
-    public TranslationEntry getFreePage() {
-    TranslationEntry page = null;
-
-    // traverse page table to find a free page
-    for (Iterator<TranslationEntry> it = pageTable.iterator(); it.hasNext();) { 
-        page = (TranslationEntry)(it.next());  
-        if (page.used == false)
-            break; 
-    }
+    public static int getFreePage() {                                     // @BBA
     
-    return page;
-    }
+    int pageNumber = -1;                                           // @BBA
+
+    pageLock.acquire();                                            // @BBA
+    if (pageTable.isEmpty() == false)                              // @BBA
+       pageNumber = pageTable.removeFirst();                       // @BBA
+    pageLock.release();                                            // @BBA
+
+    return pageNumber;                                             // @BBA
+    }                                                              // @BBA
+
+    /**
+     * Add a free page into page linked list.
+     */
+    public static void addFreePage(int pageNumber) {               // @BBA
+       Lib.assertTrue(pageNumber >= 0                              // @BBA
+           && pageNumber < Machine.processor().getNumPhysPages()); // @BBA
+       pageLock.acquire();                                         // @BBA     
+       pageTable.add(pageNumber);                                  // @BBA 
+       pageLock.release();                                         // @BBA 
+    }                                                              // @BBA 
+
 
     /** Globally accessible reference to the synchronized console. */
     public static SynchConsole console;
@@ -149,9 +167,11 @@ public class UserKernel extends ThreadedKernel {
     private static Coff dummy1 = null;
 
     /** maintain a global linked list of free physical pages. */
-    private static LinkedList<TranslationEntry> pageTable        // @BBA
-                         = new LinkedList<TranslationEntry>();   // @BBA
+    private static LinkedList<int> pageTable                      // @BBA
+                         = new LinkedList<int>();                 // @BBA
 
+    /** Use a lock to synchronize access of page linked list */  
+    private static Lock pageLock;                                 // @BBA  
 }
 
 

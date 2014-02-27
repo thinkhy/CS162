@@ -34,8 +34,11 @@ public class UserProcess {
     public UserProcess() {
 	int numPhysPages = Machine.processor().getNumPhysPages();
 	pageTable = new TranslationEntry[numPhysPages];
-	for (int i=0; i<numPhysPages; i++)
+	for (int i=0; i<numPhysPages; i++)  {
+        
 	    pageTable[i] = new TranslationEntry(i,i, true,false,false,false);
+
+    }
     
     /**************************************************************************/
     /* Need to create elements of fds one by one, any better code here?  @BAA */
@@ -50,11 +53,9 @@ public class UserProcess {
     fds[STDIN].file = UserKernel.console.openForReading();              /*@BAA*/
     fds[STDIN].position = 0;
 	Lib.assertTrue(fds[STDIN] != null);                                 /*@BAA*/  
-
     /* fds[STDOUT].file = UserKernel.console.openForWriting();*/        /*@BAA*/
     /* fds[STDOUT].position = 0; */
 	/* Lib.assertTrue(fds[STDOUT] != null); */                          /*@BAA*/ 
-
     // Just for TEST!!! [140203 hy]                                     /*@BAA*/
     OpenFile retval  = UserKernel.fileSystem.open("out", false);        /*@BAA*/
 
@@ -62,6 +63,7 @@ public class UserProcess {
     System.out.println("*** File handle: " + fileHandle);               /*@BAA*/
     fds[fileHandle].file = retval;                                      /*@BAA*/
     fds[fileHandle].position = 0;                                       /*@BAA*/
+
     }                                                                   /*@BAA*/
     
     /**
@@ -184,6 +186,7 @@ public class UserProcess {
      * Same as <tt>writeVirtualMemory(vaddr, data, 0, data.length)</tt>.
      *
      * @param	vaddr	the first byte of virtual memory to write.
+     *
      * @param	data	the array containing the data to transfer.
      * @return	the number of bytes successfully transferred.
      */

@@ -41,7 +41,7 @@ public class UserKernel extends ThreadedKernel {
 	    });
 
     int numPhysPages = Machine.processor().getNumPhysPages();     // @BAA
-    for(int i = 0; i < numPhysPages; i++)                         // @BAA              
+    for(int i = 0; i < numPhysPages; i++)                         // @BAA          
         pageTable.add(i);                                         // @BAA
 
 
@@ -136,14 +136,14 @@ public class UserKernel extends ThreadedKernel {
      * Return number of a free page.
      * If page talbe is empty, return -1 otherwise return free page number.
      */
-    public static int getFreePage() {                                     // @BBA
+    public static int getFreePage() {                              // @BBA
     
     int pageNumber = -1;                                           // @BBA
 
-    pageLock.acquire();                                            // @BBA
+    Machine.interrupt().disable();                                 // @BBA 
     if (pageTable.isEmpty() == false)                              // @BBA
        pageNumber = pageTable.removeFirst();                       // @BBA
-    pageLock.release();                                            // @BBA
+    Machine.interrupt().enable();                                  // @BBA 
 
     return pageNumber;                                             // @BBA
     }                                                              // @BBA
@@ -154,9 +154,9 @@ public class UserKernel extends ThreadedKernel {
     public static void addFreePage(int pageNumber) {               // @BBA
        Lib.assertTrue(pageNumber >= 0                              // @BBA
            && pageNumber < Machine.processor().getNumPhysPages()); // @BBA
-       pageLock.acquire();                                         // @BBA     
+       Machine.interrupt().disable();                              // @BBA 
        pageTable.add(pageNumber);                                  // @BBA 
-       pageLock.release();                                         // @BBA 
+       Machine.interrupt().enable();                               // @BBA 
     }                                                              // @BBA 
 
 
@@ -167,11 +167,9 @@ public class UserKernel extends ThreadedKernel {
     private static Coff dummy1 = null;
 
     /** maintain a global linked list of free physical pages. */
-    private static LinkedList<int> pageTable                      // @BBA
-                         = new LinkedList<int>();                 // @BBA
+    private static LinkedList<Integer> pageTable                   // @BBA
+                         = new LinkedList<Integer>();              // @BBA
 
-    /** Use a lock to synchronize access of page linked list */  
-    private static Lock pageLock;                                 // @BBA  
 }
 
 

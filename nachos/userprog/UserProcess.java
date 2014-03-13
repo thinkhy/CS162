@@ -6,14 +6,15 @@ import nachos.userprog.*;
 
 import java.io.EOFException;
 
-/********************************************************************************
+/****************************************************************************************
  *
  * 01* CHANGE-ACTIVITY:
  *                                                                        
  *  $BA=PROJECT2 TASK1, 140125, THINKHY: Implement the file system calls  
  *  $BB=PROJECT2 TASK2, 140205, THINKHY: Implement support for multiprogramming  
+ *  $BC=PROJECT2 TASK3, 140302, THINKHY: Implement system calls for process management
  *                                                                        
- ********************************************************************************/
+ ****************************************************************************************/
 
 /**
  * Encapsulates the state of a user process that is not contained in its
@@ -56,7 +57,6 @@ public class UserProcess {
     System.out.println("*** File handle: " + fileHandle);               /*@BAA*/
     fds[fileHandle].file = retval;                                      /*@BAA*/
     fds[fileHandle].position = 0;                                       /*@BAA*/
-
     }                                                                   /*@BAA*/
     
     /**
@@ -709,6 +709,79 @@ public class UserProcess {
         return retval ? 0 : -1;                                           /*@BAA*/  
     }
 
+    /**
+     * Terminate the current process immediately. Any open file descriptors
+     * belonging to the process are closed. Any children of the process no longer
+     * have a parent process.
+     *
+     * status is returned to the parent process as this process's exit status and
+     * can be collected using the join syscall. A process exiting normally should
+     * (but is not required to) set status to 0.
+     *
+     * exit() never returns.
+     */
+    /**
+     * Close open file descriptors belonging to the process
+     * Set parent process of child processes to null
+     * 
+     */
+    private int handleExit(int a0) {                                       /*@BCA*/
+	    Lib.debug(dbgProcess, "handleExit()");                             /*@BCA*/
+        int exitCode = a0;                                                 /*@BCA*/ 
+        KThread.currentThread().finish();                                  /*@BCA*/
+        return exitCode;                                                   /*@BCA*/
+    }                                                                      /*@BCA*/
+
+
+   /**
+    * Execute the program stored in the specified file, with the specified
+    * arguments, in a new child process. The child process has a new unique
+    * process ID, and starts with stdin opened as file descriptor 0, and stdout
+    * opened as file descriptor 1.
+    *
+    * file is a null-terminated string that specifies the name of the file
+    * containing the executable. Note that this string must include the ".coff"
+    * extension.
+    *
+    * argc specifies the number of arguments to pass to the child process. This
+    * number must be non-negative.
+    *
+    * argv is an array of pointers to null-terminated strings that represent the
+    * arguments to pass to the child process. argv[0] points to the first
+    * argument, and argv[argc-1] points to the last argument.
+    *
+    * exec() returns the child process's process ID, which can be passed to
+    * join(). On error, returns -1.
+    */
+    private int handleExec(int a0) {                                       /*@BCA*/
+	    Lib.debug(dbgProcess, "handleExec()");                             /*@BCA*/
+        return 0;                                                          /*@BCA*/
+    }                                                                      /*@BCA*/
+
+
+    /**
+     * Suspend execution of the current process until the child process specified
+     * by the processID argument has exited. If the child has already exited by the
+     * time of the call, returns immediately. When the current process resumes, it
+     * disowns the child process, so that join() cannot be used on that process
+     * again.
+     *
+     * processID is the process ID of the child process, returned by exec().
+     *
+     * status points to an integer where the exit status of the child process will
+     * be stored. This is the value the child passed to exit(). If the child exited
+     * because of an unhandled exception, the value stored is not defined.
+     *
+     * If the child exited normally, returns 1. If the child exited as a result of
+     * an unhandled exception, returns 0. If processID does not refer to a child
+     * process of the current process, returns -1.
+     */
+    private int handleJoin(int a0) {                                       /*@BCA*/
+	    Lib.debug(dbgProcess, "handleJoin()");                             /*@BCA*/
+        return 0;                                                          /*@BCA*/
+    }                                                                      /*@BCA*/
+     
+     
     private static final int
     syscallHalt = 0,
 	syscallExit = 1,
@@ -754,37 +827,42 @@ public class UserProcess {
 	case syscallHalt:
 	    return handleHalt();
 
-    // [added by hy 1/12/2014]
-	case syscallExit:
-	    return handleHalt();
-
     case syscallCreate:
-        // the first argument is filename              @BAA
+        /* the first argument is filename              @BAA*/
 	    return handleCreate(a0); 
 
     case syscallOpen:
-        // the first argument is filename              @BAA
+        /* the first argument is filename              @BAA*/
 	    return handleOpen(a0);   
 
     case syscallRead:
-        // the first argument is filename              @BAA
-        // the second argument is buf address          @BAA
-        // the third argument is buf size              @BAA
+        /* the first argument is filename              @BAA*/
+        /* the second argument is buf address          @BAA*/
+        /* the third argument is buf size              @BAA*/
 	    return handleRead(a0, a1, a2); 
          
     case syscallWrite:
-        // the first argument is filename              @BAA
-        // the second argument is buf address          @BAA
-        // the third argument is buf size              @BAA
+        /* the first argument is filename              @BAA*/
+        /* the second argument is buf address          @BAA*/
+        /* the third argument is buf size              @BAA*/
 	    return handleWrite(a0, a1, a2);
 
     case syscallClose:
-        // the first argument is file handle           @BAA
+        /* the first argument is file handle           @BAA*/
 	    return handleClose(a0);
 
     case syscallUnlink:
-        // the first argument is filename              @BAA
-	    return handleUnlink(a0);                     //@BAA
+        /* the first argument is filename              @BAA*/
+	    return handleUnlink(a0);                     /*@BAA*/
+
+    case syscallExit:                                /*@BCA*/
+	    return handleExit(a0);                       /*@BCA*/
+
+    case syscallExec:                                /*@BCA*/
+	    return handleExec(a0);                       /*@BCA*/
+
+    case syscallJoin:                                /*@BCA*/
+	    return handleJoin(a0);                       /*@BCA*/
 
 	default:
 	    Lib.debug(dbgProcess, "Unknown syscall " + syscall);
@@ -831,19 +909,19 @@ public class UserProcess {
                 return i;                                   /* @BAA */
         }                                                   /* @BAA */
 
-        return -1;                                          /*@BAA */
-    }                                                       /*@BAA */
+        return -1;                                          /* @BAA */
+    }                                                       /* @BAA */
 
-    /* Find the first empty position in FD array by filename  @BAA */
-    private int findFileDescriptorByName(String filename) { /*@BAA */
-        for (int i = 0; i < MAXFD; i++) {                   /*@BAA */
-            if (fds[i].filename == filename)                /*@BAA */
-                return i;                                   /*@BAA */
-        }                                                   /*@BAA */
+    /* Find the first empty position in FD array by filename   @BAA */
+    private int findFileDescriptorByName(String filename) { /* @BAA */
+        for (int i = 0; i < MAXFD; i++) {                   /* @BAA */
+            if (fds[i].filename == filename)                /* @BAA */
+                return i;                                   /* @BAA */
+        }                                                   /* @BAA */
 
-        return -1;                                          /*@BAA */
-    }                                                       /*@BAA */
-
+        return -1;                                          /* @BAA */
+    }                                                       /* @BAA */
+ 
     /** The program being run by this process. */
     protected Coff coff;
 
@@ -863,7 +941,7 @@ public class UserProcess {
     private static final char dbgProcess = 'a';
 
     /**
-     * variables added by Huang Ye 1/18/2014 *
+     * variables added by hy 1/18/2014 *
      */
     public class FileDescriptor {                                 /*@BAA*/
         public FileDescriptor() {                                 /*@BAA*/ 

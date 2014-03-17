@@ -412,7 +412,7 @@ public final class Processor {
 
     /**
      * Complete the in progress delayed load and scheduled a new one.
-     *We suggest maintaining a global linked list of free physical pages (perhaps as part of the UserKernel class). Be sure to use synchronization where necessary when accessing this list.
+     *
      * @param	nextLoadTarget	the target register of the new load.
      * @param	nextLoadValue	the value to be loaded into the new target.
      * @param	nextLoadMask	the mask specifying which bits in the new

@@ -39,6 +39,12 @@ public class UserKernel extends ThreadedKernel {
 	Machine.processor().setExceptionHandler(new Runnable() {
 		public void run() { exceptionHandler(); }
 	    });
+
+    int numPhysPages = Machine.processor().getNumPhysPages();     // @BAA
+    for(int i = 0; i < numPhysPages; i++)                         // @BAA          
+        pageTable.add(i);                                         // @BAA
+
+
     }
 
     /**
@@ -127,20 +133,32 @@ public class UserKernel extends ThreadedKernel {
     }
 
     /**
-     * Return a free page.
+     * Return number of a free page.
+     * If page talbe is empty, return -1 otherwise return free page number.
      */
-    public TranslationEntry getFreePage() {                                      // @BBA
-    TranslationEntry page = null;                                                // @BBA
-
-    // traverse page table to find a free page                                      @BBA
-    for (Iterator<TranslationEntry> it = pageTable.iterator(); it.hasNext();) {  // @BBA
-        page = (TranslationEntry)(it.next());                                    // @BBA
-        if (page.used == false)                                                  // @BBA
-            break;                                                               // @BBA
-    }                                                                            // @BBA
+    public static int getFreePage() {                              // @BBA
     
-    return page;                                                                 // @BBA
-    }
+    int pageNumber = -1;                                           // @BBA
+
+    Machine.interrupt().disable();                                 // @BBA 
+    if (pageTable.isEmpty() == false)                              // @BBA
+       pageNumber = pageTable.removeFirst();                       // @BBA
+    Machine.interrupt().enable();                                  // @BBA 
+
+    return pageNumber;                                             // @BBA
+    }                                                              // @BBA
+
+    /**
+     * Add a free page into page linked list.
+     */
+    public static void addFreePage(int pageNumber) {               // @BBA
+       Lib.assertTrue(pageNumber >= 0                              // @BBA
+           && pageNumber < Machine.processor().getNumPhysPages()); // @BBA
+       Machine.interrupt().disable();                              // @BBA 
+       pageTable.add(pageNumber);                                  // @BBA 
+       Machine.interrupt().enable();                               // @BBA 
+    }                                                              // @BBA 
+
 
     /** Globally accessible reference to the synchronized console. */
     public static SynchConsole console;
@@ -149,8 +167,8 @@ public class UserKernel extends ThreadedKernel {
     private static Coff dummy1 = null;
 
     /** maintain a global linked list of free physical pages. */
-    private static LinkedList<TranslationEntry> pageTable        // @BBA
-                         = new LinkedList<TranslationEntry>();   // @BBA
+    private static LinkedList<Integer> pageTable                   // @BBA
+                         = new LinkedList<Integer>();              // @BBA
 
 }
 

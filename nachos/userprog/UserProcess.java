@@ -32,10 +32,6 @@ public class UserProcess {
      * Allocate a new process.
      */
     public UserProcess() {
-	int numPhysPages = Machine.processor().getNumPhysPages();
-	pageTable = new TranslationEntry[numPhysPages];
-	for (int i=0; i<numPhysPages; i++)
-	    pageTable[i] = new TranslationEntry(i,i, true,false,false,false);
     
     /**************************************************************************/
     /* Need to create elements of fds one by one, any better code here?  @BAA */
@@ -50,11 +46,9 @@ public class UserProcess {
     fds[STDIN].file = UserKernel.console.openForReading();              /*@BAA*/
     fds[STDIN].position = 0;
 	Lib.assertTrue(fds[STDIN] != null);                                 /*@BAA*/  
-
     /* fds[STDOUT].file = UserKernel.console.openForWriting();*/        /*@BAA*/
     /* fds[STDOUT].position = 0; */
 	/* Lib.assertTrue(fds[STDOUT] != null); */                          /*@BAA*/ 
-
     // Just for TEST!!! [140203 hy]                                     /*@BAA*/
     OpenFile retval  = UserKernel.fileSystem.open("out", false);        /*@BAA*/
 
@@ -62,6 +56,7 @@ public class UserProcess {
     System.out.println("*** File handle: " + fileHandle);               /*@BAA*/
     fds[fileHandle].file = retval;                                      /*@BAA*/
     fds[fileHandle].position = 0;                                       /*@BAA*/
+
     }                                                                   /*@BAA*/
     
     /**
@@ -166,14 +161,33 @@ public class UserProcess {
 				 int length) {
 	Lib.assertTrue(offset >= 0 && length >= 0 && offset+length <= data.length);
 
-	byte[] memory = Machine.processor().getMemory();
+    Processor processor = Machine.processor();                               /* @BBA  */
+	byte[] memory = processor.getMemory();
 	
+    /** original code [removed by hy 3/1/2014] @BBD
 	// for now, just assume that virtual addresses equal physical addresses
-	if (vaddr < 0 || vaddr >= memory.length)
-	    return 0;
+	if (vaddr < 0 || vaddr >= memory.length)             
+	    return 0;                                       
+    */
+          
+	// calculate virtual page number from the virtual address               /* @BBA */
+    int vpn = processor.pageFromAddress(vaddr);                             /* @BBA */
+    int addressOffset = processor.offsetFromAddress(vaddr);                 /* @BBA */
 
-	int amount = Math.min(length, memory.length-vaddr);
-	System.arraycopy(memory, vaddr, data, offset, amount);
+	TranslationEntry entry = null;                                          /* @BBA */
+    entry = pageTable[vpn];                                                 /* @BBA */
+	entry.used = true;                                                      /* @BBA */
+
+    int ppn = entry.ppn;                                                    /* @BBA */
+	int paddr = (ppn*pageSize) + addressOffset;                             /* @BBA */
+    // check if physical page number is out of range
+    if (ppn < 0 || ppn >= processor.getNumPhysPages())  {                   /* @BBA */
+        Lib.debug(dbgProcess, "\t\t UserProcess.readVirtualMemory(): bad ppn "+ppn);  /* @BBA */
+        return 0;                                                           /* @BBA */
+    }                                                                       /* @BBA */
+
+	int amount = Math.min(length, memory.length-paddr);
+	System.arraycopy(memory, paddr, data, offset, amount);
 
 	return amount;
     }
@@ -184,6 +198,7 @@ public class UserProcess {
      * Same as <tt>writeVirtualMemory(vaddr, data, 0, data.length)</tt>.
      *
      * @param	vaddr	the first byte of virtual memory to write.
+     *
      * @param	data	the array containing the data to transfer.
      * @return	the number of bytes successfully transferred.
      */
@@ -209,11 +224,38 @@ public class UserProcess {
 				  int length) {
 	Lib.assertTrue(offset >= 0 && length >= 0 && offset+length <= data.length);
 
+    Processor processor = Machine.processor();                  /* @BBA */
 	byte[] memory = Machine.processor().getMemory();
 	
+    /** removed by hy [3/1/2014]
 	// for now, just assume that virtual addresses equal physical addresses
 	if (vaddr < 0 || vaddr >= memory.length)
 	    return 0;
+    */
+
+	// calculate virtual page number from the virtual address
+    int vpn = processor.pageFromAddress(vaddr);                 /* @BBA */            
+    int addressOffset = processor.offsetFromAddress(vaddr);     /* @BBA */
+
+	TranslationEntry entry = null;                              /* @BBA */
+    entry = pageTable[vpn];                                     /* @BBA */
+	entry.used = true;                                          /* @BBA */
+	entry.dirty = true;                                         /* @BBA */
+
+    int ppn = entry.ppn;                                        /* @BBA */
+	int paddr = (ppn*pageSize) + addressOffset;                 /* @BBA */
+
+    if (entry.readOnly) {                                       /* @BBA */
+        Lib.debug(dbgProcess,                                   /* @BBA */
+                 "\t\t UserProcess.writeVirtualMemory(): write read-only page "+ppn); /* @BBA */
+        return 0;                                               /* @BBA */
+    }                                                           /* @BBA */
+
+    // check if physical page number is out of range
+    if (ppn < 0 || ppn >= processor.getNumPhysPages())  {       /* @BBA */
+        Lib.debug(dbgProcess, "\t\t UserProcess.writeVirtualMemory(): bad ppn "+ppn); /* @BBA */
+        return 0;                                               /* @BBA */
+    }                                                           /* @BBA */
 
 	int amount = Math.min(length, memory.length-vaddr);
 	System.arraycopy(data, offset, memory, vaddr, amount);
@@ -285,6 +327,12 @@ public class UserProcess {
 	// and finally reserve 1 page for arguments
 	numPages++;
 
+    pageTable = new TranslationEntry[numPages];                                        /* @BBA */
+    for (int i = 0; i < numPages; i++) {                                               /* @BBA */
+        int ppn = UserKernel.getFreePage();                                            /* @BBA */
+        pageTable[i] =  new TranslationEntry(i, ppn, true, false, false, false);     /* @BBA */
+    }                                                                                  /* @BBA */
+
 	if (!loadSections())
 	    return false;
 
@@ -333,8 +381,17 @@ public class UserProcess {
 	    for (int i=0; i<section.getLength(); i++) {
 		int vpn = section.getFirstVPN()+i;
 
+        /** removed by hy [3/1/2014] @BBD
 		// for now, just assume virtual addresses=physical addresses
-		section.loadPage(i, vpn);
+		// section.loadPage(i, vpn);
+        */
+         
+        // translate virtual page number from physical page number
+        TranslationEntry entry = pageTable[vpn];                                   /* @BBA */ 
+        entry.readOnly = section.isReadOnly();                                   /* @BBA */ 
+        int ppn = entry.ppn;                                                       /* @BBA */ 
+        
+        section.loadPage(i, ppn);                                                  /* @BBA */ 
 	    }
 	}
 	
@@ -815,7 +872,7 @@ public class UserProcess {
         private  OpenFile file = null;     // opened file object  /*@BAA*/
         private  int      position = 0;    // IO position         /*@BAA*/
 
-        private  boolean  toRemove = false;// if need to remove
+        private  boolean  toRemove = false;// if need to remove   /*@BAA*/
                                            // this file           /*@BAA*/
                                             
     }                                                             /*@BAA*/

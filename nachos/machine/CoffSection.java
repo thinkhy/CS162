@@ -117,6 +117,7 @@ public class CoffSection {
      * @return	the COFF object corresponding to this section.
      */
     public Coff getCoff() {
+
 	return coff;
     }
 

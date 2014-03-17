@@ -129,17 +129,17 @@ public class UserKernel extends ThreadedKernel {
     /**
      * Return a free page.
      */
-    public TranslationEntry getFreePage() {
-    TranslationEntry page = null;
+    public TranslationEntry getFreePage() {                                      // @BBA
+    TranslationEntry page = null;                                                // @BBA
 
-    // traverse page table to find a free page
-    for (Iterator<TranslationEntry> it = pageTable.iterator(); it.hasNext();) { 
-        page = (TranslationEntry)(it.next());  
-        if (page.used == false)
-            break; 
-    }
+    // traverse page table to find a free page                                      @BBA
+    for (Iterator<TranslationEntry> it = pageTable.iterator(); it.hasNext();) {  // @BBA
+        page = (TranslationEntry)(it.next());                                    // @BBA
+        if (page.used == false)                                                  // @BBA
+            break;                                                               // @BBA
+    }                                                                            // @BBA
     
-    return page;
+    return page;                                                                 // @BBA
     }
 
     /** Globally accessible reference to the synchronized console. */

@@ -13,6 +13,7 @@ import java.util.Iterator;
  *                                                                        
  *  $BA=PROJECT2 TASK1, 140125, THINKHY: Implement the file system calls  
  *  $BB=PROJECT2 TASK2, 140222, THINKHY: Implement support for multiprogramming  
+ *  $BC=PROJECT2 TASK3, 140302, THINKHY: Implement system calls for process management
  *                                                                        
  **************************************************************************/
 
@@ -137,15 +138,12 @@ public class UserKernel extends ThreadedKernel {
      * If page talbe is empty, return -1 otherwise return free page number.
      */
     public static int getFreePage() {                              // @BBA
-    
-    int pageNumber = -1;                                           // @BBA
-
-    Machine.interrupt().disable();                                 // @BBA 
-    if (pageTable.isEmpty() == false)                              // @BBA
-       pageNumber = pageTable.removeFirst();                       // @BBA
-    Machine.interrupt().enable();                                  // @BBA 
-
-    return pageNumber;                                             // @BBA
+        int pageNumber = -1;                                       // @BBA
+        Machine.interrupt().disable();                             // @BBA 
+        if (pageTable.isEmpty() == false)                          // @BBA 
+           pageNumber = pageTable.removeFirst();                   // @BBA
+        Machine.interrupt().enable();                              // @BBA 
+        return pageNumber;                                         // @BBA
     }                                                              // @BBA
 
     /**
@@ -160,6 +158,36 @@ public class UserKernel extends ThreadedKernel {
     }                                                              // @BBA 
 
 
+    /**
+     * return next Pid
+     */
+    public static int getNextPid() {                               // @BCA 
+        int retval;                                                // @BCA
+        Machine.interrupt().disable();                             // @BCA 
+        retval = ++nextPid;                                        // @BCA 
+        Machine.interrupt().enabled();                             // @BCA 
+        return nextPid;                                            // @BCA
+    }                                                              // @BCA
+
+    /**
+     * get process from process map by pid
+     */
+    public static UserProcess getProcessByID(int pid) {
+        return processMap.get(pid);
+    }
+
+    /**
+     * get process from process map by pid
+     */
+    public static UserProcess registerProcess(int pid, UserProcess process) {  // @BCA
+        UserProcess insertedProcess;                               // @BCA 
+        Machine.interrupt().disable();                             // @BCA 
+        insertedProcess = processMap.put(pid, process);            // @BCA 
+        Machine.interrupt().enabled();                             // @BCA 
+        return insertedProcess;                                    // @BCA 
+    }                                                              // @BCA
+
+
     /** Globally accessible reference to the synchronized console. */
     public static SynchConsole console;
         
@@ -169,6 +197,16 @@ public class UserKernel extends ThreadedKernel {
     /** maintain a global linked list of free physical pages. */
     private static LinkedList<Integer> pageTable                   // @BBA
                          = new LinkedList<Integer>();              // @BBA
+    
+    /** Maintain a static counter which indicates the next process ID
+     * to assign, assume that the process ID counter will not overflow.
+     */
+    private static int nextPid = 0;                                // @BCA
+
+    /** maintain a map which stores processes, key is pid,
+     * value is the process which holds the pid.              */
+    private static int HashMap<int, UserProcess>                   // @BCA 
+                      processMap = new map<int, UserProcess>();    // @BCA 
 
 }
 

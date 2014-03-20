@@ -82,7 +82,9 @@ public class UserProcess {
 	if (!load(name, args))
 	    return false;
 	
-	new UThread(this).setName(name).fork();
+	/* new UThread(this).setName(name).fork();                     @BCD*/
+    thread = new UThread(this);                                  /*@BCA*/ 
+    thread.setName(name).fork();                                 /*@BCA*/
 
 	return true;
     }
@@ -182,7 +184,8 @@ public class UserProcess {
 	int paddr = (ppn*pageSize) + addressOffset;                             /* @BBA */
     // check if physical page number is out of range
     if (ppn < 0 || ppn >= processor.getNumPhysPages())  {                   /* @BBA */
-        Lib.debug(dbgProcess, "\t\t UserProcess.readVirtualMemory(): bad ppn "+ppn);  /* @BBA */
+        Lib.debug(dbgProcess,                                               /* @BBA */ 
+                "\t\t UserProcess.readVirtualMemory(): bad ppn "+ppn);      /* @BBA */
         return 0;                                                           /* @BBA */
     }                                                                       /* @BBA */
 
@@ -330,7 +333,7 @@ public class UserProcess {
     pageTable = new TranslationEntry[numPages];                                        /* @BBA */
     for (int i = 0; i < numPages; i++) {                                               /* @BBA */
         int ppn = UserKernel.getFreePage();                                            /* @BBA */
-        pageTable[i] =  new TranslationEntry(i, ppn, true, false, false, false);     /* @BBA */
+        pageTable[i] =  new TranslationEntry(i, ppn, true, false, false, false);       /* @BBA */
     }                                                                                  /* @BBA */
 
 	if (!loadSections())
@@ -388,7 +391,7 @@ public class UserProcess {
          
         // translate virtual page number from physical page number
         TranslationEntry entry = pageTable[vpn];                                   /* @BBA */ 
-        entry.readOnly = section.isReadOnly();                                   /* @BBA */ 
+        entry.readOnly = section.isReadOnly();                                     /* @BBA */ 
         int ppn = entry.ppn;                                                       /* @BBA */ 
         
         section.loadPage(i, ppn);                                                  /* @BBA */ 
@@ -401,8 +404,13 @@ public class UserProcess {
     /**
      * Release any resources allocated by <tt>loadSections()</tt>.
      */
-    protected void unloadSections() {
-    }    
+    protected void unloadSections() {                                              /*@BBA*/
+        /* back out physical pages and make page entry invalid                           */
+        for (int i = 0; i < numPages; i++) {                                       /*@BBA*/
+            UserKernel.addFreePage(pageTable[i].ppn);                              /*@BBA*/
+            pageTable[i].valid = false;                                            /*@BBA*/
+        }                                                                          /*@BBA*/
+    }                                                                              /*@BBA*/
 
     /**
      * Initialize the processor's registers in preparation for running the
@@ -484,32 +492,32 @@ public class UserProcess {
      * Returns the new file descriptor, or -1 if an error occurred.
      */
     private int handleOpen(int a0) {
-	    Lib.debug(dbgProcess, "handleOpen()");                            /*@BAA*/
+	    Lib.debug(dbgProcess, "handleOpen()");                             /*@BAA*/
 
         // a0 is address of filename 
-        String filename = readVirtualMemoryString(a0, MAXSTRLEN);         /*@BAA*/
+        String filename = readVirtualMemoryString(a0, MAXSTRLEN);          /*@BAA*/
 
-	    Lib.debug(dbgProcess, "filename: "+filename);                     /*@BAA*/
+	    Lib.debug(dbgProcess, "filename: "+filename);                      /*@BAA*/
 
         // invoke open through stubFilesystem, truncate flag is set to false
-        OpenFile retval  = UserKernel.fileSystem.open(filename, false);   /*@BAA*/
+        OpenFile retval  = UserKernel.fileSystem.open(filename, false);    /*@BAA*/
 
-        if (retval == null) {                                             /*@BAA*/
-            return -1;                                                    /*@BAA*/
-        }                                                                 /*@BAA*/
-        else {                                                            /*@BAA*/
-            int fileHandle = findEmptyFileDescriptor();                   /*@BAA*/ 
-            if (fileHandle < 0)                                           /*@BAA*/ 
-                return -1;                                                /*@BAA*/ 
-            else {                                                        /*@BAA*/
-                fds[fileHandle].filename = filename;                      /*@BAA*/
-                fds[fileHandle].file = retval;                            /*@BAA*/
-                fds[fileHandle].position = 0;                             /*@BAA*/
-                return fileHandle;                                        /*@BAA*/
-            }                                                             /*@BAA*/ 
-        }                                                                 /*@BAA*/
-    }                                                                     /*@BAA*/
-
+        if (retval == null) {                                              /*@BAA*/
+            return -1;                                                     /*@BAA*/
+        }                                                                  /*@BAA*/
+        else {                                                             /*@BAA*/
+            int fileHandle = findEmptyFileDescriptor();                    /*@BAA*/ 
+            if (fileHandle < 0)                                            /*@BAA*/ 
+                return -1;                                                 /*@BAA*/ 
+            else {                                                         /*@BAA*/
+                fds[fileHandle].filename = filename;                       /*@BAA*/
+                fds[fileHandle].file = retval;                             /*@BAA*/
+                fds[fileHandle].position = 0;                              /*@BAA*/
+                return fileHandle;                                         /*@BAA*/
+            }                                                              /*@BAA*/ 
+        }                                                                  /*@BAA*/
+    }                                                                      /*@BAA*/
+ 
 
     /**
      * Attempt to read up to count bytes into buffer from the file or stream
@@ -534,9 +542,9 @@ public class UserProcess {
     private int handleRead(int a0, int a1, int a2) {                      /*@BAA*/
 	    Lib.debug(dbgProcess, "handleRead()");                            /*@BAA*/
          
-        int handle = a0;                                                  /* a0 is file descriptor handle @BAA*/
-        int vaddr = a1;                                                   /* a1 is buf address            @BAA*/
-        int bufsize = a2;                                                 /* a2 is buf size               @BAA*/
+        int handle = a0;                    /* a0 is file descriptor handle @BAA*/
+        int vaddr = a1;                     /* a1 is buf address            @BAA*/
+        int bufsize = a2;                   /* a2 is buf size               @BAA*/
 
 	    Lib.debug(dbgProcess, "handle: " + handle);                       /*@BAA*/
 	    Lib.debug(dbgProcess, "buf address: " + vaddr);                   /*@BAA*/
@@ -580,15 +588,16 @@ public class UserProcess {
      * happen if fileDescriptor is invalid, if part of the buffer is invalid, or
      * if a network stream has already been terminated by the remote host.
      *
-     * Syscall: int write(int fileDescriptor, void *buffer, int count);
+     * Syscall: 
+     *       int write(int fileDescriptor, void *buffer, int count);
      *
      */
      private int handleWrite(int a0, int a1, int a2) {
 	    Lib.debug(dbgProcess, "handleWrite()");                           /*@BAA*/
          
-        int handle = a0;                                                  /* a0 is file descriptor handle @BAA*/
-        int vaddr = a1;                                                   /* a1 is buf address            @BAA*/
-        int bufsize = a2;                                                 /* a2 is buf size               @BAA*/
+        int handle = a0;                    /* a0 is file descriptor handle @BAA*/
+        int vaddr = a1;                     /* a1 is buf address            @BAA*/
+        int bufsize = a2;                   /* a2 is buf size               @BAA*/
 
 	    Lib.debug(dbgProcess, "handle: " + handle);                       /*@BAA*/
 	    Lib.debug(dbgProcess, "buf address: " + vaddr);                   /*@BAA*/
@@ -719,17 +728,70 @@ public class UserProcess {
      * (but is not required to) set status to 0.
      *
      * exit() never returns.
+     * 
+     * syscall prototype:
+     *
+     *   void exit(int status);
+     *
      */
     /**
-     * Close open file descriptors belonging to the process
-     * Set parent process of child processes to null
-     * 
+     * Procedure*    
+     *               
+     *   1. close open file descriptors belonging to the process
+     *   2. set pid of parent process to null
+     *   3. set any children of the process no longer have a parent process(null).
+     *   4. set the process's exit status to status that caller specifies(normal) or -1(exception)
+     *   5. unloadSections and release memory pages
+     *   6. finish associated thread
+     *
      */
-    private int handleExit(int a0) {                                       /*@BCA*/
+    private void handleExit(int exitStatus) {                              /*@BCA*/
 	    Lib.debug(dbgProcess, "handleExit()");                             /*@BCA*/
-        int exitCode = a0;                                                 /*@BCA*/ 
-        KThread.currentThread().finish();                                  /*@BCA*/
-        return exitCode;                                                   /*@BCA*/
+
+
+        /* close open file descriptors belonging to the process                  */           
+        for (int i = 0; i < MAXFD; i++) {                                  /*@BCA*/
+            if (fds[i].file != null)                                       /*@BCA*/
+                handleClose(i);                                            /*@BCA*/
+        }                                                                  /*@BCA*/
+
+        /* set pid of parent process to null                                     */
+        UserProcess parentProcess = UserKernel.getProcessByID(this.ppid);  /*@BCA*/
+        this.ppid = null;                                                  /*@BCA*/
+        Iterator<int> ts = parentProcess.children.iterator();              /*@BCA*/ 
+        while(ts.hasNext()) {                                              /*@BCA*/
+            int childpid = ts.next();                                      /*@BCA*/ 
+            if (childpid == this.pid) {                                    /*@BCA*/
+                ts.remove();                                               /*@BCA*/
+                break;                                                     /*@BCA*/ 
+            }                                                              /*@BCA*/ 
+        }                                                                  /*@BCA*/
+
+
+        /* set any children of the process no longer have a parent process(null).*/ 
+        while (!children.isEmpty())  {                                     /*@BCA*/
+            childPid = children.removeFirst();                             /*@BCA*/ 
+            UserProcess childProcess = UserKernel.getProcessByID(childPid);/*@BCA*/
+            childProcess.ppid = null;                                      /*@BCA*/
+        }                                                                  /*@BCA*/
+
+        /*  set the process's exit status to status that caller specifies(normal)* 
+         *  or -1(exception)                                                     */
+        this.exitStatus = exitStatus;                                      /*@BCA*/ 
+
+        /* unloadSections and release memory pages                               */
+        this.unloadSections();
+
+        /* finish associated thread                                              */
+        if (this.pid == ROOT) {
+            Kernel.kernel.terminate(); /* Terminate this kernel              @BCA*/
+        }                                                                  /*@BCA*/
+        else {                                                             /*@BCA*/
+            Lib.assertTrue(KThread.currentThread() == this.thread);        /*@BCA*/ 
+            KThread.currentThread().finish();                              /*@BCA*/
+        }                                                                  /*@BCA*/
+
+        Lib.assertNotReached();                                            /*@BCA*/
     }                                                                      /*@BCA*/
 
 
@@ -752,11 +814,84 @@ public class UserProcess {
     *
     * exec() returns the child process's process ID, which can be passed to
     * join(). On error, returns -1.
+    *
+    * syscall prototype:
+    *    int  exec(char *name, int argc, char **argv);
+    *
     */
-    private int handleExec(int a0) {                                       /*@BCA*/
-	    Lib.debug(dbgProcess, "handleExec()");                             /*@BCA*/
-        return 0;                                                          /*@BCA*/
-    }                                                                      /*@BCA*/
+    /**
+     * Procedure *
+     *
+     *  + if argc is less than 1
+        +   return -1
+        +if filename doesn't have the ".coff" extension
+        +   return -1;
+        get args from address of argv
+        create a new process by invoking UserProcess.newUserProcess()
+        allocate an unique pid for child process
+        * copy file descriptors to the new process. [NOT required in this]
+        set new process's parent to this process.
+        add new process into this process's children list.
+        register this new process in UserKernel
+        invoke UserProcess.execute to load executable file and create new UThread
+        + If normal, return new process's pid.
+        + Otherwise, on error return -1.
+    */
+    private int handleExec(int file, int argc, int argv) {                  /*@BCA*/
+	    Lib.debug(dbgProcess, "handleExec()");                              /*@BCA*/
+
+        if (argc < 1) {                                                     /*@BCA*/
+            Lib.debug(dbgProcess, "handleExec(): argc < 1");                /*@BCA*/
+            return -1;                                                      /*@BCA*/
+        }                                                                   /*@BCA*/
+
+        String filename = readVirtualMemoryString(file, MAXSTRLEN);         /*@BCA*/
+        if (filename == null)                                               /*@BCA*/
+            Lib.debug(dbgProcess, "handleExec(): filename == null");        /*@BCA*/
+            return -1;                                                      /*@BCA*/
+        }                                                                   /*@BCA*/
+
+        /* filename doesn't have the ".coff" extension                            */
+        if (filename.substring(filename.length()-4, filename.length())      /*@BCA*/
+              != ".coff"){                                                  /*@BCA*/
+            Lib.debug(dbgProcess,                                           /*@BCA*/
+               "handleExec(): filename doesn't have the ".coff" extension");/*@BCA*/
+            return -1;                                                      /*@BCA*/
+        }                                                                   /*@BCA*/
+
+        /* get args from address of argv                                          */  
+        String args[] = new String[argc];                                   /*@BCA*/
+        byte   temp[] = new byte[4];                                        /*@BCA*/
+        for (int i = 0; i < argc; i++) {                                    /*@BCA*/
+            int cntBytes = readVirtualMemory(argv+i*4, temp);               /*@BCA*/
+            if (cntBytes != 4) {                                            /*@BCA*/
+                return -1;                                                  /*@BCA*/
+            }                                                               /*@BCA*/
+
+            int argAddress = Lib.bytesToInt(temp, 0);                       /*@BCA*/
+            args[i] = readVirtualMemoryString(argAddress, MAXSTRLEN);       /*@BCA*/
+        }                                                                   /*@BCA*/
+
+        /* create a new child process                                       /*@BCA*/
+        UserProcess childProcess = UserProcess.newUserProcess();            /*@BCA*/
+        childProcess.pid = UserKernel.getNextPid();                         /*@BCA*/
+        childProcess.ppid = this.pid;                                       /*@BCA*/
+        this.children.add(childProcess);                                    /*@BCA*/
+
+        /* register this new process in UserKenel's map                           */
+        UserKernel.registerProcess(childProcess.pid, childProcess);         /*@BCA*/
+
+         
+        /* invoke UserProcess.execute to load executable and create a new UThread */
+        boolean retval = this.execute(filename, args);                      /*@BCA*/
+
+        if (retval) {                                                       /*@BCA*/
+            return childProcess.pid;                                        /*@BCA*/    
+        }                                                                   /*@BCA*/
+        else {                                                              /*@BCA*/
+            return -1;                                                      /*@BCA*/
+        }                                                                   /*@BCA*/
+    }                                                                       /*@BCA*/
 
 
     /**
@@ -775,10 +910,67 @@ public class UserProcess {
      * If the child exited normally, returns 1. If the child exited as a result of
      * an unhandled exception, returns 0. If processID does not refer to a child
      * process of the current process, returns -1.
+     *
+     * prototype:
+     *
+     *    int  join(int pid, int *status)
+     *
      */
-    private int handleJoin(int a0) {                                       /*@BCA*/
+    /**
+     * Procedure *
+     *
+     * If processID does not refer to a child process of the current process, 
+     *          returns -1.
+     *   If the child has already exited by the time of the call,
+     *          returns -2.
+     *   Else
+     *     
+     *   Child process's thread joins current thread
+     *   Store the exit status of child process to status pointed by the second argument
+     *   If the child exited normally, 
+     *          returns 1;
+     *   Else If the child exited as a result of an unhandled exception, 
+     *          returns 0;
+     */
+    private int handleJoin(int childPid, int adrStatus) {                  /*@BCA*/
 	    Lib.debug(dbgProcess, "handleJoin()");                             /*@BCA*/
-        return 0;                                                          /*@BCA*/
+        
+        /* childpid does not refer to a child process of the current process     */
+        boolean childFlag = false;                                         /*@BCA*/
+        Iterator<int> it = this.children.iterator();                       /*@BCA*/
+        while(it.hasNext()) {                                              /*@BCA*/
+            int childpid = it.next();                                      /*@BCA*/ 
+            if (childpid == this.pid) {                                    /*@BCA*/
+                childFlag = true;                                          /*@BCA*/
+                break;                                                     /*@BCA*/
+            }                                                              /*@BCA*/
+        }                                                                  /*@BCA*/
+                                                                           /*@BCA*/
+        if (childFlag == false) {                                          /*@BCA*/
+            Lib.debug(dbgProcess,                                          /*@BCA*/ 
+                    "not refer to a child process of the current process");/*@BCA*/                         
+            return -1;                                                     /*@BCA*/
+        }                                                                  /*@BCA*/
+
+        /* the child has already exited by the time of the call                  */   
+        UserProcess childProcess = UserKernel.getProcessByID(childpid);    /*@BCA*/
+        if (childProcess.ppid == null) {                                   /*@BCA*/
+            Lib.debug(dbgProcess,                                          /*@BCA*/ 
+                 "the child has already exited by the time of the call");  /*@BCA*/                         
+            return -2;                                                     /*@BCA*/
+        }                                                                  /*@BCA*/
+         
+        /* child process's thread joins current thread                           */
+        childProcess.thread.join();                                        /*@BCA*/ 
+
+        /* store the exit status to status pointed by the second argument        */
+        byte temp[] = new byte[4];                                         /*@BCA*/
+        temp=Lib.bytesFromInt(childProcess.exitStatus);                    /*@BCA*/
+        int cntBytes = writeVirtualMemory(adrStatus, temp);                /*@BCA*/
+        if (cntBytes != 4)                                                 /*@BCA*/
+            return 1;                                                      /*@BCA*/ 
+        else                                                               /*@BCA*/
+           return 0;                                                       /*@BCA*/
     }                                                                      /*@BCA*/
      
      
@@ -856,10 +1048,13 @@ public class UserProcess {
 	    return handleUnlink(a0);                     /*@BAA*/
 
     case syscallExit:                                /*@BCA*/
-	    return handleExit(a0);                       /*@BCA*/
+        /* the first argument is specified exit status @BAA*/
+	    handleExit(a0);                              /*@BCA*/
+        Lib.assertNotReached();                      /*@BCA */
+        return 0;                                    /*@BCA*/           
 
     case syscallExec:                                /*@BCA*/
-	    return handleExec(a0);                       /*@BCA*/
+	    return handleExec(a0, a1, a2);               /*@BCA*/
 
     case syscallJoin:                                /*@BCA*/
 	    return handleJoin(a0);                       /*@BCA*/
@@ -955,23 +1150,45 @@ public class UserProcess {
                                             
     }                                                             /*@BAA*/
 
-    /* maximum number of opened files per process */
+    /* maximum number of opened files per process                       */
     public static final int MAXFD = 16;                           /*@BAA*/
 
-    /* standard input file descriptor  */
+    /* standard input file descriptor                                   */
     public static final int STDIN = 0;                            /*@BAA*/ 
 
-    /* standard output file descriptor */
+    /* standard output file descriptor                                  */
     public static final int STDOUT = 1;                           /*@BAA*/
 
-    /* maximum length of strings passed as arguments to system calls */
+    /* maximum length of strings passed as arguments to system calls    */
     public static final int MAXSTRLEN = 256;                      /*@BAA*/  
 
-    /* file descriptors per process */
+    /* pid of root process(first user process)                          */
+    public static final int ROOT = 1;                             /*@BCA*/  
+
+    /* file descriptors per process                                     */
     private FileDescriptor fds[] = new FileDescriptor[MAXFD];     /*@BAA*/   
 
-    /* number of opened files       */
+    /* number of opened files                                           */
     private int cntOpenedFiles = 0;                               /*@BAA*/
+
+    /* process ID                                                       */
+    private int pid;                                              /*@BCA*/
+
+    /* parent process's ID                                              */
+    private int ppid;                                             /*@BCA*/
+
+    /* child processes                                                  */
+    private LinkedList<int> children = new LinkedList<int>();     /*@BCA*/
+
+    /* exit status                                                      */
+    private int exitStatus;                                       /*@BCA*/
+
+    /* user thread that's associated with this process                  */
+    private UThread thread;                                       /*@BCA*/
+
+    /* condition varialbe which is used to notify parent process */
+    // [TBD 2/18/2014] private int exitCondition = new Condition2;                                    
+
 }
 
 

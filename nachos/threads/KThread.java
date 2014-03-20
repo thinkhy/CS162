@@ -385,6 +385,7 @@ public class KThread {
 	Machine.yield();
 
     // do nothing
+    // UThread will save general registers [3/18/2014 hy]
 	currentThread.saveState();
 
 	Lib.debug(dbgThread, "Switching from: " + currentThread.toString()

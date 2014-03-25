@@ -1185,10 +1185,7 @@ public class UserProcess {
 
     /* user thread that's associated with this process                  */
     private UThread thread;                                       /*@BCA*/
-
-    /* condition varialbe which is used to notify parent process */
-    // [TBD 2/18/2014] private int exitCondition = new Condition2;                                    
-
+                                   
 }
 
 

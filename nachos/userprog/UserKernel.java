@@ -6,6 +6,7 @@ import nachos.userprog.*;
 
 import java.util.LinkedList; 
 import java.util.Iterator;   
+import java.util.HashMap;   
 
 /**************************************************************************
  *
@@ -194,7 +195,7 @@ public class UserKernel extends ThreadedKernel {
     /** dummy variables to make javac smarter. */
     private static Coff dummy1 = null;
 
-    /** maintain a global linked list of free physical pages. */
+    /** maintain a global linked list of free physical pages.      */
     private static LinkedList<Integer> pageTable                   // @BBA
                          = new LinkedList<Integer>();              // @BBA
     
@@ -204,9 +205,9 @@ public class UserKernel extends ThreadedKernel {
     private static int nextPid = 0;                                // @BCA
 
     /** maintain a map which stores processes, key is pid,
-     * value is the process which holds the pid.              */
-    private static int HashMap<int, UserProcess>                   // @BCA 
-                      processMap = new map<int, UserProcess>();    // @BCA 
+     * value is the process which holds the pid.                   */
+    private static HashMap<Integer, UserProcess>                   // @BCA 
+              processMap = new HashMap<Integer, UserProcess>();    // @BCA 
 
 }
 

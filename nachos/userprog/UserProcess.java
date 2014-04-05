@@ -4,6 +4,8 @@ import nachos.machine.*;
 import nachos.threads.*;
 import nachos.userprog.*;
 
+import java.util.LinkedList; 
+import java.util.Iterator; 
 import java.io.EOFException;
 
 /****************************************************************************************
@@ -46,7 +48,7 @@ public class UserProcess {
     /**************************************************************************/
     fds[STDIN].file = UserKernel.console.openForReading();              /*@BAA*/
     fds[STDIN].position = 0;
-	Lib.assertTrue(fds[STDIN] != null);                                 /*@BAA*/  
+	Lib.assertTrue(fds[STDIN] != null);                                    /*@BAA*/  
     /* fds[STDOUT].file = UserKernel.console.openForWriting();*/        /*@BAA*/
     /* fds[STDOUT].position = 0; */
 	/* Lib.assertTrue(fds[STDOUT] != null); */                          /*@BAA*/ 
@@ -757,8 +759,8 @@ public class UserProcess {
 
         /* set pid of parent process to null                                     */
         UserProcess parentProcess = UserKernel.getProcessByID(this.ppid);  /*@BCA*/
-        this.ppid = null;                                                  /*@BCA*/
-        Iterator<int> ts = parentProcess.children.iterator();              /*@BCA*/ 
+        this.ppid = 0;                                                     /*@BCA*/
+        Iterator<Integer> ts = parentProcess.children.iterator();          /*@BCA*/ 
         while(ts.hasNext()) {                                              /*@BCA*/
             int childpid = ts.next();                                      /*@BCA*/ 
             if (childpid == this.pid) {                                    /*@BCA*/
@@ -770,9 +772,9 @@ public class UserProcess {
 
         /* set any children of the process no longer have a parent process(null).*/ 
         while (!children.isEmpty())  {                                     /*@BCA*/
-            childPid = children.removeFirst();                             /*@BCA*/ 
+            int childPid = children.removeFirst();                         /*@BCA*/ 
             UserProcess childProcess = UserKernel.getProcessByID(childPid);/*@BCA*/
-            childProcess.ppid = null;                                      /*@BCA*/
+            childProcess.ppid = 0;                                         /*@BCA*/
         }                                                                  /*@BCA*/
 
         /*  set the process's exit status to status that caller specifies(normal)* 
@@ -846,16 +848,17 @@ public class UserProcess {
         }                                                                   /*@BCA*/
 
         String filename = readVirtualMemoryString(file, MAXSTRLEN);         /*@BCA*/
-        if (filename == null)                                               /*@BCA*/
+        if (filename == null) {                                             /*@BCA*/
             Lib.debug(dbgProcess, "handleExec(): filename == null");        /*@BCA*/
             return -1;                                                      /*@BCA*/
         }                                                                   /*@BCA*/
 
         /* filename doesn't have the ".coff" extension                            */
-        if (filename.substring(filename.length()-4, filename.length())      /*@BCA*/
-              != ".coff"){                                                  /*@BCA*/
+        String suffix =                                                     /*@BCA*/
+            filename.substring(filename.length()-4, filename.length());     /*@BCA*/
+        if (suffix.equals(".coff")) {                                       /*@BCA*/
             Lib.debug(dbgProcess,                                           /*@BCA*/
-               "handleExec(): filename doesn't have the ".coff" extension");/*@BCA*/
+              "handleExec(): filename doesn't have the "+coff+" extension");/*@BCA*/
             return -1;                                                      /*@BCA*/
         }                                                                   /*@BCA*/
 
@@ -876,7 +879,7 @@ public class UserProcess {
         UserProcess childProcess = UserProcess.newUserProcess();            /*@BCA*/
         childProcess.pid = UserKernel.getNextPid();                         /*@BCA*/
         childProcess.ppid = this.pid;                                       /*@BCA*/
-        this.children.add(childProcess);                                    /*@BCA*/
+        this.children.add(childProcess.pid);                                /*@BCA*/
 
         /* register this new process in UserKenel's map                           */
         UserKernel.registerProcess(childProcess.pid, childProcess);         /*@BCA*/
@@ -937,9 +940,10 @@ public class UserProcess {
         
         /* childpid does not refer to a child process of the current process     */
         boolean childFlag = false;                                         /*@BCA*/
-        Iterator<int> it = this.children.iterator();                       /*@BCA*/
+        int childpid = 0;                                                  /*@BCA*/
+        Iterator<Integer> it = this.children.iterator();                   /*@BCA*/
         while(it.hasNext()) {                                              /*@BCA*/
-            int childpid = it.next();                                      /*@BCA*/ 
+            childpid = it.next();                                      /*@BCA*/ 
             if (childpid == this.pid) {                                    /*@BCA*/
                 childFlag = true;                                          /*@BCA*/
                 break;                                                     /*@BCA*/
@@ -954,7 +958,8 @@ public class UserProcess {
 
         /* the child has already exited by the time of the call                  */   
         UserProcess childProcess = UserKernel.getProcessByID(childpid);    /*@BCA*/
-        if (childProcess.ppid == null) {                                   /*@BCA*/
+        /* TODO: can't check exit state according to value of ppid [140406]/*@BCA*/          
+        if (childProcess.ppid == 0) {                                      /*@BCA*/
             Lib.debug(dbgProcess,                                          /*@BCA*/ 
                  "the child has already exited by the time of the call");  /*@BCA*/                         
             return -2;                                                     /*@BCA*/
@@ -1057,7 +1062,7 @@ public class UserProcess {
 	    return handleExec(a0, a1, a2);               /*@BCA*/
 
     case syscallJoin:                                /*@BCA*/
-	    return handleJoin(a0);                       /*@BCA*/
+	    return handleJoin(a0, a1);                   /*@BCA*/
 
 	default:
 	    Lib.debug(dbgProcess, "Unknown syscall " + syscall);
@@ -1178,7 +1183,8 @@ public class UserProcess {
     private int ppid;                                             /*@BCA*/
 
     /* child processes                                                  */
-    private LinkedList<int> children = new LinkedList<int>();     /*@BCA*/
+    private LinkedList<Integer> children                          /*@BCA*/
+                   = new LinkedList<Integer>();                   /*@BCA*/
 
     /* exit status                                                      */
     private int exitStatus;                                       /*@BCA*/

@@ -59,6 +59,13 @@ public class UserProcess {
     System.out.println("*** File handle: " + fileHandle);               /*@BAA*/
     fds[fileHandle].file = retval;                                      /*@BAA*/
     fds[fileHandle].position = 0;                                       /*@BAA*/
+
+
+    pid = UserKernel.getNextPid();                                      /*@BCA*/
+
+    /* register this new process in UserKenel's map                           */
+    UserKernel.registerProcess(pid, this);                              /*@BCA*/
+
     }                                                                   /*@BAA*/
     
     /**
@@ -757,24 +764,26 @@ public class UserProcess {
                 handleClose(i);                                            /*@BCA*/
         }                                                                  /*@BCA*/
 
-        /* set pid of parent process to null                                     */
-        UserProcess parentProcess = UserKernel.getProcessByID(this.ppid);  /*@BCA*/
-        this.ppid = 0;                                                     /*@BCA*/
-        Iterator<Integer> ts = parentProcess.children.iterator();          /*@BCA*/ 
-        while(ts.hasNext()) {                                              /*@BCA*/
-            int childpid = ts.next();                                      /*@BCA*/ 
-            if (childpid == this.pid) {                                    /*@BCA*/
-                ts.remove();                                               /*@BCA*/
-                break;                                                     /*@BCA*/ 
-            }                                                              /*@BCA*/ 
-        }                                                                  /*@BCA*/
-
+        if (this.pid != ROOT) {                                            /*@BCA*/
+            /* set pid of parent process to null                                 */
+            UserProcess parentProcess =                                    /*@BCA*/
+                UserKernel.getProcessByID(this.ppid);                      /*@BCA*/
+            this.ppid = 0;                                                 /*@BCA*/
+            Iterator<Integer> ts = parentProcess.children.iterator();      /*@BCA*/ 
+            while(ts.hasNext()) {                                          /*@BCA*/
+                int childpid = ts.next();                                  /*@BCA*/ 
+                if (childpid == this.pid) {                                /*@BCA*/
+                 ts.remove();                                              /*@BCA*/
+                 break;                                                    /*@BCA*/ 
+                }                                                          /*@BCA*/ 
+            }                                                              /*@BCA*/
+        }                                                                  /*@BCA*/ 
 
         /* set any children of the process no longer have a parent process(null).*/ 
-        while (!children.isEmpty())  {                                     /*@BCA*/
+        while (children != null && !children.isEmpty())  {                 /*@BCA*/
             int childPid = children.removeFirst();                         /*@BCA*/ 
             UserProcess childProcess = UserKernel.getProcessByID(childPid);/*@BCA*/
-            childProcess.ppid = 0;                                         /*@BCA*/
+            childProcess.ppid = ROOT;                                      /*@BCA*/
         }                                                                  /*@BCA*/
 
         /*  set the process's exit status to status that caller specifies(normal)* 
@@ -840,6 +849,7 @@ public class UserProcess {
         + Otherwise, on error return -1.
     */
     private int handleExec(int file, int argc, int argv) {                  /*@BCA*/
+        System.out.println("*** [DEBUG] Inside exec:");               
 	    Lib.debug(dbgProcess, "handleExec()");                              /*@BCA*/
 
         if (argc < 1) {                                                     /*@BCA*/
@@ -877,12 +887,8 @@ public class UserProcess {
 
         /* create a new child process                                       /*@BCA*/
         UserProcess childProcess = UserProcess.newUserProcess();            /*@BCA*/
-        childProcess.pid = UserKernel.getNextPid();                         /*@BCA*/
         childProcess.ppid = this.pid;                                       /*@BCA*/
         this.children.add(childProcess.pid);                                /*@BCA*/
-
-        /* register this new process in UserKenel's map                           */
-        UserKernel.registerProcess(childProcess.pid, childProcess);         /*@BCA*/
 
          
         /* invoke UserProcess.execute to load executable and create a new UThread */
@@ -943,7 +949,7 @@ public class UserProcess {
         int childpid = 0;                                                  /*@BCA*/
         Iterator<Integer> it = this.children.iterator();                   /*@BCA*/
         while(it.hasNext()) {                                              /*@BCA*/
-            childpid = it.next();                                      /*@BCA*/ 
+            childpid = it.next();                                          /*@BCA*/ 
             if (childpid == this.pid) {                                    /*@BCA*/
                 childFlag = true;                                          /*@BCA*/
                 break;                                                     /*@BCA*/
@@ -1055,7 +1061,7 @@ public class UserProcess {
     case syscallExit:                                /*@BCA*/
         /* the first argument is specified exit status @BAA*/
 	    handleExit(a0);                              /*@BCA*/
-        Lib.assertNotReached();                      /*@BCA */
+        Lib.assertNotReached();                      /*@BCA*/
         return 0;                                    /*@BCA*/           
 
     case syscallExec:                                /*@BCA*/

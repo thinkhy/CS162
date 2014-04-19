@@ -12,8 +12,8 @@
 # HY 1/12/2014  add syscall to test code of syscall
 # ##############################################################################
 ARCHDIR = ..
-#GCCDIR = $(ARCHDIR)/mips-x86.linux-xgcc/
-GCCDIR = $(ARCHDIR)/mips-x86.win32-xgcc/
+GCCDIR = $(ARCHDIR)/mips-x86.linux-xgcc/
+#GCCDIR = $(ARCHDIR)/mips-x86.win32-xgcc/
 
 ASFLAGS = -mips1
 CPPFLAGS =
@@ -35,7 +35,7 @@ STDLIB_O = start.o stdio.o stdlib.o
 LIB = assert atoi printf readline stdio strncmp strcat strcmp strcpy strlen memcpy memset
 NLIB = libnachos.a
 
-TARGETS = halt sh matmult sort echo cat cp mv rm syscall #chat chatserver
+TARGETS = halt sh matmult sort echo cat cp mv rm syscall exittest exectest #chat chatserver
 
 .SECONDARY: $(patsubst %.c,%.o,$(wildcard *.c))
 

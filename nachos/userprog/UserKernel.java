@@ -116,6 +116,7 @@ public class UserKernel extends ThreadedKernel {
 	super.run();
 
 	UserProcess process = UserProcess.newUserProcess();
+
 	
 	String shellProgram = Machine.getShellProgramName();	
     

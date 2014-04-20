@@ -1,5 +1,6 @@
 
 
 void main() {
-    exec("../test/exittest.coff", 0);          
+    char* argv[] = {"exittest.coff"};
+    exec("exittest.coff", 1, argv);          
 }

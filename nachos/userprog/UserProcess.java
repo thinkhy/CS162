@@ -849,17 +849,18 @@ public class UserProcess {
         + Otherwise, on error return -1.
     */
     private int handleExec(int file, int argc, int argv) {                  /*@BCA*/
-        System.out.println("*** [DEBUG] Inside exec:");               
 	    Lib.debug(dbgProcess, "handleExec()");                              /*@BCA*/
 
         if (argc < 1) {                                                     /*@BCA*/
-            Lib.debug(dbgProcess, "handleExec(): argc < 1");                /*@BCA*/
+            Lib.debug(dbgProcess,                                           /*@BCA*/
+                    "[UserProcess::handleExec] Error: argc < 1");           /*@BCA*/
             return -1;                                                      /*@BCA*/
         }                                                                   /*@BCA*/
 
         String filename = readVirtualMemoryString(file, MAXSTRLEN);         /*@BCA*/
         if (filename == null) {                                             /*@BCA*/
-            Lib.debug(dbgProcess, "handleExec(): filename == null");        /*@BCA*/
+            Lib.debug(dbgProcess,                                           /*@BCA*/ 
+                    "[UserProcess::handleExec] Error: filename == null");   /*@BCA*/
             return -1;                                                      /*@BCA*/
         }                                                                   /*@BCA*/
 

@@ -114,8 +114,6 @@ public class SynchConsole {
 	    this.canRead = canRead;
 	    this.canWrite = canWrite;
 
-        // [Debug by Huang Ye 140203]
-        System.out.println("File.File()");
 	}
 	
 	public void close() {

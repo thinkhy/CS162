@@ -62,3 +62,9 @@ start.o: start.s syscall.h
 
 %.coff: %.o $(NLIB)
 	$(LD) $(LDFLAGS) -o $@ $< start.o -lnachos
+
+
+mulprocess.coff: ./testprj2/mulprocess.c
+	$(CC) $(CFLAGS)  -c $<
+	$(LD) $(LDFLAGS) -o $@ mulprocess.o start.o -lnachos
+

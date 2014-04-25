@@ -21,13 +21,13 @@ int main(int argc, char *argv[]) {
  *
  * Variations for Project 2 Task III: Implement the system calls for process management
  *
- * Var 0 : tests that your syscall exit finishes the thread of the process immediately
- * Var 1 : runs exec multiple times and checks each child gets unique PID
- * Var 2 : tests your syscall join to a child
- * Var 3 : tests exec with error arguments (e.g. bad file name)
- * Var 4 : tests your syscall join to a non-child
- * Var 5 : tests your syscall join to a child that caused unhandled exception
- * Var 6 : tests that your exit syscall releases all resources
+ * Var 1 : tests that your syscall exit finishes the thread of the process immediately
+ * Var 2 : runs exec multiple times and checks each child gets unique PID
+ * Var 3 : tests your syscall join to a child
+ * Var 4 : tests exec with error arguments (e.g. bad file name)
+ * Var 5 : tests your syscall join to a non-child
+ * Var 6 : tests your syscall join to a child that caused unhandled exception
+ * Var 7 : tests that your exit syscall releases all resources
  *
  ******************************************************************************************/
     int i;
@@ -59,8 +59,13 @@ void route(int variation, char dbg_flag)
             /*************************************************************/
             /*                                                           */
             /* Variation 1:                                              */
+            /* tests that your syscall exit finishes the thread of the   */
+            /* process immediately.                                      */
             /*                                                           */
             /*************************************************************/
+            exit(-1);
+
+
 
 
         case 2:

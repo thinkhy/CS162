@@ -10,15 +10,20 @@
  * Change activity:
  *   $BC,EPT     4/21/2014 - initial release
  **********************************************************************/
+#include "../stdio.h"
 
 #define NULL     0
 #define NUMVARS  7
 #define NAN      (0xEFFFFFFF)
+#define MAXARGC  20
 
 void route(int, char);
 int atoi(const char *str);
 
-int pid[10];                    /* Array to store pid                                    */
+int pid[10];                    /* array to store pid                                    */
+char *executable;               /* executable file name for exec()                       */
+char *_argv[MAXARGC];           /* argv for testing executable                           */
+int   _argc;                    /* argc for testing executable                           */
 
 int main(int argc, char *argv[]) { 
 
@@ -83,7 +88,12 @@ void route(int variation, char dbg_flag)
             /* child gets unique PID                                     */
             /*                                                           */
             /*************************************************************/
-            pid[0] = exec("../test/exit");
+            executable = "cp.coff";
+            _argv[0] = executable;
+            _argv[1] = NULL;
+            _argc = 1;
+
+            pid[0] = exec(executable, _argc, _argv);
             
 
 

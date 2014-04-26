@@ -11,9 +11,14 @@
  *   $BC,EPT     4/21/2014 - initial release
  **********************************************************************/
 
+#define NULL     0
 #define NUMVARS  7
+#define NAN      (0xEFFFFFFF)
 
 void route(int, char);
+int atoi(const char *str);
+
+int pid[10];                    /* Array to store pid                                    */
 
 int main(int argc, char *argv[]) { 
 
@@ -31,8 +36,11 @@ int main(int argc, char *argv[]) {
  *
  ******************************************************************************************/
     int i;
-    int variation;
+    int variation = 0;
     char dbg_flag = 'd';
+
+    if(argc > 1)
+        variation = atoi(argv[1]);
 
     if (variation) {
         route(variation, dbg_flag);
@@ -64,16 +72,20 @@ void route(int variation, char dbg_flag)
             /*                                                           */
             /*************************************************************/
             exit(1);
-
+            exit(0);
 
 
 
         case 2:
             /*************************************************************/
             /*                                                           */
-            /* Variation 1:                                              */
+            /* Variation 2: runs exec multiple times and checks each     */
+            /* child gets unique PID                                     */
             /*                                                           */
             /*************************************************************/
+            pid[0] = exec("../test/exit");
+            
+
 
         case 3:
             /*************************************************************/
@@ -86,22 +98,26 @@ void route(int variation, char dbg_flag)
         case 5:
         case 6:
         case 7:
+        default:
+            0;
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
 
 
+int atoi(const char *str) {
+    if (str == NULL)
+        return NAN;
+
+    int sum = 0;
+    int i = 0;
+    while(str[i] != NULL) {
+        sum = sum*10 + (str[i]-'0');
+        i++;
+    }
+
+    return sum;
+}
 
 

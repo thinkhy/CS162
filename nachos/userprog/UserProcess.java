@@ -364,6 +364,9 @@ public class UserProcess {
 	    stringOffset += argv[i].length;
 	    Lib.assertTrue(writeVirtualMemory(stringOffset,new byte[] { 0 }) == 1);
 	    stringOffset += 1;
+
+        Lib.debug(dbgProcess,                                                   /*@BCA*/
+              "[UserProcess.load] args[" + i + "]: " + args[i]);                /*@BCA*/
 	}
 
 	return true;

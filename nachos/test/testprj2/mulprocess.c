@@ -63,7 +63,7 @@ void route(int variation, char dbg_flag)
             /* process immediately.                                      */
             /*                                                           */
             /*************************************************************/
-            exit(-1);
+            exit(1);
 
 
 

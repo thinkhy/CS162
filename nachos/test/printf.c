@@ -1,5 +1,6 @@
 #include "stdio.h"
 #include "stdlib.h"
+#include "syscall.h"
 
 static char digittoascii(unsigned n, int uppercase) {
     assert(n<36);

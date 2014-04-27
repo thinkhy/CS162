@@ -20,7 +20,7 @@
 
 void log(char *format, ...);
 void route(int, char);
-int atoi(const char *str);
+int  atoi(const char *str);
 
 int pid[10];                    /* array to store pid                                    */
 char *executable;               /* executable file name for exec()                       */
@@ -81,7 +81,9 @@ void route(int variation, char dbg_flag)
             LOG("++ProjectII TaskIII VAR1");
             exit(1);
             exit(0);
-            // LOG("++ProjectII TaskIII VAR1: FAILED");
+            /* FIX IT [thinkhy 4/27/2014] */
+            /* The second LOG will cause this program to get hung */
+            /* LOG("++ProjectII TaskIII VAR1: FAILED"); */
 
 
 
@@ -100,7 +102,7 @@ void route(int variation, char dbg_flag)
             _argc = 1;
 
             pid[0] = exec(executable, _argc, _argv);
-            // LOG("++ProjectII TaskIII VAR2: get PID: %d after exec cp.coff", pid[0]);
+            LOG("++ProjectII TaskIII VAR2: get PID: %d after exec cp.coff", pid[0]);
             
 
 

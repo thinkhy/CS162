@@ -4,7 +4,7 @@
  * desc:   test cases for CS162 project 2: support multiprogramming
  * author: thinkhy
  * tccall: java nachos.machine.Machine -x mulprocess.coff  -# varnum
- * k
+ * 
  * env:    nachos 5.0j 
  * compile:test/make
  * Change activity:
@@ -16,14 +16,16 @@
 #define NUMVARS  7
 #define NAN      (0xEFFFFFFF)
 #define MAXARGC  20
+#define LOG      printf
 
+void log(char *format, ...);
 void route(int, char);
 int atoi(const char *str);
 
 int pid[10];                    /* array to store pid                                    */
 char *executable;               /* executable file name for exec()                       */
 char *_argv[MAXARGC];           /* argv for testing executable                           */
-int   _argc;                    /* argc for testing executable                           */
+int  _argc;                     /* argc for testing executable                           */
 
 int main(int argc, char *argv[]) { 
 
@@ -76,8 +78,10 @@ void route(int variation, char dbg_flag)
             /* process immediately.                                      */
             /*                                                           */
             /*************************************************************/
+            LOG("++ProjectII TaskIII VAR1");
             exit(1);
             exit(0);
+            // LOG("++ProjectII TaskIII VAR1: FAILED");
 
 
 
@@ -88,12 +92,15 @@ void route(int variation, char dbg_flag)
             /* child gets unique PID                                     */
             /*                                                           */
             /*************************************************************/
+            // log("++ProjectII TaskIII VAR2");
+            // log("++ProjectII TaskIII VAR2: exec cp.coff");
             executable = "cp.coff";
             _argv[0] = executable;
             _argv[1] = NULL;
             _argc = 1;
 
             pid[0] = exec(executable, _argc, _argv);
+            // LOG("++ProjectII TaskIII VAR2: get PID: %d after exec cp.coff", pid[0]);
             
 
 
@@ -115,6 +122,15 @@ void route(int variation, char dbg_flag)
 
 }
 
+
+void log(char *format, ...) {
+     va_list ap;
+     va_start(ap,format);
+ 
+     vprintf(format, ap);
+ 
+     va_end(ap);
+}
 
 int atoi(const char *str) {
     if (str == NULL)

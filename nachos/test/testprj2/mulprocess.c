@@ -12,11 +12,12 @@
  **********************************************************************/
 #include "../stdio.h"
 
-#define NULL     0
-#define NUMVARS  7
-#define NAN      (0xEFFFFFFF)
-#define MAXARGC  20
-#define LOG      printf
+#define NULL        0
+#define NUMVARS     7
+#define NAN         (0xEFFFFFFF)
+#define MAXARGC     20
+#define MAXPROCESS  5
+#define LOG         printf
 
 void log(char *format, ...);
 void route(int, char);
@@ -26,7 +27,7 @@ int pid[10];                    /* array to store pid                           
 char *executable;               /* executable file name for exec()                       */
 char *_argv[MAXARGC];           /* argv for testing executable                           */
 int  _argc;                     /* argc for testing executable                           */
-int  i;                         /* counter for loop                                      */
+int  i,j;                       /* counter for loop                                      */
 
 int main(int argc, char *argv[]) { 
 
@@ -96,19 +97,31 @@ void route(int variation, char dbg_flag)
             /*                                                           */
             /*************************************************************/
             // log("++ProjectII TaskIII VAR2");
-            // log("++ProjectII TaskIII VAR2: exec cp.coff");
+            LOG("++ProjectII TaskIII VAR2: [START] runs exec multiple times and checks each "
+                    "child gets unique PID\n");
             executable = "cp.coff";
             _argv[0] = executable;
             _argv[1] = "cat.coff";
             _argv[2] = "cat1.coff";
             _argc = 3;
 
-            for (i = 0; i <  5; i++) {
+            for (i = 0; i <  MAXPROCESS; i++) {
                 // LOG("before");
                 pid[i] = exec(executable, _argc, _argv);
-                LOG("++ProjectII TaskIII VAR2: get PID:%d after exec cp.coff", pid[i]);
-            }
+                LOG("++ProjectII TaskIII VAR2: get PID %d after exec cp.coff\n", pid[i]);
             
+                for (j = 0; j < i; ++j)  {
+                    if (pid[j] == pid[i]) {
+                        LOG("++ProjectII TaskIII VAR2: FAILED, pid[%d] equals pid[%d]\n",
+                                    pid[j], pid[i]);
+                        exit(-1);
+                    }
+                }
+            }
+
+            LOG("++ProjectII TaskIII VAR2: [END] SUCCESSFUL\n");
+
+            break;
 
 
         case 3:

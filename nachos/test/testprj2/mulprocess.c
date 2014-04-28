@@ -26,6 +26,7 @@ int pid[10];                    /* array to store pid                           
 char *executable;               /* executable file name for exec()                       */
 char *_argv[MAXARGC];           /* argv for testing executable                           */
 int  _argc;                     /* argc for testing executable                           */
+int  i;                         /* counter for loop                                      */
 
 int main(int argc, char *argv[]) { 
 
@@ -81,7 +82,7 @@ void route(int variation, char dbg_flag)
             LOG("++ProjectII TaskIII VAR1");
             exit(1);
             exit(0);
-            /* FIX IT [thinkhy 4/27/2014] */
+            /* FIX ME [thinkhy 4/27/2014] */
             /* The second LOG will cause this program to get hung */
             /* LOG("++ProjectII TaskIII VAR1: FAILED"); */
 
@@ -98,11 +99,15 @@ void route(int variation, char dbg_flag)
             // log("++ProjectII TaskIII VAR2: exec cp.coff");
             executable = "cp.coff";
             _argv[0] = executable;
-            _argv[1] = NULL;
-            _argc = 1;
+            _argv[1] = "cat.coff";
+            _argv[2] = "cat1.coff";
+            _argc = 3;
 
-            pid[0] = exec(executable, _argc, _argv);
-            LOG("++ProjectII TaskIII VAR2: get PID: %d after exec cp.coff", pid[0]);
+            for (i = 0; i <  5; i++) {
+                // LOG("before");
+                pid[i] = exec(executable, _argc, _argv);
+                LOG("++ProjectII TaskIII VAR2: get PID:%d after exec cp.coff", pid[i]);
+            }
             
 
 

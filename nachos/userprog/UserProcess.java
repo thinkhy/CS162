@@ -56,7 +56,6 @@ public class UserProcess {
     OpenFile retval  = UserKernel.fileSystem.open("out", false);        /*@BAA*/
 
     int fileHandle = findEmptyFileDescriptor();                         /*@BAA*/ 
-    System.out.println("*** File handle: " + fileHandle);               /*@BAA*/
     fds[fileHandle].file = retval;                                      /*@BAA*/
     fds[fileHandle].position = 0;                                       /*@BAA*/
 
@@ -799,6 +798,7 @@ public class UserProcess {
 
         /* finish associated thread                                              */
         if (this.pid == ROOT) {
+	        Lib.debug(dbgProcess, "I am the root process");                /*@BCA*/
             Kernel.kernel.terminate(); /* Terminate this kernel              @BCA*/
         }                                                                  /*@BCA*/
         else {                                                             /*@BCA*/
@@ -897,7 +897,7 @@ public class UserProcess {
 
          
         /* invoke UserProcess.execute to load executable and create a new UThread */
-        boolean retval = this.execute(filename, args);                      /*@BCA*/
+        boolean retval = childProcess.execute(filename, args);                      /*@BCA*/
 
         if (retval) {                                                       /*@BCA*/
             return childProcess.pid;                                        /*@BCA*/    

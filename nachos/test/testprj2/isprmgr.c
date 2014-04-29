@@ -1,9 +1,9 @@
 /*prolog****************************************************************
  *
- * cname:  mulprocess.c
- * desc:   test cases for CS162 project 2: support multiprogramming
+ * cname:  isprmgr.c
+ * desc:   test cases for CS162 project 2 TaskIII: support multiprogramming
  * author: thinkhy
- * tccall: java nachos.machine.Machine -x mulprocess.coff  -# varnum
+ * tccall: java nachos.machine.Machine -x isprmgr.coff  -# varnum
  * 
  * env:    nachos 5.0j 
  * compile:test/make
@@ -80,9 +80,11 @@ void route(int variation, char dbg_flag)
             /* process immediately.                                      */
             /*                                                           */
             /*************************************************************/
-            LOG("++ProjectII TaskIII VAR1");
-            exit(1);
-            exit(0);
+            LOG("++ISPRMGR VAR1 STARTED");
+            LOG("++ISPRMGR VAR1");
+            executable = "exittest.coff";
+            exec(executable, _argc, _argv);
+            LOG("++ISPRMGR VAR1 ENDED: SUCCESS");
             /* FIX ME [thinkhy 4/27/2014] */
             /* The second LOG will cause this program to get hung */
             /* LOG("++ProjectII TaskIII VAR1: FAILED"); */

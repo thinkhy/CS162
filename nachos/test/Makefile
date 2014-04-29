@@ -64,7 +64,8 @@ start.o: start.s syscall.h
 	$(LD) $(LDFLAGS) -o $@ $< start.o -lnachos
 
 
-isprmgr.coff: ./testprj2/isprmgr.c
+isprmgr.coff: ./testprj2/isprmgr.c ./testprj2/exittest.c
 	$(CC) $(CFLAGS)  -c $<
-	$(LD) $(LDFLAGS) -o $@ isprmgr.o start.o -lnachos
+	$(LD) $(LDFLAGS) -o isprmgr.coff isprmgr.o start.o -lnachos
+	$(LD) $(LDFLAGS) -o exittest.coff exittest.o start.o -lnachos
 

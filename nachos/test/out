@@ -1,8 +1,8 @@
 Unable to open Øÿ½'
 AR2: [START] runs exec multiple times and checks each child gets unique PID
-++ProjectII TaskIII VAR2: get PID:2 after exec cp.coff
-++ProjectII TaskIII VAR2: get PID:3 after exec cp.coff
-++ProjectII TaskIII VAR2: get PID:4 after exec cp.coff
-++ProjectII TaskIII VAR2: get PID:5 after exec cp.coff
-++ProjectII TaskIII VAR2: get PID:6 after exec cp.coff
+++ProjectII TaskIII VAR2: get PID 2 after exec cp.coff
+++ProjectII TaskIII VAR2: get PID 3 after exec cp.coff
+++ProjectII TaskIII VAR2: get PID 4 after exec cp.coff
+++ProjectII TaskIII VAR2: get PID 5 after exec cp.coff
+++ProjectII TaskIII VAR2: get PID 6 after exec cp.coff
 ++ProjectII TaskIII VAR2: [END] SUCCESSFUL

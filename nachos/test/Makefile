@@ -35,7 +35,7 @@ STDLIB_O = start.o stdio.o stdlib.o
 LIB = assert atoi printf readline stdio strncmp strcat strcmp strcpy strlen memcpy memset
 NLIB = libnachos.a
 
-TARGETS = halt sh matmult sort echo cat cp mv rm syscall exittest exectest mulprocess#chat chatserver
+TARGETS = halt sh matmult sort echo cat cp mv rm syscall exittest exectest isprmgr#chat chatserver
 
 .SECONDARY: $(patsubst %.c,%.o,$(wildcard *.c))
 
@@ -64,7 +64,7 @@ start.o: start.s syscall.h
 	$(LD) $(LDFLAGS) -o $@ $< start.o -lnachos
 
 
-mulprocess.coff: ./testprj2/mulprocess.c
+isprmgr.coff: ./testprj2/isprmgr.c
 	$(CC) $(CFLAGS)  -c $<
-	$(LD) $(LDFLAGS) -o $@ mulprocess.o start.o -lnachos
+	$(LD) $(LDFLAGS) -o $@ isprmgr.o start.o -lnachos
 

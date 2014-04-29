@@ -1,8 +1,17 @@
 Unable to open Øÿ½'
-AR2: [START] runs exec multiple times and checks each child gets unique PID
-++ProjectII TaskIII VAR2: get PID 2 after exec cp.coff
-++ProjectII TaskIII VAR2: get PID 3 after exec cp.coff
-++ProjectII TaskIII VAR2: get PID 4 after exec cp.coff
-++ProjectII TaskIII VAR2: get PID 5 after exec cp.coff
-++ProjectII TaskIII VAR2: get PID 6 after exec cp.coff
-++ProjectII TaskIII VAR2: [END] SUCCESSFUL
+it
+                            0 
+++ISPRMGR Run all the variations
+++ISPRMGR VAR1: [STARTED]
+++ISPRMGR VAR1: Child process id is                                2
+++ISPRMGR VAR1: [ENDED] SUCCESS
+++ISPRMGR VAR2: [STARTED]
+++ISPRMGR VAR2: Get PID 3 after exec cp.coff
+++ISPRMGR VAR2: Get PID 4 after exec cp.coff
+++ISPRMGR VAR2: Get PID 5 after exec cp.coff
+++ISPRMGR VAR2: Get PID 6 after exec cp.coff
+++ISPRMGR VAR2: Get PID 7 after exec cp.coff
+++ISPRMGR VAR2: [ENDED] SUCCESS
+
+PID 6 after exec cp.coff
+++ISPRMGR VAR1 ENDED: SUCCESS

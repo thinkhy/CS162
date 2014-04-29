@@ -63,9 +63,11 @@ start.o: start.s syscall.h
 %.coff: %.o $(NLIB)
 	$(LD) $(LDFLAGS) -o $@ $< start.o -lnachos
 
+exittest.coff: ./testprj2/exittest.c
+	$(CC) $(CFLAGS)  -c $<
+	$(LD) $(LDFLAGS) -o exittest.coff exittest.o start.o -lnachos
 
-isprmgr.coff: ./testprj2/isprmgr.c ./testprj2/exittest.c
+isprmgr.coff: ./testprj2/isprmgr.c
 	$(CC) $(CFLAGS)  -c $<
 	$(LD) $(LDFLAGS) -o isprmgr.coff isprmgr.o start.o -lnachos
-	$(LD) $(LDFLAGS) -o exittest.coff exittest.o start.o -lnachos
 

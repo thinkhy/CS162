@@ -3,7 +3,7 @@
  * cname:  isprmgr.c
  * desc:   test cases for CS162 project 2 TaskIII: support multiprogramming
  * author: thinkhy
- * tccall: java nachos.machine.Machine -x isprmgr.coff  -# varnum
+ * tccall: java nachos.machine.Machine -x isprmgr.coff  
  * 
  * env:    nachos 5.0j 
  * compile:test/make
@@ -51,12 +51,15 @@ int main(int argc, char *argv[]) {
     if(argc > 1)
         variation = atoi(argv[1]);
 
+    LOG("++ISPRMGR: ARG[1] is %d \n", variation);
+
     if (variation) {
         route(variation, dbg_flag);
     }
     else {
+        LOG("++ISPRMGR Run all the variations\n");
         for (i=1; i <= NUMVARS; i++)
-            route(variation, dbg_flag);
+            route(i, dbg_flag);
     }
 
 
@@ -80,14 +83,18 @@ void route(int variation, char dbg_flag)
             /* process immediately.                                      */
             /*                                                           */
             /*************************************************************/
-            LOG("++ISPRMGR VAR1 STARTED");
-            LOG("++ISPRMGR VAR1");
+            LOG("++ISPRMGR VAR1: [STARTED]\n");
             executable = "exittest.coff";
-            exec(executable, _argc, _argv);
-            LOG("++ISPRMGR VAR1 ENDED: SUCCESS");
+            _argv[0] = executable;
+            _argv[1] = NULL;
+            _argc = 1;
+            pid[0] = exec(executable, _argc, _argv);
+            LOG("++ISPRMGR VAR1: Child process id is %d\n", pid[0]);
+            LOG("++ISPRMGR VAR1: [ENDED] SUCCESS\n");
             /* FIX ME [thinkhy 4/27/2014] */
             /* The second LOG will cause this program to get hung */
             /* LOG("++ProjectII TaskIII VAR1: FAILED"); */
+            break;
 
 
 
@@ -99,8 +106,7 @@ void route(int variation, char dbg_flag)
             /*                                                           */
             /*************************************************************/
             // log("++ProjectII TaskIII VAR2");
-            LOG("++ProjectII TaskIII VAR2: [START] runs exec multiple times and checks each "
-                    "child gets unique PID\n");
+            LOG("++ISPRMGR VAR2: [STARTED]\n");
             executable = "cp.coff";
             _argv[0] = executable;
             _argv[1] = "cat.coff";
@@ -110,18 +116,18 @@ void route(int variation, char dbg_flag)
             for (i = 0; i <  MAXPROCESS; i++) {
                 // LOG("before");
                 pid[i] = exec(executable, _argc, _argv);
-                LOG("++ProjectII TaskIII VAR2: get PID %d after exec cp.coff\n", pid[i]);
+                LOG("++ISPRMGR VAR2: Get PID %d after exec cp.coff\n", pid[i]);
             
                 for (j = 0; j < i; ++j)  {
                     if (pid[j] == pid[i]) {
-                        LOG("++ProjectII TaskIII VAR2: FAILED, pid[%d] equals pid[%d]\n",
+                        LOG("++ISPRMGR VAR2: FAILED, pid[%d] equals pid[%d]\n",
                                     pid[j], pid[i]);
                         exit(-1);
                     }
                 }
             }
 
-            LOG("++ProjectII TaskIII VAR2: [END] SUCCESSFUL\n");
+            LOG("++ISPRMGR VAR2: [ENDED] SUCCESS\n");
 
             break;
 

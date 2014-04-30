@@ -503,7 +503,9 @@ public class UserProcess {
      * Returns the new file descriptor, or -1 if an error occurred.
      */
     private int handleOpen(int a0) {
-	    Lib.debug(dbgProcess, "handleOpen()");                             /*@BAA*/
+	    Lib.debug(dbgProcess, "[UserProcess.handleOpen] Start");           /*@BAA*/
+
+	    Lib.debug(dbgProcess, "[UserProcess.handleOpen] a0: "+a0+"\n");    /*@BAA*/
 
         // a0 is address of filename 
         String filename = readVirtualMemoryString(a0, MAXSTRLEN);          /*@BAA*/

@@ -14,3 +14,5 @@ it
 ++ISPRMGR VAR2: Get PID 8 after exec cp.coff
 ++ISPRMGR VAR2: Get PID 9 after exec cp.coff
 ++ISPRMGR VAR2: Get PID 10 after exec cp.coff
+++ISPRMGR VAR2: Get PID 11 after exec cp.coff
+++ISPRMGR VAR2: [ENDED] SUCCESS

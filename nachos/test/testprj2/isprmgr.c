@@ -16,7 +16,7 @@
 #define NUMVARS     7
 #define NAN         (0xEFFFFFFF)
 #define MAXARGC     20
-#define MAXPROCESS  10
+#define MAXPROCESS  9
 #define LOG         printf
 
 void log(char *format, ...);

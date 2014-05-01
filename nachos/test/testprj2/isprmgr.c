@@ -16,7 +16,7 @@
 #define NUMVARS     7
 #define NAN         (0xEFFFFFFF)
 #define MAXARGC     20
-#define MAXPROCESS  9
+#define MAXPROCESS  10
 #define LOG         printf
 
 void log(char *format, ...);
@@ -28,6 +28,8 @@ char *executable;               /* executable file name for exec()              
 char *_argv[MAXARGC];           /* argv for testing executable                           */
 int  _argc;                     /* argc for testing executable                           */
 int  i,j;                       /* counter for loop                                      */
+int  exitstatus;                /* exit status of child process                          */           
+int  retval;                    /* return value of system call                           */
 
 int main(int argc, char *argv[]) { 
 
@@ -135,9 +137,30 @@ void route(int variation, char dbg_flag)
         case 3:
             /*************************************************************/
             /*                                                           */
-            /* Variation 1:                                              */
+            /* Variation 3:  tests your syscall join to a child          */
             /*                                                           */
             /*************************************************************/
+            LOG("++ISPRMGR VAR3: [STARTED]\n");
+            
+            executable = "exittest.coff";
+            _argv[0] = executable;
+            _argv[1] = NULL;
+            _argc = 1;
+            LOG("++ISPRMGR VAR3: exec %s\n", executable);
+            pid[0] = exec(executable, _argc, _argv);
+            LOG("++ISPRMGR VAR3: Child process id is %d\n", pid[0]);
+            LOG("++ISPRMGR VAR3: Issue join to get exit status of chile process\n", pid[0]);
+            retval = join(pid[0], &exitstatus);
+            if (retval == 0) {
+                LOG("++ISPRMGR VAR3: join successfully, exit status is %d\n", exitstatus);
+                LOG("++ISPRMGR VAR3: [ENDED] SUCCESS\n");
+            }
+            else {
+                LOG("++ISPRMGR VAR3: return value of join is %d\n", retval);
+                LOG("++ISPRMGR VAR3: [ENDED] FAIL\n");
+            }
+            
+            
 
         case 4:
         case 5:

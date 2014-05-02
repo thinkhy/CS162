@@ -1,9 +1,6 @@
-++TESTEXIT: invoke exit
-                            5 
-++ISPRMGR VAR5: [STARTED]
-++ISPRMGR VAR5: invoke exec with unmatched argc
-++ISPRMGR VAR5: exec exittest.coff
-++ISPRMGR VAR5: invoke exec with unmatched argc when argv varies
-++ISPRMGR VAR5: exec exittest.coff
-++ISPRMGR VAR5: Retval of exec is                                3 
-++ISPRMGR VAR5: [END] SUCCESS
+++ISPRMGR: ARG[1] is                                7 
+++ISPRMGR VAR7: [STARTED]
+++ISPRMGR VAR7: exec exception.coff
+++ISPRMGR VAR7: [END] FAIL to invoke exec
+++ISPRMGR VAR7: Issue join to child with pid=                               2
+++ISPRMGR VAR7: [ENDED] FAIL

@@ -123,7 +123,7 @@ public class UserKernel extends ThreadedKernel {
     // [added by hy 12/31/2013]
     Lib.debug('a', "Shell program: " + shellProgram);
 
-	Lib.assertTrue(process.execute(shellProgram, new String[] {shellProgram, "5" }));
+	Lib.assertTrue(process.execute(shellProgram, new String[] {shellProgram, "7" }));
 
 	KThread.currentThread().finish();
     }

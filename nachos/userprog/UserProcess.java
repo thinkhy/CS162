@@ -1108,6 +1108,9 @@ public class UserProcess {
 	default:
 	    Lib.debug(dbgProcess, "Unexpected exception: " +
 		      Processor.exceptionNames[cause]);
+
+        /* Fix defect by isprmgr, Var7                            */
+        handleExit(-1);                                     /*@BCA*/
 	    Lib.assertNotReached("Unexpected exception");
 	}
     }

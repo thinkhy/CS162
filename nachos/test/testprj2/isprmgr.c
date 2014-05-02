@@ -41,9 +41,10 @@ int main(int argc, char *argv[]) {
  * Var 2 : runs exec multiple times and checks each child gets unique PID
  * Var 3 : tests your syscall join to a child
  * Var 4 : tests exec with error arguments (e.g. bad file name)
- * Var 5 : tests your syscall join to a non-child
- * Var 6 : tests your syscall join to a child that caused unhandled exception
- * Var 7 : tests that your exit syscall releases all resources
+ * Var 5:  tests exec with error arguments: unmatched argc
+ * Var 6 : tests your syscall join to a non-child
+ * Var 7 : tests your syscall join to a child that caused unhandled exception
+ * Var 8 : tests that your exit syscall releases all resources
  *
  ******************************************************************************************/
     int i;
@@ -170,6 +171,8 @@ void route(int variation, char dbg_flag)
                 LOG("++ISPRMGR VAR3: [ENDED] FAIL\n");
             }
             
+            break;
+
         case 4:
             /*************************************************************************/
             /*                                                                       */
@@ -188,6 +191,8 @@ void route(int variation, char dbg_flag)
                 LOG("++ISPRMGR VAR4: [END] SUCCESS\n");
             else
                 LOG("++ISPRMGR VAR4: [END] FAIL\n");
+
+            break;
 
         case 5:
             /*************************************************************************/
@@ -225,10 +230,73 @@ void route(int variation, char dbg_flag)
             else
                 LOG("++ISPRMGR VAR5: [END] FAIL\n");
 
+            break;
 
         case 6:
+            /*************************************************************************/
+            /*                                                                       */
+            /* Var 6 : tests your syscall join to a non-child                        */
+            /*                                                                       */
+            /*************************************************************************/
+            LOG("++ISPRMGR VAR6: [STARTED]\n");
+            
+            LOG("++ISPRMGR VAR6: Issue join to a non-chold with pid=0\n");
+            retval = join(0, &exitstatus);
+            if (retval == 0) {
+                LOG("++ISPRMGR VAR6: [ENDED] FAIL\n");
+                break;
+            }
+
+            LOG("++ISPRMGR VAR6: Issue join to myself with pid=1\n");
+            retval = join(1, &exitstatus);
+            if (retval == 0) {
+                LOG("++ISPRMGR VAR6: [ENDED] FAIL\n");
+                break;
+            }
+
+            LOG("++ISPRMGR VAR6: [ENDED] SUCCESS\n");
+
         case 7:
+            /*************************************************************************/
+            /*                                                                       */
+            /* Var 7 : tests your syscall join to a child                            */   
+            /* that caused unhandled exception                                       */
+            /*                                                                       */
+            /*************************************************************************/
+            LOG("++ISPRMGR VAR7: [STARTED]\n");
+            
+            executable = "exception.coff";
+            _argv[0] = executable;
+            _argv[1] = NULL;
+            _argc = 1; 
+            LOG("++ISPRMGR VAR7: exec %s\n", executable);
+            pid[0] = exec(executable, _argc, _argv);
+            if (pid[0] != 0) {
+                LOG("++ISPRMGR VAR7: [END] FAIL to invoke exec\n");
+            }
+
+            LOG("++ISPRMGR VAR7: Issue join to child with pid=%d\n", pid[0]);
+            retval = join(pid[0], &exitstatus);
+            if (retval == 0) {
+                LOG("++ISPRMGR VAR7: [ENDED] FAIL\n");
+             /home/huangye/study/CS162/nachos/test/testprj2   break;
+            }
+            else {
+                LOG("++ISPRMGR VAR7: [ENDED] SUCCESS\n");
+            }
+           
+            break; 
         case 8:
+            /*************************************************************************/
+            /*                                                                       */
+            /* Var 8: tests that your exit syscall releases all resources   */
+            /*                                                                       */
+            /*************************************************************************/
+            /* TODO: it's difficult to write code for this case                      */
+
+
+            break; 
+
         default:
             0;
     }

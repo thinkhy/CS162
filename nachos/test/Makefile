@@ -63,10 +63,11 @@ start.o: start.s syscall.h
 %.coff: %.o $(NLIB)
 	$(LD) $(LDFLAGS) -o $@ $< start.o -lnachos
 
-test.coff: ./testprj2/exittest.c ./testprj2/loopawhile.c
+test.coff: ./testprj2/exittest.c ./testprj2/loopawhile.c ./testprj2/exception.c
 	$(CC) $(CFLAGS)  -c $?
 	$(LD) $(LDFLAGS) -o exittest.coff exittest.o start.o -lnachos
 	$(LD) $(LDFLAGS) -o loopawhile.coff loopawhile.o start.o -lnachos
+	$(LD) $(LDFLAGS) -o exception.coff exception.o start.o -lnachos
 
 isprmgr.coff: ./testprj2/isprmgr.c
 	$(CC) $(CFLAGS)  -c $<

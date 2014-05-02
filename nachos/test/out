@@ -1,19 +1,9 @@
 ++TESTEXIT: invoke exit
-                            0 
-++ISPRMGR Run all the variations
-++ISPRMGR VAR1: [STARTED]
-++ISPRMGR VAR1: Child process id is                                2
-++ISPRMGR VAR1: [ENDED] SUCCESS
-++ISPRMGR VAR2: [STARTED]
-++ISPRMGR VAR2: Get PID 3 after exec cp.coff
-++ISPRMGR VAR2: Get PID 4 after exec cp.coff
-++ISPRMGR VAR2: Get PID 5 after exec cp.coff
-++ISPRMGR VAR2: Get PID 6 after exec cp.coff
-++ISPRMGR VAR2: Get PID 7 after exec cp.coff
-++ISPRMGR VAR2: [ENDED] SUCCESS
-++ISPRMGR VAR3: [STARTED]
-++ISPRMGR VAR3: exec exittest.coff
-++ISPRMGR VAR3: Child process id is                                8
-++ISPRMGR VAR3: Issue join to get exit status of chile process
-++ISPRMGR VAR3: join successfully, exit status is                                0
-++ISPRMGR VAR3: [ENDED] SUCCESS
+                            5 
+++ISPRMGR VAR5: [STARTED]
+++ISPRMGR VAR5: invoke exec with unmatched argc
+++ISPRMGR VAR5: exec exittest.coff
+++ISPRMGR VAR5: invoke exec with unmatched argc when argv varies
+++ISPRMGR VAR5: exec exittest.coff
+++ISPRMGR VAR5: Retval of exec is                                3 
+++ISPRMGR VAR5: [END] SUCCESS

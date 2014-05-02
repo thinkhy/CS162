@@ -16,7 +16,7 @@
 #define NUMVARS     7
 #define NAN         (0xEFFFFFFF)
 #define MAXARGC     20
-#define MAXPROCESS  8
+#define MAXPROCESS  9
 #define LOG         printf
 
 void log(char *format, ...);
@@ -90,6 +90,15 @@ void route(int variation, char dbg_flag)
             _argv[0] = executable;
             _argv[1] = NULL;
             _argc = 1;
+            LOG("++ISPRMGR VAR1: exec %s\n", executable);
+            pid[0] = exec(executable, _argc, _argv);
+            LOG("++ISPRMGR VAR1: Child process id is %d\n", pid[0]);
+
+            executable = "loopawhile.coff";
+            _argv[0] = executable;
+            _argv[1] = NULL;
+            _argc = 1;
+            LOG("++ISPRMGR VAR1: exec %s\n", executable);
             pid[0] = exec(executable, _argc, _argv);
             LOG("++ISPRMGR VAR1: Child process id is %d\n", pid[0]);
             LOG("++ISPRMGR VAR1: [ENDED] SUCCESS\n");
@@ -117,6 +126,7 @@ void route(int variation, char dbg_flag)
 
             for (i = 0; i <  MAXPROCESS; i++) {
                 // LOG("before");
+                LOG("++ISPRMGR VAR2: exec %s\n", executable);
                 pid[i] = exec(executable, _argc, _argv);
                 LOG("++ISPRMGR VAR2: Get PID %d after exec cp.coff\n", pid[i]);
             
@@ -160,12 +170,65 @@ void route(int variation, char dbg_flag)
                 LOG("++ISPRMGR VAR3: [ENDED] FAIL\n");
             }
             
-            
-
         case 4:
+            /*************************************************************************/
+            /*                                                                       */
+            /* Variation 4:  tests exec with error arguments: bad file name)         */
+            /*                                                                       */
+            /*************************************************************************/
+            LOG("++ISPRMGR VAR4: [STARTED]\n");
+            LOG("++ISPRMGR VAR4: invoke exec with nonextent executable\n");
+            executable = "inexistent.coff";
+            _argv[0] = executable;
+            _argv[1] = NULL;
+            _argc = 1; 
+            LOG("++ISPRMGR VAR4: exec %s\n", executable);
+            retval = exec(executable, _argc, _argv);
+            if (retval == -1)
+                LOG("++ISPRMGR VAR4: [END] SUCCESS\n");
+            else
+                LOG("++ISPRMGR VAR4: [END] FAIL\n");
+
         case 5:
+            /*************************************************************************/
+            /*                                                                       */
+            /* Variation 5:  tests exec with error arguments: unmatched argc         */
+            /*                                                                       */
+            /*************************************************************************/
+            LOG("++ISPRMGR VAR5: [STARTED]\n");
+            LOG("++ISPRMGR VAR5: invoke exec with unmatched argc\n");
+            executable = "exittest.coff";
+            _argv[0] = executable;
+            _argv[1] = NULL;
+            _argc = 100; 
+            LOG("++ISPRMGR VAR5: exec %s\n", executable);
+            retval = exec(executable, _argc, _argv);
+            if (retval != -1) {
+                LOG("++ISPRMGR VAR5: [END] FAIL\n");
+                break;
+            }
+
+            /* TODO; figure out this case */
+            LOG("++ISPRMGR VAR5:"
+                    " invoke exec with unmatched argc when argv varies\n");
+            executable = "exittest.coff";
+            _argv[0] = executable;
+            _argv[1] = "cat.coff";
+            _argv[2] = "cat1.coff";
+            _argc = 2; 
+            LOG("++ISPRMGR VAR5: exec %s\n", executable);
+            retval = exec(executable, _argc, _argv);
+            if (retval != 0) {
+                LOG("++ISPRMGR VAR5: Retval of exec is %d \n", retval);
+                LOG("++ISPRMGR VAR5: [END] SUCCESS\n");
+            }
+            else
+                LOG("++ISPRMGR VAR5: [END] FAIL\n");
+
+
         case 6:
         case 7:
+        case 8:
         default:
             0;
     }

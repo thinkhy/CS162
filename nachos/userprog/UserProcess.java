@@ -967,10 +967,11 @@ public class UserProcess {
 
         /* the child has already exited by the time of the call                  */   
         UserProcess childProcess = UserKernel.getProcessByID(childpid);    /*@BCA*/
-        /* TODO: can't check exit state according to value of ppid [140406]/*@BCA*/          
         if (childProcess.ppid == ROOT) {                                   /*@BCA*/
             Lib.debug(dbgProcess,                                          /*@BCA*/ 
-                 "the child has already exited by the time of the call");  /*@BCA*/                         
+             "[UserProcess.handleJoin] "                                   /*@BCA*/
+             +"Error: the child " + childpid                               /*@BCA*/ 
+             + " has already exited by the time of the call");             /*@BCA*/                         
         }                                                                  /*@BCA*/
         else {
             /* child process's thread joins current thread                       */

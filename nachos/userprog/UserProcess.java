@@ -258,17 +258,19 @@ public class UserProcess {
 
     if (entry.readOnly) {                                       /* @BBA */
         Lib.debug(dbgProcess,                                   /* @BBA */
-                 "\t\t UserProcess.writeVirtualMemory(): write read-only page "+ppn); /* @BBA */
+                 "\t\t [UserProcess.writeVirtualMemory]: write read-only page "+ppn); /* @BBA */
         return 0;                                               /* @BBA */
     }                                                           /* @BBA */
 
     // check if physical page number is out of range
     if (ppn < 0 || ppn >= processor.getNumPhysPages())  {       /* @BBA */
-        Lib.debug(dbgProcess, "\t\t UserProcess.writeVirtualMemory(): bad ppn "+ppn); /* @BBA */
+        Lib.debug(dbgProcess, "\t\t [UserProcess.writeVirtualMemory]: bad ppn "+ppn); /* @BBA */
         return 0;                                               /* @BBA */
     }                                                           /* @BBA */
 
 	int amount = Math.min(length, memory.length-vaddr);
+    Lib.debug(dbgProcess, 
+            "[UserProcess.writeVirtualMemory]: arrary copy amount: "+amount);
 	System.arraycopy(data, offset, memory, vaddr, amount);
 
 	return amount;
@@ -752,9 +754,9 @@ public class UserProcess {
      *               
      *   1. close open file descriptors belonging to the process
      *   2. set pid of parent process to null
-     *   3. set any children of the process no longer have a parent process(null).
+     *   3. set any children of the process no longer have a parent process(ROOT).
      *   4. set the process's exit status to status that caller specifies(normal) or -1(exception)
-     *   5. unloadSections and release memory pages
+     *   5. unload coff sections and release memory pages
      *   6. finish associated thread
      *
      */
@@ -768,20 +770,6 @@ public class UserProcess {
                 handleClose(i);                                            /*@BCA*/
         }                                                                  /*@BCA*/
 
-        if (this.pid != ROOT) {                                            /*@BCA*/
-            /* set pid of parent process to null                                 */
-            UserProcess parentProcess =                                    /*@BCA*/
-                UserKernel.getProcessByID(this.ppid);                      /*@BCA*/
-            this.ppid = 0;                                                 /*@BCA*/
-            Iterator<Integer> ts = parentProcess.children.iterator();      /*@BCA*/ 
-            while(ts.hasNext()) {                                          /*@BCA*/
-                int childpid = ts.next();                                  /*@BCA*/ 
-                if (childpid == this.pid) {                                /*@BCA*/
-                 ts.remove();                                              /*@BCA*/
-                 break;                                                    /*@BCA*/ 
-                }                                                          /*@BCA*/ 
-            }                                                              /*@BCA*/
-        }                                                                  /*@BCA*/ 
 
         /* set any children of the process no longer have a parent process(null).*/ 
         while (children != null && !children.isEmpty())  {                 /*@BCA*/
@@ -896,10 +884,13 @@ public class UserProcess {
         UserProcess childProcess = UserProcess.newUserProcess();            /*@BCA*/
         childProcess.ppid = this.pid;                                       /*@BCA*/
         this.children.add(childProcess.pid);                                /*@BCA*/
+        Lib.debug(dbgProcess,                                               /*@BCA*/
+          "[UserProcess.handleExec] process "                               /*@BCA*/
+          + this.pid + " add a child with pid="+ childProcess.pid);         /*@BCA*/
 
          
         /* invoke UserProcess.execute to load executable and create a new UThread */
-        boolean retval = childProcess.execute(filename, args);                      /*@BCA*/
+        boolean retval = childProcess.execute(filename, args);              /*@BCA*/
 
         if (retval) {                                                       /*@BCA*/
             return childProcess.pid;                                        /*@BCA*/    
@@ -935,8 +926,10 @@ public class UserProcess {
     /**
      * Procedure *
      *
-     * If processID does not refer to a child process of the current process, 
-     *          returns -1.
+     *   If the specified process is a child of this process 
+     *          Remove the child pid in this process's children list
+     *   Else
+     *          return -1
      *   If the child has already exited by the time of the call,
      *          returns -2.
      *   Else
@@ -948,16 +941,17 @@ public class UserProcess {
      *   Else If the child exited as a result of an unhandled exception, 
      *          returns 0;
      */
-    private int handleJoin(int childPid, int adrStatus) {                  /*@BCA*/
+    private int handleJoin(int childpid, int adrStatus) {                  /*@BCA*/
 	    Lib.debug(dbgProcess, "handleJoin()");                             /*@BCA*/
         
-        /* childpid does not refer to a child process of the current process     */
+        /* remove child's pid in parent's children list                            */
         boolean childFlag = false;                                         /*@BCA*/
-        int childpid = 0;                                                  /*@BCA*/
+        int tmp = 0;                                                  /*@BCA*/
         Iterator<Integer> it = this.children.iterator();                   /*@BCA*/
         while(it.hasNext()) {                                              /*@BCA*/
-            childpid = it.next();                                          /*@BCA*/ 
-            if (childpid == this.pid) {                                    /*@BCA*/
+            tmp = it.next();                                          /*@BCA*/ 
+            if (tmp == childpid) {                                    /*@BCA*/
+                it.remove();                                               /*@BCA*/
                 childFlag = true;                                          /*@BCA*/
                 break;                                                     /*@BCA*/
             }                                                              /*@BCA*/
@@ -965,21 +959,23 @@ public class UserProcess {
                                                                            /*@BCA*/
         if (childFlag == false) {                                          /*@BCA*/
             Lib.debug(dbgProcess,                                          /*@BCA*/ 
-                    "not refer to a child process of the current process");/*@BCA*/                         
+          "[UserProcess.handleJoin] "                                      /*@BCA*/
+          +"Error: process "+ this.pid                                    /*@BCA*/ 
+          + " doesn't have a child with pid=" + childpid);                 /*@BCA*/                         
             return -1;                                                     /*@BCA*/
         }                                                                  /*@BCA*/
 
         /* the child has already exited by the time of the call                  */   
         UserProcess childProcess = UserKernel.getProcessByID(childpid);    /*@BCA*/
         /* TODO: can't check exit state according to value of ppid [140406]/*@BCA*/          
-        if (childProcess.ppid == 0) {                                      /*@BCA*/
+        if (childProcess.ppid == ROOT) {                                   /*@BCA*/
             Lib.debug(dbgProcess,                                          /*@BCA*/ 
                  "the child has already exited by the time of the call");  /*@BCA*/                         
-            return -2;                                                     /*@BCA*/
         }                                                                  /*@BCA*/
-         
-        /* child process's thread joins current thread                           */
-        childProcess.thread.join();                                        /*@BCA*/ 
+        else {
+            /* child process's thread joins current thread                       */
+            childProcess.thread.join();                                    /*@BCA*/ 
+        }
 
         /* store the exit status to status pointed by the second argument        */
         byte temp[] = new byte[4];                                         /*@BCA*/

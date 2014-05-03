@@ -965,6 +965,7 @@ public class UserProcess {
             return -1;                                                     /*@BCA*/
         }                                                                  /*@BCA*/
 
+        /*TODO: invoke unregister at here  [140503 thinkhy] */
         /* the child has already exited by the time of the call                  */   
         UserProcess childProcess = UserKernel.getProcessByID(childpid);    /*@BCA*/
         if (childProcess.ppid == ROOT) {                                   /*@BCA*/

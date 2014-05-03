@@ -179,7 +179,7 @@ public class UserKernel extends ThreadedKernel {
     }
 
     /**
-     * get process from process map by pid
+     * register a process to the map in Kernel 
      */
     public static UserProcess registerProcess(int pid, UserProcess process) {  // @BCA
         UserProcess insertedProcess;                               // @BCA 
@@ -188,6 +188,20 @@ public class UserKernel extends ThreadedKernel {
         Machine.interrupt().enabled();                             // @BCA 
         return insertedProcess;                                    // @BCA 
     }                                                              // @BCA
+
+    /**
+     * unregister a process in the map 
+     * TODO: impliment unregisterProcess [140503 thinkhy]
+     * TODO: update design doc on Github wiki
+     */
+    public static UserProcess unregisterProcess(int pid, UserProcess process) {  // @BCA
+        UserProcess insertedProcess;                               // @BCA 
+        Machine.interrupt().disable();                             // @BCA 
+        insertedProcess = processMap.put(pid, process);            // @BCA 
+        Machine.interrupt().enabled();                             // @BCA 
+        return insertedProcess;                                    // @BCA 
+    }                                                              // @BCA
+
 
 
     /** Globally accessible reference to the synchronized console. */

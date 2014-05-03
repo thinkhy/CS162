@@ -1,6 +1,13 @@
-++ISPRMGR: ARG[1] is                                7 
+++TESTEXIT: invoke exit
+                            7 
 ++ISPRMGR VAR7: [STARTED]
-++ISPRMGR VAR7: exec exception.coff
-++ISPRMGR VAR7: [END] FAIL to invoke exec
-++ISPRMGR VAR7: Issue join to child with pid=                               2
-++ISPRMGR VAR7: [ENDED] FAIL
+++ISPRMGR VAR7: exec exittest.coff
+++ISPRMGR VAR7: Child process id is                                2
+++ISPRMGR VAR7: Issue join to get exit status of chile process
+++ISPRMGR VAR7: Issue join again to get exit status of chile process
+++ISPRMGR VAR7: [ENDED] SUCCESS
+++ISPRMGR VAR8: [STARTED]
+++ISPRMGR VAR8: exec exception.coff
+++ISPRMGR VAR8: [END] FAIL to invoke exec
+++ISPRMGR VAR8: Issue join to child with pid=                               3
+++ISPRMGR VAR8: [ENDED] FAIL

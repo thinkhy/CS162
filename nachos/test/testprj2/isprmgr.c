@@ -259,34 +259,69 @@ void route(int variation, char dbg_flag)
         case 7:
             /*************************************************************************/
             /*                                                                       */
-            /* Var 7 : tests your syscall join to a child                            */   
-            /* that caused unhandled exception                                       */
+            /* Var 7 : tests your syscall join to be invoked more than once          */
             /*                                                                       */
             /*************************************************************************/
             LOG("++ISPRMGR VAR7: [STARTED]\n");
+            
+
+            executable = "exittest.coff";
+            _argv[0] = executable;
+            _argv[1] = NULL;
+            _argc = 1;
+            LOG("++ISPRMGR VAR7: exec %s\n", executable);
+            pid[0] = exec(executable, _argc, _argv);
+            LOG("++ISPRMGR VAR7: Child process id is %d\n", pid[0]);
+            LOG("++ISPRMGR VAR7: Issue join to get exit status of chile process\n", pid[0]);
+            retval = join(pid[0], &exitstatus);
+            if (retval != 0) {
+                LOG("++ISPRMGR VAR7: [ENDED] FAIL\n");
+                break;
+            }
+
+            LOG("++ISPRMGR VAR7: Issue join again to get exit status of chile process\n", pid[0]);
+            retval = join(0, &exitstatus);
+            if (retval == 0) {
+                LOG("++ISPRMGR VAR7: [ENDED] FAIL\n");
+                break;
+            }
+
+            LOG("++ISPRMGR VAR7: [ENDED] SUCCESS\n");
+
+            break;
+
+        case 8:
+            /*************************************************************************/
+            /*                                                                       */
+            /* Var 8 : tests your syscall join to a child                            */   
+            /* that caused unhandled exception                                       */
+            /*                                                                       */
+            /*************************************************************************/
+            LOG("++ISPRMGR VAR8: [STARTED]\n");
             
             executable = "exception.coff";
             _argv[0] = executable;
             _argv[1] = NULL;
             _argc = 1; 
-            LOG("++ISPRMGR VAR7: exec %s\n", executable);
+            LOG("++ISPRMGR VAR8: exec %s\n", executable);
             pid[0] = exec(executable, _argc, _argv);
             if (pid[0] != 0) {
-                LOG("++ISPRMGR VAR7: [END] FAIL to invoke exec\n");
+                LOG("++ISPRMGR VAR8: [END] FAIL to invoke exec\n");
             }
 
-            LOG("++ISPRMGR VAR7: Issue join to child with pid=%d\n", pid[0]);
+            LOG("++ISPRMGR VAR8: Issue join to child with pid=%d\n", pid[0]);
             retval = join(pid[0], &exitstatus);
             if (retval == 0) {
-                LOG("++ISPRMGR VAR7: [ENDED] FAIL\n");
-             /home/huangye/study/CS162/nachos/test/testprj2   break;
+                LOG("++ISPRMGR VAR8: [ENDED] FAIL\n");
+                break;
             }
             else {
-                LOG("++ISPRMGR VAR7: [ENDED] SUCCESS\n");
+                LOG("++ISPRMGR VAR8: [ENDED] SUCCESS\n");
             }
            
             break; 
-        case 8:
+
+        case 9:
             /*************************************************************************/
             /*                                                                       */
             /* Var 8: tests that your exit syscall releases all resources   */

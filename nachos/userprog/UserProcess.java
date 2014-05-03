@@ -62,7 +62,7 @@ public class UserProcess {
 
     pid = UserKernel.getNextPid();                                      /*@BCA*/
 
-    /* register this new process in UserKenel's map                           */
+    /* register this new process in UserKernel's map                           */
     UserKernel.registerProcess(pid, this);                              /*@BCA*/
 
     }                                                                   /*@BAA*/
@@ -968,16 +968,21 @@ public class UserProcess {
         /*TODO: invoke unregister at here  [140503 thinkhy] */
         /* the child has already exited by the time of the call                  */   
         UserProcess childProcess = UserKernel.getProcessByID(childpid);    /*@BCA*/
-        if (childProcess.ppid == ROOT) {                                   /*@BCA*/
+
+        if (childProcess == null) {                                        /*@BCA*/
             Lib.debug(dbgProcess,                                          /*@BCA*/ 
              "[UserProcess.handleJoin] "                                   /*@BCA*/
-             +"Error: the child " + childpid                               /*@BCA*/ 
-             + " has already exited by the time of the call");             /*@BCA*/                         
+             + "Error: the child " + childpid                              /*@BCA*/ 
+             + " has already joined by the time of the call");             /*@BCA*/                         
+            return -2;                                                     /*@BCA*/ 
         }                                                                  /*@BCA*/
-        else {
-            /* child process's thread joins current thread                       */
-            childProcess.thread.join();                                    /*@BCA*/ 
-        }
+
+        /* child process's thread joins current thread                           */
+        childProcess.thread.join();                                        /*@BCA*/ 
+
+        /* we needn't the object of child process after invoking join,           */
+        /* so unregister it in kernel's process map                              */  
+        UserKernel.unregisterProcess(childpid);                            /*@BCA*/
 
         /* store the exit status to status pointed by the second argument        */
         byte temp[] = new byte[4];                                         /*@BCA*/

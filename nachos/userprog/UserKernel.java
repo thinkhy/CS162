@@ -190,16 +190,18 @@ public class UserKernel extends ThreadedKernel {
     }                                                              // @BCA
 
     /**
-     * unregister a process in the map 
-     * TODO: impliment unregisterProcess [140503 thinkhy]
-     * TODO: update design doc on Github wiki
+     * unregister a process in the process map 
      */
-    public static UserProcess unregisterProcess(int pid, UserProcess process) {  // @BCA
-        UserProcess insertedProcess;                               // @BCA 
+    public static UserProcess unregisterProcess(int pid) {         // @BCA
+        UserProcess deletedProcess;                                // @BCA 
         Machine.interrupt().disable();                             // @BCA 
-        insertedProcess = processMap.put(pid, process);            // @BCA 
+
+        /* Remove value for key pid                                   @BCA*/
+        deletedProcess = processMap.remove(pid);                   // @BCA 
+
         Machine.interrupt().enabled();                             // @BCA 
-        return insertedProcess;                                    // @BCA 
+
+        return deletedProcess;                                     // @BCA 
     }                                                              // @BCA
 
 

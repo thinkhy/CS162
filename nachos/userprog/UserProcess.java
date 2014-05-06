@@ -291,7 +291,7 @@ public class UserProcess {
 	
 	OpenFile executable = ThreadedKernel.fileSystem.open(name, false);
 	if (executable == null) {
-	    Lib.debug(dbgProcess, "\topen failed");
+	    Lib.debug(dbgProcess, "\t[UserProcess.load] failed to open "+name);
 	    return false;
 	}
 

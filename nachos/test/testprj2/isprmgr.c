@@ -13,7 +13,7 @@
 #include "../stdio.h"
 
 #define NULL        0
-#define NUMVARS     7
+#define NUMVARS     8
 #define NAN         (0xEFFFFFFF)
 #define MAXARGC     20
 #define MAXPROCESS  9
@@ -233,14 +233,15 @@ void route(int variation, char dbg_flag)
             break;
 
         case 6:
+        {
             /*************************************************************************/
             /*                                                                       */
             /* Var 6 : tests your syscall join to a non-child                        */
             /*                                                                       */
             /*************************************************************************/
             LOG("++ISPRMGR VAR6: [STARTED]\n");
+            LOG("++ISPRMGR VAR6: Issue join to a non-child with pid=0\n");
             
-            LOG("++ISPRMGR VAR6: Issue join to a non-chold with pid=0\n");
             retval = join(0, &exitstatus);
             if (retval == 0) {
                 LOG("++ISPRMGR VAR6: [ENDED] FAIL\n");
@@ -255,6 +256,7 @@ void route(int variation, char dbg_flag)
             }
 
             LOG("++ISPRMGR VAR6: [ENDED] SUCCESS\n");
+        }
 
         case 7:
             /*************************************************************************/
@@ -263,8 +265,8 @@ void route(int variation, char dbg_flag)
             /*                                                                       */
             /*************************************************************************/
             LOG("++ISPRMGR VAR7: [STARTED]\n");
+            LOG("++ISPRMGR VAR7: test your syscall join to be invoked more than once\n");
             
-
             executable = "exittest.coff";
             _argv[0] = executable;
             _argv[1] = NULL;
@@ -272,19 +274,21 @@ void route(int variation, char dbg_flag)
             LOG("++ISPRMGR VAR7: exec %s\n", executable);
             pid[0] = exec(executable, _argc, _argv);
             LOG("++ISPRMGR VAR7: Child process id is %d\n", pid[0]);
-            LOG("++ISPRMGR VAR7: Issue join to get exit status of chile process\n", pid[0]);
+            LOG("++ISPRMGR VAR7: Issue join to get exit status of chile process\n");
             retval = join(pid[0], &exitstatus);
             if (retval != 0) {
                 LOG("++ISPRMGR VAR7: [ENDED] FAIL\n");
                 break;
             }
+            LOG("++ISPRMGR VAR7: first time invoke join successfully\n");
 
             LOG("++ISPRMGR VAR7: Issue join again to get exit status of chile process\n", pid[0]);
-            retval = join(0, &exitstatus);
+            retval = join(pid[0], &exitstatus);
             if (retval == 0) {
-                LOG("++ISPRMGR VAR7: [ENDED] FAIL\n");
+                LOG("++ISPRMGR VAR7: [ENDED] FAILED to join process %d\n", pid[0]);
                 break;
             }
+            LOG("++ISPRMGR VAR7: failed to invoke join second time as exptected\n");
 
             LOG("++ISPRMGR VAR7: [ENDED] SUCCESS\n");
 
@@ -293,11 +297,12 @@ void route(int variation, char dbg_flag)
         case 8:
             /*************************************************************************/
             /*                                                                       */
-            /* Var 8 : tests your syscall join to a child                            */   
+            /* Var 8 : tests syscall join to a child                                 */   
             /* that caused unhandled exception                                       */
             /*                                                                       */
             /*************************************************************************/
             LOG("++ISPRMGR VAR8: [STARTED]\n");
+            LOG("++ISPRMGR VAR8: tests syscall join to a child that caused unhandled exception\n");
             
             executable = "exception.coff";
             _argv[0] = executable;
@@ -305,17 +310,20 @@ void route(int variation, char dbg_flag)
             _argc = 1; 
             LOG("++ISPRMGR VAR8: exec %s\n", executable);
             pid[0] = exec(executable, _argc, _argv);
-            if (pid[0] != 0) {
-                LOG("++ISPRMGR VAR8: [END] FAIL to invoke exec\n");
+            if (pid[0] < 0) {
+                LOG("++ISPRMGR VAR8: [ENDED] FAIL to invoke exec\n");
+                break;
             }
 
             LOG("++ISPRMGR VAR8: Issue join to child with pid=%d\n", pid[0]);
             retval = join(pid[0], &exitstatus);
-            if (retval == 0) {
+            if (exitstatus == 0) {
+                LOG("++ISPRMGR VAR8: Issue join successfully, but expect a failure at here\n");
                 LOG("++ISPRMGR VAR8: [ENDED] FAIL\n");
                 break;
             }
             else {
+                LOG("++ISPRMGR VAR8: failed to issue join as expected\n");
                 LOG("++ISPRMGR VAR8: [ENDED] SUCCESS\n");
             }
            

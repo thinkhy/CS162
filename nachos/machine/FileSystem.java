@@ -22,6 +22,7 @@ public interface FileSystem {
      */
     public OpenFile open(String name, boolean create);
 
+
     /**
      * Atomically remove an existing file. After a file is removed, it cannot
      * be opened until it is created again with <tt>open</tt>. If the file is

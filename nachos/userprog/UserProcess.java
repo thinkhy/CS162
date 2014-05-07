@@ -291,7 +291,7 @@ public class UserProcess {
 	
 	OpenFile executable = ThreadedKernel.fileSystem.open(name, false);
 	if (executable == null) {
-	    Lib.debug(dbgProcess, "\t[UserProcess.load] failed to open "+name);
+	    Lib.debug(dbgProcess, "[UserProcess.load] failed to open " + name);
 	    return false;
 	}
 
@@ -300,7 +300,9 @@ public class UserProcess {
 	}
 	catch (EOFException e) {
 	    executable.close();
-	    Lib.debug(dbgProcess, "\tcoff load failed");
+	    Lib.debug(dbgProcess, "Failed to load coff file due to "
+                  + (e.getMessage()));
+
 	    return false;
 	}
 
@@ -423,6 +425,8 @@ public class UserProcess {
             UserKernel.addFreePage(pageTable[i].ppn);                              /*@BBA*/
             pageTable[i].valid = false;                                            /*@BBA*/
         }                                                                          /*@BBA*/
+
+	    coff.close();
     }                                                                              /*@BBA*/
 
     /**

@@ -46,7 +46,7 @@
 ++ISPRMGR VAR5: exec exittest.coff
 ++ISPRMGR VAR5: invoke exec with unmatched argc when argv varies
 ++ISPRMGR VAR5: exec exittest.coff
-++ISPRMGR VAR5: Retval of exec is -                               1 
+++ISPRMGR VAR5: Retval of exec is                               16 
 ++ISPRMGR VAR5: [END] SUCCESS
 ++ISPRMGR VAR6: [STARTED]
 ++ISPRMGR VAR6: Issue join to a non-child with pid=0
@@ -55,16 +55,24 @@
 ++ISPRMGR VAR7: [STARTED]
 ++ISPRMGR VAR7: test your syscall join to be invoked more than once
 ++ISPRMGR VAR7: exec exittest.coff
-++ISPRMGR VAR7: Child process id is -                               1
+++ISPRMGR VAR7: Child process id is                               17
 ++ISPRMGR VAR7: Issue join to get exit status of chile process
-++ISPRMGR VAR7: [ENDED] FAIL
+++ISPRMGR VAR7: first time invoke join successfully
+++ISPRMGR VAR7: Issue join again to get exit status of chile process
+++ISPRMGR VAR7: failed to invoke join second time as exptected
+++ISPRMGR VAR7: [ENDED] SUCCESS
 ++ISPRMGR VAR7: [STARTED]
 ++ISPRMGR VAR7: test your syscall join to be invoked more than once
 ++ISPRMGR VAR7: exec exittest.coff
-++ISPRMGR VAR7: Child process id is -                               1
+++ISPRMGR VAR7: Child process id is                               18
 ++ISPRMGR VAR7: Issue join to get exit status of chile process
-++ISPRMGR VAR7: [ENDED] FAIL
+++ISPRMGR VAR7: first time invoke join successfully
+++ISPRMGR VAR7: Issue join again to get exit status of chile process
+++ISPRMGR VAR7: failed to invoke join second time as exptected
+++ISPRMGR VAR7: [ENDED] SUCCESS
 ++ISPRMGR VAR8: [STARTED]
 ++ISPRMGR VAR8: tests syscall join to a child that caused unhandled exception
 ++ISPRMGR VAR8: exec exception.coff
-++ISPRMGR VAR8: [ENDED] FAIL to invoke exec
+++ISPRMGR VAR8: Issue join to child with pid=                              19
+++ISPRMGR VAR8: failed to issue join as expected
+++ISPRMGR VAR8: [ENDED] SUCCESS

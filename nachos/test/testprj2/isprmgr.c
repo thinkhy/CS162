@@ -87,6 +87,7 @@ void route(int variation, char dbg_flag)
             /*                                                           */
             /*************************************************************/
             LOG("++ISPRMGR VAR1: [STARTED]\n");
+            LOG("++ISPRMGR VAR1: tests that your syscall exit finishes the thread of the process immediately\n");
             executable = "exittest.coff";
             _argv[0] = executable;
             _argv[1] = NULL;
@@ -119,6 +120,7 @@ void route(int variation, char dbg_flag)
             /*************************************************************/
             // log("++ProjectII TaskIII VAR2");
             LOG("++ISPRMGR VAR2: [STARTED]\n");
+            LOG("++ISPRMGR VAR2: runs exec multiple times and checks each child gets unique PID\n");
             executable = "cp.coff";
             _argv[0] = executable;
             _argv[1] = "cat.coff";
@@ -152,6 +154,7 @@ void route(int variation, char dbg_flag)
             /*                                                           */
             /*************************************************************/
             LOG("++ISPRMGR VAR3: [STARTED]\n");
+            LOG("++ISPRMGR VAR3: tests your syscall join to a child\n");
             
             executable = "exittest.coff";
             _argv[0] = executable;
@@ -180,6 +183,7 @@ void route(int variation, char dbg_flag)
             /*                                                                       */
             /*************************************************************************/
             LOG("++ISPRMGR VAR4: [STARTED]\n");
+            LOG("++ISPRMGR VAR4: tests exec with error arguments: bad file name)\n");
             LOG("++ISPRMGR VAR4: invoke exec with nonextent executable\n");
             executable = "inexistent.coff";
             _argv[0] = executable;

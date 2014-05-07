@@ -1,15 +1,20 @@
 ++TESTEXIT: invoke exit
-                            7 
-++ISPRMGR VAR7: [STARTED]
-++ISPRMGR VAR7: test your syscall join to be invoked more than once
-++ISPRMGR VAR7: exec exittest.coff
-++ISPRMGR VAR7: Child process id is                                2
-++ISPRMGR VAR7: Issue join to get exit status of chile process
-++ISPRMGR VAR7: first time invoke join successfully
-++ISPRMGR VAR7: Issue join again to get exit status of chile process
-++ISPRMGR VAR7: failed to invoke join second time as exptected
-++ISPRMGR VAR7: [ENDED] SUCCESS
-ISPRMGR VAR2: exec cp.coff
+                            0 
+++ISPRMGR Run all the variations
+++ISPRMGR VAR1: [STARTED]
+++ISPRMGR VAR1: tests that your syscall exit finishes the thread of the process immediately
+++ISPRMGR VAR1: exec exittest.coff
+++ISPRMGR VAR1: Child process id is                                2
+++ISPRMGR VAR1: exec loopawhile.coff
+++ISPRMGR VAR1: Child process id is                                3
+++ISPRMGR VAR1: [ENDED] SUCCESS
+++ISPRMGR VAR2: [STARTED]
+++ISPRMGR VAR2: runs exec multiple times and checks each child gets unique PID
+++ISPRMGR VAR2: exec cp.coff
+++ISPRMGR VAR2: Get PID 4 after exec cp.coff
+++ISPRMGR VAR2: exec cp.coff
+++ISPRMGR VAR2: Get PID 5 after exec cp.coff
+++ISPRMGR VAR2: exec cp.coff
 ++ISPRMGR VAR2: Get PID 6 after exec cp.coff
 ++ISPRMGR VAR2: exec cp.coff
 ++ISPRMGR VAR2: Get PID 7 after exec cp.coff
@@ -25,12 +30,14 @@ ISPRMGR VAR2: exec cp.coff
 ++ISPRMGR VAR2: Get PID 12 after exec cp.coff
 ++ISPRMGR VAR2: [ENDED] SUCCESS
 ++ISPRMGR VAR3: [STARTED]
+++ISPRMGR VAR3: tests your syscall join to a child
 ++ISPRMGR VAR3: exec exittest.coff
 ++ISPRMGR VAR3: Child process id is                               13
 ++ISPRMGR VAR3: Issue join to get exit status of chile process
 ++ISPRMGR VAR3: join successfully, exit status is                                0
 ++ISPRMGR VAR3: [ENDED] SUCCESS
 ++ISPRMGR VAR4: [STARTED]
+++ISPRMGR VAR4: tests exec with error arguments: bad file name)
 ++ISPRMGR VAR4: invoke exec with nonextent executable
 ++ISPRMGR VAR4: exec inexistent.coff
 ++ISPRMGR VAR4: [END] SUCCESS

@@ -420,13 +420,17 @@ public class UserProcess {
      * Release any resources allocated by <tt>loadSections()</tt>.
      */
     protected void unloadSections() {                                              /*@BBA*/
+        /* close coff file                                                               */
+	    coff.close();                                                              /*@BBA*/
+
         /* back out physical pages and make page entry invalid                           */
         for (int i = 0; i < numPages; i++) {                                       /*@BBA*/
             UserKernel.addFreePage(pageTable[i].ppn);                              /*@BBA*/
-            pageTable[i].valid = false;                                            /*@BBA*/
+            pageTable[i] = null;                                                   /*@BBA*/
         }                                                                          /*@BBA*/
 
-	    coff.close();
+        pageTable = null;                                                          /*@BBA*/ 
+
     }                                                                              /*@BBA*/
 
     /**
@@ -767,15 +771,13 @@ public class UserProcess {
     private void handleExit(int exitStatus) {                              /*@BCA*/
 	    Lib.debug(dbgProcess, "handleExit()");                             /*@BCA*/
 
-
         /* close open file descriptors belonging to the process                  */           
         for (int i = 0; i < MAXFD; i++) {                                  /*@BCA*/
             if (fds[i].file != null)                                       /*@BCA*/
                 handleClose(i);                                            /*@BCA*/
         }                                                                  /*@BCA*/
 
-
-        /* set any children of the process no longer have a parent process(null).*/ 
+        /* set any children of the process no longer have a parent process(null) */ 
         while (children != null && !children.isEmpty())  {                 /*@BCA*/
             int childPid = children.removeFirst();                         /*@BCA*/ 
             UserProcess childProcess = UserKernel.getProcessByID(childPid);/*@BCA*/

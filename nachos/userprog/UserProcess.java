@@ -785,7 +785,7 @@ public class UserProcess {
         /*  set the process's exit status to status that caller specifies(normal)* 
          *  or -1(exception)                                                     */
         this.exitStatus = exitStatus;                                      /*@BCA*/ 
-	    Lib.debug(dbgProcess, "exitStatus: "+exitStatus);                  /*@BCA*/
+	    Lib.debug(dbgProcess, "exitStatus: " + exitStatus);                /*@BCA*/
 
         /* unloadSections and release memory pages                               */
         this.unloadSections();

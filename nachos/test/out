@@ -28,11 +28,13 @@
 ++ISPRMGR VAR2: Get PID 11 after exec cp.coff
 ++ISPRMGR VAR2: exec cp.coff
 ++ISPRMGR VAR2: Get PID 12 after exec cp.coff
+++ISPRMGR VAR2: exec cp.coff
+++ISPRMGR VAR2: Get PID 13 after exec cp.coff
 ++ISPRMGR VAR2: [ENDED] SUCCESS
 ++ISPRMGR VAR3: [STARTED]
 ++ISPRMGR VAR3: tests your syscall join to a child
 ++ISPRMGR VAR3: exec exittest.coff
-++ISPRMGR VAR3: Child process id is                               13
+++ISPRMGR VAR3: Child process id is                               14
 ++ISPRMGR VAR3: Issue join to get exit status of chile process
 ++ISPRMGR VAR3: join successfully, exit status is                                0
 ++ISPRMGR VAR3: [ENDED] SUCCESS
@@ -46,21 +48,12 @@
 ++ISPRMGR VAR5: exec exittest.coff
 ++ISPRMGR VAR5: invoke exec with unmatched argc when argv varies
 ++ISPRMGR VAR5: exec exittest.coff
-++ISPRMGR VAR5: Retval of exec is                               16 
+++ISPRMGR VAR5: Retval of exec is                               17 
 ++ISPRMGR VAR5: [END] SUCCESS
 ++ISPRMGR VAR6: [STARTED]
 ++ISPRMGR VAR6: Issue join to a non-child with pid=0
 ++ISPRMGR VAR6: Issue join to myself with pid=1
 ++ISPRMGR VAR6: [ENDED] SUCCESS
-++ISPRMGR VAR7: [STARTED]
-++ISPRMGR VAR7: test your syscall join to be invoked more than once
-++ISPRMGR VAR7: exec exittest.coff
-++ISPRMGR VAR7: Child process id is                               17
-++ISPRMGR VAR7: Issue join to get exit status of chile process
-++ISPRMGR VAR7: first time invoke join successfully
-++ISPRMGR VAR7: Issue join again to get exit status of chile process
-++ISPRMGR VAR7: failed to invoke join second time as exptected
-++ISPRMGR VAR7: [ENDED] SUCCESS
 ++ISPRMGR VAR7: [STARTED]
 ++ISPRMGR VAR7: test your syscall join to be invoked more than once
 ++ISPRMGR VAR7: exec exittest.coff
@@ -70,9 +63,1125 @@
 ++ISPRMGR VAR7: Issue join again to get exit status of chile process
 ++ISPRMGR VAR7: failed to invoke join second time as exptected
 ++ISPRMGR VAR7: [ENDED] SUCCESS
+++ISPRMGR VAR7: [STARTED]
+++ISPRMGR VAR7: test your syscall join to be invoked more than once
+++ISPRMGR VAR7: exec exittest.coff
+++ISPRMGR VAR7: Child process id is                               19
+++ISPRMGR VAR7: Issue join to get exit status of chile process
+++ISPRMGR VAR7: first time invoke join successfully
+++ISPRMGR VAR7: Issue join again to get exit status of chile process
+++ISPRMGR VAR7: failed to invoke join second time as exptected
+++ISPRMGR VAR7: [ENDED] SUCCESS
 ++ISPRMGR VAR8: [STARTED]
 ++ISPRMGR VAR8: tests syscall join to a child that caused unhandled exception
 ++ISPRMGR VAR8: exec exception.coff
-++ISPRMGR VAR8: Issue join to child with pid=                              19
+++ISPRMGR VAR8: Issue join to child with pid=                              20
 ++ISPRMGR VAR8: failed to issue join as expected
 ++ISPRMGR VAR8: [ENDED] SUCCESS
+++ISPRMGR VAR9: [STARTED]
+++ISPRMGR VAR9: tests that your exit syscall releases all resources
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               21
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               22
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               23
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               24
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               25
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               26
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               27
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               28
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               29
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               30
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               31
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               32
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               33
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               34
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               35
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               36
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               37
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               38
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               39
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               40
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               41
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               42
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               43
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               44
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               45
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               46
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               47
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               48
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               49
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               50
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               51
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               52
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               53
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               54
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               55
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               56
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               57
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               58
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               59
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               60
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               61
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               62
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               63
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               64
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               65
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               66
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               67
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               68
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               69
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               70
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               71
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               72
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               73
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               74
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               75
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               76
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               77
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               78
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               79
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               80
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               81
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               82
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               83
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               84
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               85
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               86
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               87
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               88
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               89
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               90
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               91
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               92
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               93
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               94
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               95
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               96
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               97
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               98
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                               99
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              100
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              101
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              102
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              103
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              104
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              105
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              106
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              107
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              108
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              109
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              110
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              111
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              112
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              113
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              114
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              115
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              116
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              117
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              118
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              119
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              120
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              121
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              122
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              123
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              124
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              125
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              126
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              127
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              128
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              129
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              130
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              131
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              132
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              133
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              134
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              135
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              136
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              137
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              138
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              139
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              140
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              141
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              142
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              143
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              144
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              145
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              146
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              147
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              148
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              149
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              150
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              151
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              152
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              153
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              154
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              155
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              156
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              157
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              158
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              159
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              160
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              161
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              162
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              163
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              164
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              165
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              166
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              167
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              168
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              169
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              170
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              171
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              172
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              173
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              174
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              175
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              176
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              177
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              178
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              179
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              180
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              181
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              182
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              183
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              184
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              185
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              186
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              187
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              188
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              189
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              190
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              191
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              192
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              193
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              194
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              195
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              196
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              197
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              198
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              199
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              200
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              201
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              202
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              203
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              204
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              205
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              206
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              207
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              208
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              209
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              210
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              211
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              212
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              213
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              214
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              215
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              216
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              217
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              218
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              219
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              220
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              221
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              222
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              223
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              224
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              225
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              226
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              227
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              228
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              229
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              230
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              231
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              232
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              233
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              234
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              235
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              236
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              237
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              238
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              239
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              240
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              241
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              242
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              243
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              244
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              245
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              246
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              247
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              248
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              249
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              250
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              251
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              252
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              253
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              254
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              255
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              256
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              257
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              258
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              259
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              260
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              261
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              262
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              263
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              264
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              265
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              266
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              267
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              268
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              269
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              270
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              271
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              272
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              273
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              274
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              275
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              276
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              277
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              278
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              279
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              280
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              281
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              282
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              283
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              284
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              285
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              286
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              287
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              288
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              289
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              290
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              291
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              292
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              293
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              294
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              295
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff
+++ISPRMGR VAR9: Child process id is                              296
+++ISPRMGR VAR9: Issue join to get exit status of chile process
+++ISPRMGR VAR9: join successfully, exit status is                                0
+++ISPRMGR VAR9: exec exittest.coff

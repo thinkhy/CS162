@@ -345,6 +345,7 @@ public class UserProcess {
     pageTable = new TranslationEntry[numPages];                                        /* @BBA */
     for (int i = 0; i < numPages; i++) {                                               /* @BBA */
         int ppn = UserKernel.getFreePage();                                            /* @BBA */
+	    Lib.debug(dbgProcess, "get physical page " + ppn + "\n");
         pageTable[i] =  new TranslationEntry(i, ppn, true, false, false, false);       /* @BBA */
     }                                                                                  /* @BBA */
 

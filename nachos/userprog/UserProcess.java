@@ -15,6 +15,7 @@ import java.io.EOFException;
  *  $BA=PROJECT2 TASK1, 140125, THINKHY: Implement the file system calls  
  *  $BB=PROJECT2 TASK2, 140205, THINKHY: Implement support for multiprogramming  
  *  $BC=PROJECT2 TASK3, 140302, THINKHY: Implement system calls for process management
+ *  $BD=PROJECT2 ISSUE #8,140302, THINKHY: Hit "RuntimePermission createClassLoader" while long run ISPRMGR VAR9
  *                                                                        
  ****************************************************************************************/
 
@@ -518,6 +519,12 @@ public class UserProcess {
 
 	    Lib.debug(dbgProcess, "[UserProcess.handleOpen] a0: "+a0+"\n");    /*@BAA*/
 
+        if (a0 < 0) {                                                      /*@BDA*/ 
+            Lib.debug(dbgProcess,                                          /*@BDA*/
+                    "[UserProcess.handleOpen] a0: invalid address\n");     /*@BDA*/
+            return -1;                                                     /*@BDA*/
+        }                                                                  /*@BDA*/
+
         // a0 is address of filename 
         String filename = readVirtualMemoryString(a0, MAXSTRLEN);          /*@BAA*/
 
@@ -800,6 +807,8 @@ public class UserProcess {
         }                                                                  /*@BCA*/
         else {                                                             /*@BCA*/
             Lib.assertTrue(KThread.currentThread() == this.thread);        /*@BCA*/ 
+	        Lib.debug(dbgProcess,                                          /*@BDA*/ 
+              "[UserProcess.handleExit] finish current thread ");          /*@BDA*/
             KThread.currentThread().finish();                              /*@BCA*/
         }                                                                  /*@BCA*/
 
@@ -1178,7 +1187,6 @@ public class UserProcess {
 
         private  boolean  toRemove = false;// if need to remove   /*@BAA*/
                                            // this file           /*@BAA*/
-                                            
     }                                                             /*@BAA*/
 
     /* maximum number of opened files per process                       */

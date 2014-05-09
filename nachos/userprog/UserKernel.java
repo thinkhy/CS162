@@ -12,9 +12,10 @@ import java.util.HashMap;
  *
  * 01* CHANGE-ACTIVITY:
  *                                                                        
- *  $BA=PROJECT2 TASK1, 140125, THINKHY: Implement the file system calls  
- *  $BB=PROJECT2 TASK2, 140222, THINKHY: Implement support for multiprogramming  
- *  $BC=PROJECT2 TASK3, 140302, THINKHY: Implement system calls for process management
+ *  $BA=PROJECT2 TASK1,   140125, THINKHY: Implement the file system calls  
+ *  $BB=PROJECT2 TASK2,   140222, THINKHY: Implement support for multiprogramming  
+ *  $BC=PROJECT2 TASK3,   140302, THINKHY: Implement system calls for process management
+ *  $BD=PROJECT2 ISSUE #8,140302, THINKHY: Hit "RuntimePermission createClassLoader" while long run ISPRMGR VAR9
  *                                                                        
  **************************************************************************/
 
@@ -155,10 +156,12 @@ public class UserKernel extends ThreadedKernel {
        Lib.assertTrue(pageNumber >= 0                              // @BBA
            && pageNumber < Machine.processor().getNumPhysPages()); // @BBA
        Machine.interrupt().disable();                              // @BBA 
-       pageTable.add(pageNumber);                                  // @BBA 
+            
+       Lib.debug(dbgProcess,                                       // @BDA
+               "[Userkernel.addFreepage] Recover phisical page number " + pageNumber);  // @BDA                           
+       pageTable.addFirst(pageNumber);                             // @BDC 
        Machine.interrupt().enable();                               // @BBA 
     }                                                              // @BBA 
-
 
     /**
      * return next Pid
@@ -204,7 +207,7 @@ public class UserKernel extends ThreadedKernel {
         return deletedProcess;                                     // @BCA 
     }                                                              // @BCA
 
-
+    private static final char dbgProcess = 'a';                    // @BDA 
 
     /** Globally accessible reference to the synchronized console. */
     public static SynchConsole console;

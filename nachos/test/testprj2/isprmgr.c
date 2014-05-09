@@ -170,7 +170,7 @@ void route(int variation, char dbg_flag)
             LOG("++ISPRMGR VAR3: exec %s\n", executable);
             pid[0] = exec(executable, _argc, _argv);
             LOG("++ISPRMGR VAR3: Child process id is %d\n", pid[0]);
-            LOG("++ISPRMGR VAR3: Issue join to get exit status of chile process\n", pid[0]);
+            LOG("++ISPRMGR VAR3: Issue join to get exit status of child process\n", pid[0]);
             retval = join(pid[0], &exitstatus);
             if (retval == 0) {
                 LOG("++ISPRMGR VAR3: join successfully, exit status is %d\n", exitstatus);
@@ -285,7 +285,7 @@ void route(int variation, char dbg_flag)
             LOG("++ISPRMGR VAR7: exec %s\n", executable);
             pid[0] = exec(executable, _argc, _argv);
             LOG("++ISPRMGR VAR7: Child process id is %d\n", pid[0]);
-            LOG("++ISPRMGR VAR7: Issue join to get exit status of chile process\n");
+            LOG("++ISPRMGR VAR7: Issue join to get exit status of child process\n");
             retval = join(pid[0], &exitstatus);
             if (retval != 0) {
                 LOG("++ISPRMGR VAR7: [ENDED] FAIL\n");
@@ -293,7 +293,7 @@ void route(int variation, char dbg_flag)
             }
             LOG("++ISPRMGR VAR7: first time invoke join successfully\n");
 
-            LOG("++ISPRMGR VAR7: Issue join again to get exit status of chile process\n", pid[0]);
+            LOG("++ISPRMGR VAR7: Issue join again to get exit status of child process\n", pid[0]);
             retval = join(pid[0], &exitstatus);
             if (retval == 0) {
                 LOG("++ISPRMGR VAR7: [ENDED] FAILED to join process %d\n", pid[0]);
@@ -361,7 +361,7 @@ void route(int variation, char dbg_flag)
                 pid[0] = exec(executable, _argc, _argv);
                 LOG("++ISPRMGR VAR9: Child process id is %d\n", pid[0]);
 
-                LOG("++ISPRMGR VAR9: Issue join to get exit status of chile process\n", pid[0]);
+                LOG("++ISPRMGR VAR9: Issue join to get exit status of child process\n", pid[0]);
                 retval = join(pid[0], &exitstatus);
                 if (retval == 0) {
                     LOG("++ISPRMGR VAR9: join successfully, exit status is %d\n", exitstatus);

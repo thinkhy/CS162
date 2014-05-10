@@ -9,27 +9,34 @@
  * compile:test/make
  * Change activity:
  *   $BC,EPT     4/21/2014 - initial release
+ *               5/8/2014  - TODO: add a VAR to exec a program that will fork child
+ *   
  **********************************************************************/
 #include "../stdio.h"
 
 #define NULL        0
-#define NUMVARS     8
+#define NUMVARS     9
 #define NAN         (0xEFFFFFFF)
 #define MAXARGC     20
-#define MAXPROCESS  9
+#define MAXPROCESS  10
 #define LOG         printf
+#define TRUE        1
+#define FALSE       0
 
 void log(char *format, ...);
 void route(int, char);
 int  atoi(const char *str);
 
-int pid[10];                    /* array to store pid                                    */
+int  pid[10];                   /* array to store pid                                    */
 char *executable;               /* executable file name for exec()                       */
 char *_argv[MAXARGC];           /* argv for testing executable                           */
 int  _argc;                     /* argc for testing executable                           */
 int  i,j;                       /* counter for loop                                      */
 int  exitstatus;                /* exit status of child process                          */           
 int  retval;                    /* return value of system call                           */
+int  flag;                      /* condition variable: TRUE or FALSE                     */
+
+
 
 int main(int argc, char *argv[]) { 
 
@@ -87,6 +94,7 @@ void route(int variation, char dbg_flag)
             /*                                                           */
             /*************************************************************/
             LOG("++ISPRMGR VAR1: [STARTED]\n");
+            LOG("++ISPRMGR VAR1: tests that your syscall exit finishes the thread of the process immediately\n");
             executable = "exittest.coff";
             _argv[0] = executable;
             _argv[1] = NULL;
@@ -119,6 +127,7 @@ void route(int variation, char dbg_flag)
             /*************************************************************/
             // log("++ProjectII TaskIII VAR2");
             LOG("++ISPRMGR VAR2: [STARTED]\n");
+            LOG("++ISPRMGR VAR2: runs exec multiple times and checks each child gets unique PID\n");
             executable = "cp.coff";
             _argv[0] = executable;
             _argv[1] = "cat.coff";
@@ -152,6 +161,7 @@ void route(int variation, char dbg_flag)
             /*                                                           */
             /*************************************************************/
             LOG("++ISPRMGR VAR3: [STARTED]\n");
+            LOG("++ISPRMGR VAR3: tests your syscall join to a child\n");
             
             executable = "exittest.coff";
             _argv[0] = executable;
@@ -160,7 +170,7 @@ void route(int variation, char dbg_flag)
             LOG("++ISPRMGR VAR3: exec %s\n", executable);
             pid[0] = exec(executable, _argc, _argv);
             LOG("++ISPRMGR VAR3: Child process id is %d\n", pid[0]);
-            LOG("++ISPRMGR VAR3: Issue join to get exit status of chile process\n", pid[0]);
+            LOG("++ISPRMGR VAR3: Issue join to get exit status of child process\n", pid[0]);
             retval = join(pid[0], &exitstatus);
             if (retval == 0) {
                 LOG("++ISPRMGR VAR3: join successfully, exit status is %d\n", exitstatus);
@@ -180,6 +190,7 @@ void route(int variation, char dbg_flag)
             /*                                                                       */
             /*************************************************************************/
             LOG("++ISPRMGR VAR4: [STARTED]\n");
+            LOG("++ISPRMGR VAR4: tests exec with error arguments: bad file name)\n");
             LOG("++ISPRMGR VAR4: invoke exec with nonextent executable\n");
             executable = "inexistent.coff";
             _argv[0] = executable;
@@ -274,7 +285,7 @@ void route(int variation, char dbg_flag)
             LOG("++ISPRMGR VAR7: exec %s\n", executable);
             pid[0] = exec(executable, _argc, _argv);
             LOG("++ISPRMGR VAR7: Child process id is %d\n", pid[0]);
-            LOG("++ISPRMGR VAR7: Issue join to get exit status of chile process\n");
+            LOG("++ISPRMGR VAR7: Issue join to get exit status of child process\n");
             retval = join(pid[0], &exitstatus);
             if (retval != 0) {
                 LOG("++ISPRMGR VAR7: [ENDED] FAIL\n");
@@ -282,7 +293,7 @@ void route(int variation, char dbg_flag)
             }
             LOG("++ISPRMGR VAR7: first time invoke join successfully\n");
 
-            LOG("++ISPRMGR VAR7: Issue join again to get exit status of chile process\n", pid[0]);
+            LOG("++ISPRMGR VAR7: Issue join again to get exit status of child process\n", pid[0]);
             retval = join(pid[0], &exitstatus);
             if (retval == 0) {
                 LOG("++ISPRMGR VAR7: [ENDED] FAILED to join process %d\n", pid[0]);
@@ -332,13 +343,43 @@ void route(int variation, char dbg_flag)
         case 9:
             /*************************************************************************/
             /*                                                                       */
-            /* Var 8: tests that your exit syscall releases all resources   */
+            /* Var 8: tests that your exit syscall releases all resources            */
             /*                                                                       */
             /*************************************************************************/
             /* TODO: it's difficult to write code for this case                      */
 
+            LOG("++ISPRMGR VAR9: [STARTED]\n");
+            LOG("++ISPRMGR VAR9: tests that your exit syscall releases all resources\n");
 
-            break; 
+
+            while(1) {
+                executable = "exittest.coff";
+                _argv[0] = executable;
+                _argv[1] = NULL;
+                _argc = 1;
+                LOG("++ISPRMGR VAR9: exec %s\n", executable);
+                pid[0] = exec(executable, _argc, _argv);
+                LOG("++ISPRMGR VAR9: Child process id is %d\n", pid[0]);
+
+                LOG("++ISPRMGR VAR9: Issue join to get exit status of child process\n", pid[0]);
+                retval = join(pid[0], &exitstatus);
+                if (retval == 0) {
+                    LOG("++ISPRMGR VAR9: join successfully, exit status is %d\n", exitstatus);
+                }
+                else {
+                    LOG("++ISPRMGR VAR9: return value of join is %d\n", retval);
+                    LOG("++ISPRMGR VAR9: [ENDED] FAIL\n");
+                    flag = FALSE;
+                    break;
+                }
+            }
+
+            if (flag) {
+                LOG("++ISPRMGR VAR9: [ENDED] SUCCESS\n");
+            }
+
+            break;
+
 
         default:
             0;

@@ -12,6 +12,7 @@
  *   
  ***********************************************************************************/
 #include "../stdio.h"
+#include "../stdlib.h"
 
 #define NULL        0
 #define NUMVARS     11
@@ -21,7 +22,7 @@
 #define LOG         printf
 #define TRUE        1
 #define FALSE       0
-
+#define TESTFILE    "testVar1.txt"
 void log(char *format, ...);
 void route(int, char);
 
@@ -80,32 +81,58 @@ void route(int variation, char dbg_flag)
     {
 
         case 1:
+            /***********************************************************/
+            /*                                                         */
+            /* Variation 1:                                            */ 
+            /* creates a file, checks syscall creat works                                                       */ 
+            /*                                                         */
+            /***********************************************************/
+            LOG("++FILESYSCALL VAR1: [STARTED]\n");
+            LOG("++FILESYSCALL VAR1: creates a file, checks syscall creat works\n");
+            retval = creat(TESTFILE);
+            if (retval == -1) {
+                LOG("++FILESYSCALL VAR1: Failed to create %s \n", TESTFILE);
+                exit(-1);
+            }
+            LOG("++FILESYSCALL VAR1: SUCCESS\n");
+
             break;
+
         case 2:
             break;
+
         case 3:
             break;
+
         case 4:
             break;
+
         case 5:
             break;
+
         case 6:
             break;
+
         case 7:
             break;
+
         case 8:
             break;
+
         case 9:
             break;
+
         case 10:
             break;
+
         case 11:
             break;
+
         case 12:
             break;
 
-    default:
-        0;
+        default:
+            assert(0);;
     } /* switch */
 }
 

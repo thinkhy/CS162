@@ -727,9 +727,9 @@ public class UserProcess {
             * If no processes have the file open, the file is deleted immediately 
             * and the space it was using is made available for reuse.
             */
-            retval = UserKernel.fileSystem.remove(fds[fileHandle].filename); /*@BAA*/
-        }                                                                    /*@BAA*/ 
-        else {                                                               /*@BAA*/
+            retval = UserKernel.fileSystem.remove(filename);              /*@BAA*/
+        }                                                                 /*@BAA*/ 
+        else {                                                            /*@BAA*/
             /* If any processes still have the file open, 
              * the file will remain in existence until the 
              * last file descriptor referring to it is closed.

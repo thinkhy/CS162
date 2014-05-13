@@ -3,3 +3,12 @@
 ++FILESYSCALL VAR1: [STARTED]
 ++FILESYSCALL VAR1: creates a file, checks syscall creat works
 ++FILESYSCALL VAR1: SUCCESS
+++FILESYSCALL VAR2: [STARTED]
+++FILESYSCALL VAR2: calls syscall creat/close/unlink and checks that they work
+++FILESYSCALL VAR2: calls syscall creat to create file testVar2.txt
+++FILESYSCALL VAR2: calls syscall close
+++FILESYSCALL VAR2: calls syscall unlink to delete testVar2.txt
+++FILESYSCALL VAR2: calls syscall creat again to create file testVar2.txt
+++FILESYSCALL VAR2: calls syscall unlink to delete testVar2.txt without close
+++FILESYSCALL VAR2: calls syscall unlink again to see if testVar2.txt is existed.
+++FILESYSCALL VAR2: SUCCESS

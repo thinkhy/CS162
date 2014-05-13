@@ -23,10 +23,13 @@
 #define TRUE        1
 #define FALSE       0
 #define TESTFILE    "testVar1.txt"
+#define TESTFILE2   "testVar2.txt"
+
 void log(char *format, ...);
 void route(int, char);
 
 int  retval;                    /* return value of system call                           */
+int  fd;                        /* file handle                                           */        
 int  flag;                      /* condition variable: TRUE or FALSE                     */
 
 int main(int argc, char *argv[]) { 
@@ -99,6 +102,58 @@ void route(int variation, char dbg_flag)
             break;
 
         case 2:
+            /**************************************************************/
+            /*                                                            */
+            /* Variation 2:                                               */ 
+            /* calls syscall creat/close/unlink and checks that they work */ 
+            /*                                                            */
+            /**************************************************************/
+            LOG("++FILESYSCALL VAR2: [STARTED]\n");
+            LOG("++FILESYSCALL VAR2: calls syscall creat/close/unlink and checks that they work\n");
+            LOG("++FILESYSCALL VAR2: calls syscall creat to create file %s\n",
+                    TESTFILE2);
+            fd  = creat(TESTFILE2);
+            if (fd == -1) {
+                LOG("++FILESYSCALL VAR2: Failed to create %s \n", TESTFILE2);
+                exit(-1);
+            }
+
+            LOG("++FILESYSCALL VAR2: calls syscall close\n");
+            close(fd);
+
+            LOG("++FILESYSCALL VAR2: calls syscall unlink to delete %s\n",
+                    TESTFILE2);
+            retval = unlink(TESTFILE2);
+            if (retval == -1) {
+                LOG("++FILESYSCALL VAR2: Failed to delete %s \n", TESTFILE2);
+                exit(-1);
+            }
+            LOG("++FILESYSCALL VAR2: calls syscall creat again to create file %s\n",
+                    TESTFILE2);
+            fd  = creat(TESTFILE2);
+            if (fd == -1) {
+                LOG("++FILESYSCALL VAR2: Failed to create %s \n", TESTFILE2);
+                exit(-1);
+            }
+            LOG("++FILESYSCALL VAR2: calls syscall unlink to delete %s without close\n",
+                    TESTFILE2);
+            retval = unlink(TESTFILE2);
+            if (retval == -1) {
+                LOG("++FILESYSCALL VAR2: Failed to delete %s \n", TESTFILE2);
+                exit(-1);
+            }
+
+            LOG("++FILESYSCALL VAR2: calls syscall unlink again to see if %s is existed.\n",
+                    TESTFILE2);
+            retval = unlink(TESTFILE2);
+            if (retval != -1) {
+                LOG("++FILESYSCALL VAR2: %s should be deleted by last call of unlink \n", 
+                        TESTFILE2);
+                exit(-1);
+            }
+
+            LOG("++FILESYSCALL VAR2: SUCCESS\n");
+
             break;
 
         case 3:

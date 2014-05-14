@@ -14,16 +14,17 @@
 #include "../stdio.h"
 #include "../stdlib.h"
 
-#define NULL        0
-#define NUMVARS     11
-#define NAN         (0xEFFFFFFF)
-#define MAXARGC     20
-#define MAXPROCESS  10
-#define LOG         printf
-#define TRUE        1
-#define FALSE       0
-#define TESTFILE    "testVar1.txt"
-#define TESTFILE2   "testVar2.txt"
+#define NULL           0
+#define NUMVARS        11
+#define NAN            (0xEFFFFFFF)
+#define MAXARGC        20
+#define MAXPROCESS     10
+#define MAXOPENFILES   16
+#define LOG            printf
+#define TRUE           1
+#define FALSE          0
+#define TESTFILE       "testVar1.txt"
+#define TESTFILE2      "testVar2.txt"
 
 void log(char *format, ...);
 void route(int, char);
@@ -31,6 +32,8 @@ void route(int, char);
 int  retval;                    /* return value of system call                           */
 int  fd;                        /* file handle                                           */        
 int  flag;                      /* condition variable: TRUE or FALSE                     */
+int  i;                         /* loop counter                                          */
+int  fds[MAXOPENFILES];         /* file hadle array                                      */
 
 int main(int argc, char *argv[]) { 
 /*****************************************************************************************
@@ -153,9 +156,9 @@ void route(int variation, char dbg_flag)
             }
 
             LOG("++FILESYSCALL VAR2: SUCCESS\n");
-
+             
             break;
-
+             
         case 3:
             /***********************************************************/
             /*                                                         */
@@ -164,18 +167,30 @@ void route(int variation, char dbg_flag)
             /*  when stubFileSystem's openfile limit's exceeded        */
             /*                                                         */
             /***********************************************************/
+             
+            LOG("++FILESYSCALL VAR3: [STARTED]\n");
+            LOG("++FILESYSCALL VAR3: tests if your syscall open fails gracefully when stubFileSystem's openfile limit's exceeded\n");
+            LOG("++FILESYSCALL VAR3: will open %d files\n", MAXOPENFILES);
+            for (i = 0; i < MAXOPENFILES + 1; i++) {
+                LOG("++FILESYSCALL VAR3: opening the %dth file\n", i);
+                fds[i] = open("out"); 
+                if (fds[i] == -1) {
+                    LOG("++FILESYSCALL VAR3: failed to open file \"out\" \n"); 
+                    exit(-1);
+                }
+            }
 
+            LOG("++FILESYSCALL VAR3: SUCCESS\n");
+             
             break;
-
-
-
-
+             
+              
         case 4:
             break;
 
         case 5:
             break;
-
+   
         case 6:
             break;
 

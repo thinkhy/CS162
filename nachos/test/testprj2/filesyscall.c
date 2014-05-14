@@ -87,7 +87,7 @@ void route(int variation, char dbg_flag)
             /***********************************************************/
             /*                                                         */
             /* Variation 1:                                            */ 
-            /* creates a file, checks syscall creat works                                                       */ 
+            /* creates a file, checks syscall creat works              */ 
             /*                                                         */
             /***********************************************************/
             LOG("++FILESYSCALL VAR1: [STARTED]\n");
@@ -157,7 +157,18 @@ void route(int variation, char dbg_flag)
             break;
 
         case 3:
+            /***********************************************************/
+            /*                                                         */
+            /* Variation 1:                                            */ 
+            /*  tests if your syscall open fails gracefully            */
+            /*  when stubFileSystem's openfile limit's exceeded        */
+            /*                                                         */
+            /***********************************************************/
+
             break;
+
+
+
 
         case 4:
             break;

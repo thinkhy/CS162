@@ -186,6 +186,14 @@ void route(int variation, char dbg_flag)
              
               
         case 4:
+            /***************************************************************/
+            /*                                                             */
+            /* Variation 4:                                                */ 
+            /* tests if all files get closed when process exits normally   */
+            /*  when stubFileSystem's openfile limit's exceeded            */
+            /*                                                             */
+            /***************************************************************/
+            
             break;
 
         case 5:

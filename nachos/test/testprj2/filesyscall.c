@@ -100,6 +100,7 @@ void route(int variation, char dbg_flag)
                 LOG("++FILESYSCALL VAR1: Failed to create %s \n", TESTFILE);
                 exit(-1);
             }
+            close(retval);
             LOG("++FILESYSCALL VAR1: SUCCESS\n");
 
             break;

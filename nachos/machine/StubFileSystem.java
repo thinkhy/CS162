@@ -81,6 +81,10 @@ public class StubFileSystem implements FileSystem {
 
 	    final File f = new File(directory, name);
 
+        System.out.println("[StubOpenFile.StubOpenFile] "
+                + "open file " + name
+                + " open count: " + openCount  );
+
 	    if (openCount == maxOpenFiles)
 		throw new IOException();
 
@@ -125,8 +129,6 @@ public class StubFileSystem implements FileSystem {
 	}
 	
 	public int write(int pos, byte[] buf, int offset, int length) {
-        // [Debug by Huang Ye 140203]
-        System.out.println("inside write: " + length);
 
 	    if (!open)
 		return -1;
@@ -158,6 +160,8 @@ public class StubFileSystem implements FileSystem {
 		openCount--;
 	    }
 		
+        System.out.println("[StubFilesystem.close] DEBUG "
+               + "openCount: " + openCount);
 	    try {
 		file.close();
 	    }

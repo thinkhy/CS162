@@ -19,7 +19,7 @@
 #define NAN            (0xEFFFFFFF)
 #define MAXARGC        20
 #define MAXPROCESS     10
-#define MAXOPENFILES   16
+#define MAXOPENFILES   13             /* MaxOpenFiles=16, 16-3(stdin/stdout/stderr)=13*/
 #define LOG            printf
 #define TRUE           1
 #define FALSE          0
@@ -163,7 +163,7 @@ void route(int variation, char dbg_flag)
         case 3:
             /***********************************************************/
             /*                                                         */
-            /* Variation 1:                                            */ 
+            /* Variation 3:                                            */ 
             /*  tests if your syscall open fails gracefully            */
             /*  when stubFileSystem's openfile limit's exceeded        */
             /*                                                         */

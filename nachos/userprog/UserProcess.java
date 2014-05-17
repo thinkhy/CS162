@@ -8,16 +8,17 @@ import java.util.LinkedList;
 import java.util.Iterator; 
 import java.io.EOFException;
 
-/****************************************************************************************
+/******************************************************************************************************************
  *
  * 01* CHANGE-ACTIVITY:
  *                                                                        
  *  $BA=PROJECT2 TASK1, 140125, THINKHY: Implement the file system calls  
  *  $BB=PROJECT2 TASK2, 140205, THINKHY: Implement support for multiprogramming  
  *  $BC=PROJECT2 TASK3, 140302, THINKHY: Implement system calls for process management
- *  $BD=PROJECT2 ISSUE #8,140302, THINKHY: Hit "RuntimePermission createClassLoader" while long run ISPRMGR VAR9
+ *  $BD=PROJECT2 ISSUE #8, 140509, THINKHY: Hit "RuntimePermission createClassLoader" while long run ISPRMGR VAR9
+ *  $BE=PROJECT2 ISSUE #11,140517, THINKHY: file handlers can't be closed(filesyscall.c VAR3 failed)
  *                                                                        
- ****************************************************************************************/
+ ******************************************************************************************************************/
 
 /**
  * Encapsulates the state of a user process that is not contained in its
@@ -499,6 +500,8 @@ public class UserProcess {
                 return -1;                                                 /*@BAA*/ 
             else {                                                         /*@BAA*/
                 fds[fileHandle].filename = filename;                       /*@BAA*/
+                Lib.debug(dbgProcess,                                      /*@BAA*/
+                    "handleCreate(): handle " + fileHandle);               /*@BAA*/
                 fds[fileHandle].file = retval;                             /*@BAA*/
                 fds[fileHandle].position = 0;                              /*@BAA*/
                 return fileHandle;                                         /*@BAA*/
@@ -534,12 +537,17 @@ public class UserProcess {
         OpenFile retval  = UserKernel.fileSystem.open(filename, false);    /*@BAA*/
 
         if (retval == null) {                                              /*@BAA*/
+            Lib.debug(dbgProcess,                                          /*@BEA*/
+                    "[UserProcess.handleOpen] failed to open "+filename);  /*@BEA*/
             return -1;                                                     /*@BAA*/
         }                                                                  /*@BAA*/
         else {                                                             /*@BAA*/
             int fileHandle = findEmptyFileDescriptor();                    /*@BAA*/ 
-            if (fileHandle < 0)                                            /*@BAA*/ 
+            if (fileHandle < 0) {                                          /*@BAA*/ 
+                Lib.debug(dbgProcess,                                      /*@BEA*/
+             "[UserProcess.handleOpen] failed to find empty file handler");/*@BEA*/
                 return -1;                                                 /*@BAA*/ 
+            }                                                              /*@BEA*/
             else {                                                         /*@BAA*/
                 fds[fileHandle].filename = filename;                       /*@BAA*/
                 fds[fileHandle].file = retval;                             /*@BAA*/
@@ -687,6 +695,7 @@ public class UserProcess {
 
         fd.position = 0;                                                  /*@BAA*/
         fd.file.close();                                                  /*@BAA*/
+        fd.file = null;                                                   /*@BEA*/
 
         // remove this file if necessary                                  /*@BAA*/
         if (fd.toRemove) {                                                /*@BAA*/
@@ -728,7 +737,7 @@ public class UserProcess {
             * and the space it was using is made available for reuse.
             */
             retval = UserKernel.fileSystem.remove(filename);              /*@BAA*/
-        }                                                                 /*@BAA*/ 
+        }                                                                 /*@AA*/ 
         else {                                                            /*@BAA*/
             /* If any processes still have the file open, 
              * the file will remain in existence until the 
@@ -743,7 +752,9 @@ public class UserProcess {
              * last file descriptor referring to it is closed.
              * 2/4/2014 HY
              */
-             fds[fileHandle].toRemove = true;                             /*@BAA*/  
+            /* fds[fileHandle].toRemove = true;                             @BAA*/  
+            handleClose(fileHandle);                                      /*@BEA*/
+            retval = UserKernel.fileSystem.remove(filename);              /*@BEA*/
         }                                                                 /*@BAA*/
 
         return retval ? 0 : -1;                                           /*@BAA*/  
@@ -1149,8 +1160,9 @@ public class UserProcess {
 
     /* Find the first empty position in FD array by filename   @BAA */
     private int findFileDescriptorByName(String filename) { /* @BAA */
+            
         for (int i = 0; i < MAXFD; i++) {                   /* @BAA */
-            if (fds[i].filename == filename)                /* @BAA */
+            if (fds[i].filename.equals(filename))           /* @BEC */
                 return i;                                   /* @BAA */
         }                                                   /* @BAA */
 

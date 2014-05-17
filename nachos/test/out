@@ -14,7 +14,7 @@
 ++FILESYSCALL VAR2: SUCCESS
 ++FILESYSCALL VAR3: [STARTED]
 ++FILESYSCALL VAR3: tests if your syscall open fails gracefully when stubFileSystem's openfile limit's exceeded
-++FILESYSCALL VAR3: will open                               16 files
+++FILESYSCALL VAR3: will open                               13 files
 ++FILESYSCALL VAR3: opening the                                0th file
 ++FILESYSCALL VAR3: opening the                                1th file
 ++FILESYSCALL VAR3: opening the                                2th file
@@ -27,4 +27,6 @@
 ++FILESYSCALL VAR3: opening the                                9th file
 ++FILESYSCALL VAR3: opening the                               10th file
 ++FILESYSCALL VAR3: opening the                               11th file
-++FILESYSCALL VAR3: failed to open file "out" 
+++FILESYSCALL VAR3: opening the                               12th file
+++FILESYSCALL VAR3: opening the                               13th file
+++FILESYSCALL VAR3: SUCCESS

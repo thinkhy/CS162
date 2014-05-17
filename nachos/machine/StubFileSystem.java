@@ -83,11 +83,13 @@ public class StubFileSystem implements FileSystem {
 
         System.out.println("[StubOpenFile.StubOpenFile] "
                 + "open file " + name
-                + " open count: " + openCount  );
+                + "open count: " + openCount  );
 
 	    if (openCount == maxOpenFiles)
 		throw new IOException();
 
+        System.out.println("[StubOpenFile.StubOpenFile] "
+                + "before invoking doPrivileged");
 	    privilege.doPrivileged(new Runnable() {
 		public void run() { getRandomAccessFile(f, truncate); }
 	    });
@@ -95,6 +97,8 @@ public class StubFileSystem implements FileSystem {
 	    if (file == null)
 		throw new IOException();
 
+        System.out.println("[StubOpenFile.StubOpenFile] "
+                + "set open flag");
 	    open = true;
 	    openCount++;
 	}

@@ -70,8 +70,10 @@ int main(int argc, char *argv[]) {
     }
     else {
         LOG("++ISPRMGR Run all the variations\n");
-        for (i=1; i <= NUMVARS; i++)
+        for (i=0; i <= NUMVARS; i++) {
+            LOG("++ISPRMGR Run the %dth variations\n", i);
             route(i, dbg_flag);
+        }
     }
 
     return 0;
@@ -167,10 +169,40 @@ void route(int variation, char dbg_flag)
             /*  tests if your syscall close actually closes the file   */
             /*                                                         */
             /***********************************************************/
-            LOG("++FILESYSCALL VAR3: tests if your syscall close actually closes the file");
+            LOG("++FILESYSCALL VAR2: tests if your syscall close actually closes the file");
             /* TODO */
+            LOG("++FILESYSCALL VAR2: [STARTED]\n");
+            LOG("++FILESYSCALL VAR2: creates a file, checks syscall creat works\n");
+            while(1) {
+            retval = creat(TESTFILE);
+            if (retval == -1) {
+                LOG("++FILESYSCALL VAR2: Failed to create %s \n", TESTFILE);
+                exit(-1);
+            }
+            LOG("++FILESYSCALL VAR2: close the file created just now\n");
+            close(retval);
+
+            LOG("++FILESYSCALL VAR2: open the file created just now\n");
+            fd = open(TESTFILE);
+
+            /* TODO: write some content to test file */
+
+            LOG("++FILESYSCALL VAR2: close the file just opened\n");
+            close(retval);
+
+            LOG("++FILESYSCALL VAR2: calls syscall unlink to delete %s\n",
+                    TESTFILE);
+            retval = unlink(TESTFILE);
+            if (retval == -1) {
+                LOG("++FILESYSCALL VAR2: Failed to delete %s \n", TESTFILE2);
+                exit(-1);
+            }
+            }
 
 
+            LOG("++FILESYSCALL VAR2: SUCCESS\n");
+
+            break;
 
         case 3:
             /***********************************************************/
@@ -184,7 +216,7 @@ void route(int variation, char dbg_flag)
             LOG("++FILESYSCALL VAR3: [STARTED]\n");
             LOG("++FILESYSCALL VAR3: tests if your syscall open fails gracefully when stubFileSystem's openfile limit's exceeded\n");
             LOG("++FILESYSCALL VAR3: will open %d files\n", MAXOPENFILES);
-            for (i = 0; i < MAXOPENFILES + 1; i++) {
+            for (i = 0; i <= MAXOPENFILES; i++) {
                 LOG("++FILESYSCALL VAR3: opening the %dth file\n", i);
                 fds[i] = open("out"); 
                 if (fds[i] == -1) {
@@ -193,10 +225,13 @@ void route(int variation, char dbg_flag)
                 }
             }
 
+            for (i = 0; i <= MAXOPENFILES; i++) {
+                close(fds[i]);
+            }
+             
             LOG("++FILESYSCALL VAR3: SUCCESS\n");
              
             break;
-             
               
         case 4:
             /***************************************************************/

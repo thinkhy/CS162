@@ -25,6 +25,7 @@
 #define FALSE          0
 #define TESTFILE       "testVar1.txt"
 #define TESTFILE2      "testVar2.txt"
+#define MAXRUN         10
 
 void log(char *format, ...);
 void route(int, char);
@@ -63,18 +64,20 @@ int main(int argc, char *argv[]) {
     if(argc > 1)
         variation = atoi(argv[1]);
 
-    LOG("++ISPRMGR: ARG[1] is %d \n", variation);
+    LOG("++FILESYSCALL: Start this run");
+    LOG("++FILESYSCALL: ARG[1] is %d \n", variation);
 
     if (variation) {
         route(variation, dbg_flag);
     }
     else {
-        LOG("++ISPRMGR Run all the variations\n");
+        LOG("++FILESYSCALL Run all the variations\n");
         for (i=0; i <= NUMVARS; i++) {
-            LOG("++ISPRMGR Run the %dth variations\n", i);
+            LOG("++FILESYSCALL Run the %dth variations\n", i);
             route(i, dbg_flag);
         }
     }
+    LOG("++FILESYSCALL: Start this run");
 
     return 0;
 }
@@ -170,10 +173,12 @@ void route(int variation, char dbg_flag)
             /*                                                         */
             /***********************************************************/
             LOG("++FILESYSCALL VAR2: tests if your syscall close actually closes the file");
-            /* TODO */
             LOG("++FILESYSCALL VAR2: [STARTED]\n");
             LOG("++FILESYSCALL VAR2: creates a file, checks syscall creat works\n");
-            while(1) {
+
+            i = 0;
+            while( i++ < MAXRUN) { 
+            /* while (1) { */
             retval = creat(TESTFILE);
             if (retval == -1) {
                 LOG("++FILESYSCALL VAR2: Failed to create %s \n", TESTFILE);

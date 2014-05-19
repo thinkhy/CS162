@@ -1,0 +1,88 @@
+++FILESYSCALL: Start this run++FILESYSCALL: ARG[1] is                                0 
+++FILESYSCALL Run all the variations
+++FILESYSCALL Run the                                0th variations
+++FILESYSCALL VAR0: [STARTED]
+++FILESYSCALL VAR0: creates a file, checks syscall creat works
+++FILESYSCALL VAR0: SUCCESS
+++FILESYSCALL Run the                                1th variations
+++FILESYSCALL VAR1: [STARTED]
+++FILESYSCALL VAR1: calls syscall creat/close/unlink and checks that they work
+++FILESYSCALL VAR1: calls syscall creat to create file testVar2.txt
+++FILESYSCALL VAR1: calls syscall close
+++FILESYSCALL VAR1: calls syscall unlink to delete testVar2.txt
+++FILESYSCALL VAR1: calls syscall creat again to create file testVar2.txt
+++FILESYSCALL VAR1: calls syscall unlink to delete testVar2.txt without close
+++FILESYSCALL VAR1: calls syscall unlink again to see if testVar2.txt is existed.
+++FILESYSCALL VAR1: SUCCESS
+++FILESYSCALL Run the                                2th variations
+++FILESYSCALL VAR2: tests if your syscall close actually closes the file++FILESYSCALL VAR2: [STARTED]
+++FILESYSCALL VAR2: creates a file, checks syscall creat works
+++FILESYSCALL VAR2: close the file created just now
+++FILESYSCALL VAR2: open the file created just now
+++FILESYSCALL VAR2: close the file just opened
+++FILESYSCALL VAR2: calls syscall unlink to delete testVar1.txt
+++FILESYSCALL VAR2: close the file created just now
+++FILESYSCALL VAR2: open the file created just now
+++FILESYSCALL VAR2: close the file just opened
+++FILESYSCALL VAR2: calls syscall unlink to delete testVar1.txt
+++FILESYSCALL VAR2: close the file created just now
+++FILESYSCALL VAR2: open the file created just now
+++FILESYSCALL VAR2: close the file just opened
+++FILESYSCALL VAR2: calls syscall unlink to delete testVar1.txt
+++FILESYSCALL VAR2: close the file created just now
+++FILESYSCALL VAR2: open the file created just now
+++FILESYSCALL VAR2: close the file just opened
+++FILESYSCALL VAR2: calls syscall unlink to delete testVar1.txt
+++FILESYSCALL VAR2: close the file created just now
+++FILESYSCALL VAR2: open the file created just now
+++FILESYSCALL VAR2: close the file just opened
+++FILESYSCALL VAR2: calls syscall unlink to delete testVar1.txt
+++FILESYSCALL VAR2: close the file created just now
+++FILESYSCALL VAR2: open the file created just now
+++FILESYSCALL VAR2: close the file just opened
+++FILESYSCALL VAR2: calls syscall unlink to delete testVar1.txt
+++FILESYSCALL VAR2: close the file created just now
+++FILESYSCALL VAR2: open the file created just now
+++FILESYSCALL VAR2: close the file just opened
+++FILESYSCALL VAR2: calls syscall unlink to delete testVar1.txt
+++FILESYSCALL VAR2: close the file created just now
+++FILESYSCALL VAR2: open the file created just now
+++FILESYSCALL VAR2: close the file just opened
+++FILESYSCALL VAR2: calls syscall unlink to delete testVar1.txt
+++FILESYSCALL VAR2: close the file created just now
+++FILESYSCALL VAR2: open the file created just now
+++FILESYSCALL VAR2: close the file just opened
+++FILESYSCALL VAR2: calls syscall unlink to delete testVar1.txt
+++FILESYSCALL VAR2: close the file created just now
+++FILESYSCALL VAR2: open the file created just now
+++FILESYSCALL VAR2: close the file just opened
+++FILESYSCALL VAR2: calls syscall unlink to delete testVar1.txt
+++FILESYSCALL VAR2: SUCCESS
+++FILESYSCALL Run the                                3th variations
+++FILESYSCALL VAR3: [STARTED]
+++FILESYSCALL VAR3: tests if your syscall open fails gracefully when stubFileSystem's openfile limit's exceeded
+++FILESYSCALL VAR3: will open                               13 files
+++FILESYSCALL VAR3: opening the                                0th file
+++FILESYSCALL VAR3: opening the                                1th file
+++FILESYSCALL VAR3: opening the                                2th file
+++FILESYSCALL VAR3: opening the                                3th file
+++FILESYSCALL VAR3: opening the                                4th file
+++FILESYSCALL VAR3: opening the                                5th file
+++FILESYSCALL VAR3: opening the                                6th file
+++FILESYSCALL VAR3: opening the                                7th file
+++FILESYSCALL VAR3: opening the                                8th file
+++FILESYSCALL VAR3: opening the                                9th file
+++FILESYSCALL VAR3: opening the                               10th file
+++FILESYSCALL VAR3: opening the                               11th file
+++FILESYSCALL VAR3: opening the                               12th file
+++FILESYSCALL VAR3: opening the                               13th file
+++FILESYSCALL VAR3: SUCCESS
+++FILESYSCALL Run the                                4th variations
+++FILESYSCALL Run the                                5th variations
+++FILESYSCALL Run the                                6th variations
+++FILESYSCALL Run the                                7th variations
+++FILESYSCALL Run the                                8th variations
+++FILESYSCALL Run the                                9th variations
+++FILESYSCALL Run the                               10th variations
+++FILESYSCALL Run the                               11th variations
+++FILESYSCALL: Start this run

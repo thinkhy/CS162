@@ -37,6 +37,10 @@ int  i;                         /* loop counter                                 
 int  fds[MAXOPENFILES];         /* file hadle array                                      */
 int  pid;                       /* child process id                                      */
 
+char *executable;               /* executable file name for exec()                       */
+char *_argv[MAXARGC];           /* argv for testing executable                           */
+int  _argc;                     /* argc for testing executable                           */
+
 
 int main(int argc, char *argv[]) { 
 /*****************************************************************************************
@@ -79,7 +83,7 @@ int main(int argc, char *argv[]) {
             route(i, dbg_flag);
         }
     }
-    LOG("++FILESYSCALL: Start this run");
+    LOG("++FILESYSCALL: End of this run");
 
     return 0;
 }
@@ -250,6 +254,17 @@ void route(int variation, char dbg_flag)
             /***************************************************************/
             LOG("++FILESYSCALL VAR4: [STARTED]\n");
             LOG("++FILESYSCALL VAR4: tests if all files get closed when process exits normally\n");
+            LOG("++FILESYSCALL VAR4: invoke syscall exec openfile.coff\n");
+            executable = "openfile.coff";
+            _argv[0] = executable;
+            _argv[1] = NULL;
+            _argc = 1;
+            pid = exec(executable, _argc, _argv);
+            if (pid <= 0) {
+                LOG("++FILESYSCALL: failed to exec %s \n", executable); 
+                exit(-1);
+            }
+            LOG("++FILESYSCALL VAR4: Child process id is %d\n", pid);
             
             LOG("++FILESYSCALL VAR4: SUCCESS\n");
             

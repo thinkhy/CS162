@@ -1,6 +1,9 @@
-++FILESYSCALL: Start this run++FILESYSCALL: ARG[1] is                                0 
-++FILESYSCALL Run all the variations
-++FILESYSCALL Run the                                0th variations
+++OPENFILE: [STARTED]
+++OPENFILE: open the first file test1.in
+++OPENFILE: open the second file test2.in
+++OPENFILE: open the third file test3.in
+++OPENFILE: [END]
+              0th variations
 ++FILESYSCALL VAR0: [STARTED]
 ++FILESYSCALL VAR0: creates a file, checks syscall creat works
 ++FILESYSCALL VAR0: SUCCESS
@@ -78,6 +81,11 @@
 ++FILESYSCALL VAR3: opening the                               13th file
 ++FILESYSCALL VAR3: SUCCESS
 ++FILESYSCALL Run the                                4th variations
+++FILESYSCALL VAR4: [STARTED]
+++FILESYSCALL VAR4: tests if all files get closed when process exits normally
+++FILESYSCALL VAR4: invoke syscall exec openfile.coff
+++FILESYSCALL VAR4: Child process id is                                2
+++FILESYSCALL VAR4: SUCCESS
 ++FILESYSCALL Run the                                5th variations
 ++FILESYSCALL Run the                                6th variations
 ++FILESYSCALL Run the                                7th variations
@@ -85,4 +93,4 @@
 ++FILESYSCALL Run the                                9th variations
 ++FILESYSCALL Run the                               10th variations
 ++FILESYSCALL Run the                               11th variations
-++FILESYSCALL: Start this run
+++FILESYSCALL: End of this run

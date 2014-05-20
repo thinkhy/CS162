@@ -22,10 +22,12 @@
 #define LOG            printf
 #define TRUE           1
 #define FALSE          0
-#define TESTFILE       "test1.txt"
-#define TESTFILE2      "test2.txt"
-#define TESTFILE3      "test3.txt"
-#define MAXRUN         10
+#define TESTFILE       "test1.in"
+#define TESTFILE2      "test2.in"
+#define TESTFILE3      "test3.in"
+
+int fds[MAXOPENFILES];               /* Maximum number of  opened files */
+
 
 int main(int argc, char *argv[]) {
 /*****************************************************************************************
@@ -36,6 +38,32 @@ int main(int argc, char *argv[]) {
  *
  *****************************************************************************************/
 
+    LOG("++OPENFILE: [STARTED]\n");
+
+    LOG("++OPENFILE: open the first file %s\n", TESTFILE);
+    fds[0] = open(TESTFILE);
+    if (fds[0] == -1) {
+        LOG("++OPENFILE: failed to open file %s \n", TESTFILE); 
+        exit(-1);
+    }
+
+    LOG("++OPENFILE: open the second file %s\n", TESTFILE2);
+    fds[1] = open(TESTFILE2);
+    if (fds[1] == -1) {
+        LOG("++OPENFILE: failed to open file %s \n", TESTFILE2); 
+        exit(-1);
+    }
+
+    LOG("++OPENFILE: open the third file %s\n", TESTFILE3);
+    fds[2] = open(TESTFILE3);
+    if (fds[2] == -1) {
+        LOG("++OPENFILE: failed to open file %s \n", TESTFILE3); 
+        exit(-1);
+    }
+
+    LOG("++OPENFILE: [END]\n");
+
+    /*exit(0);*/
 }
 
 

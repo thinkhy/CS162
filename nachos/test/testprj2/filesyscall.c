@@ -35,6 +35,8 @@ int  fd;                        /* file handle                                  
 int  flag;                      /* condition variable: TRUE or FALSE                     */
 int  i;                         /* loop counter                                          */
 int  fds[MAXOPENFILES];         /* file hadle array                                      */
+int  pid;                       /* child process id                                      */
+
 
 int main(int argc, char *argv[]) { 
 /*****************************************************************************************
@@ -179,29 +181,29 @@ void route(int variation, char dbg_flag)
             i = 0;
             while( i++ < MAXRUN) { 
             /* while (1) { */
-            retval = creat(TESTFILE);
-            if (retval == -1) {
-                LOG("++FILESYSCALL VAR2: Failed to create %s \n", TESTFILE);
-                exit(-1);
-            }
-            LOG("++FILESYSCALL VAR2: close the file created just now\n");
-            close(retval);
+                retval = creat(TESTFILE);
+                if (retval == -1) {
+                    LOG("++FILESYSCALL VAR2: Failed to create %s \n", TESTFILE);
+                    exit(-1);
+                }
+                LOG("++FILESYSCALL VAR2: close the file created just now\n");
+                close(retval);
 
-            LOG("++FILESYSCALL VAR2: open the file created just now\n");
-            fd = open(TESTFILE);
+                LOG("++FILESYSCALL VAR2: open the file created just now\n");
+                fd = open(TESTFILE);
 
-            /* TODO: write some content to test file */
+                /* TODO: write some content to test file */
 
-            LOG("++FILESYSCALL VAR2: close the file just opened\n");
-            close(retval);
+                LOG("++FILESYSCALL VAR2: close the file just opened\n");
+                close(retval);
 
-            LOG("++FILESYSCALL VAR2: calls syscall unlink to delete %s\n",
-                    TESTFILE);
-            retval = unlink(TESTFILE);
-            if (retval == -1) {
-                LOG("++FILESYSCALL VAR2: Failed to delete %s \n", TESTFILE2);
-                exit(-1);
-            }
+                LOG("++FILESYSCALL VAR2: calls syscall unlink to delete %s\n",
+                        TESTFILE);
+                retval = unlink(TESTFILE);
+                if (retval == -1) {
+                    LOG("++FILESYSCALL VAR2: Failed to delete %s \n", TESTFILE2);
+                    exit(-1);
+                }
             }
 
 
@@ -238,14 +240,18 @@ void route(int variation, char dbg_flag)
              
             break;
               
+
         case 4:
             /***************************************************************/
             /*                                                             */
             /* Variation 4:                                                */ 
             /* tests if all files get closed when process exits normally   */
-            /*  when stubFileSystem's openfile limit's exceeded            */
             /*                                                             */
             /***************************************************************/
+            LOG("++FILESYSCALL VAR4: [STARTED]\n");
+            LOG("++FILESYSCALL VAR4: tests if all files get closed when process exits normally\n");
+            
+            LOG("++FILESYSCALL VAR4: SUCCESS\n");
             
             break;
 

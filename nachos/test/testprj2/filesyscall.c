@@ -25,7 +25,9 @@
 #define FALSE          0
 #define TESTFILE       "testVar1.txt"
 #define TESTFILE2      "testVar2.txt"
+#define INPUTFILE      "mv.c"
 #define MAXRUN         10
+#define BUFSIZE        1024
 
 void log(char *format, ...);
 void route(int, char);
@@ -40,6 +42,8 @@ int  pid;                       /* child process id                             
 char *executable;               /* executable file name for exec()                       */
 char *_argv[MAXARGC];           /* argv for testing executable                           */
 int  _argc;                     /* argc for testing executable                           */
+char buf[BUFSIZE];              /* IO buf for read/write                                 */
+int  amount;                    /* amount(byte) per each read/write                      */
 
 
 int main(int argc, char *argv[]) { 
@@ -278,6 +282,17 @@ void route(int variation, char dbg_flag)
             /*                                                             */
             /***************************************************************/
             
+            LOG("++FILESYSCALL VAR5: [STARTED]\n");
+            LOG("++FILESYSCALL VAR5: open %s\n", INPUTFILE);
+            fds[0] = open(INPUTFILE);
+
+            LOG("++FILESYSCALL VAR5: invoke read/write in a loop\n");
+            while((amount = read(fds[0], buf, BUFSIZE)) > 0) {
+                write(1, buf, amount);
+            }
+            LOG("++FILESYSCALL VAR5: Please check above content manually that read from %s\n", INPUTFILE);
+            LOG("++FILESYSCALL VAR5: END\n");
+
             break;
    
         case 6:

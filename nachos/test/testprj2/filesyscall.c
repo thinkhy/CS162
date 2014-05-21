@@ -271,6 +271,13 @@ void route(int variation, char dbg_flag)
             break;
 
         case 5:
+            /***************************************************************/
+            /*                                                             */
+            /* Variation 5:                                                */ 
+            /* tests your syscall read by reading some bytes from a file   */
+            /*                                                             */
+            /***************************************************************/
+            
             break;
    
         case 6:

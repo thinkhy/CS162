@@ -18,6 +18,7 @@ touch ../test/out
 touch ../test/test1.in
 touch ../test/test2.in
 touch ../test/test3.in
+touch ../test/test.out
 
 rm ../test/testVar1.txt
 java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x filesyscall.coff   -d as

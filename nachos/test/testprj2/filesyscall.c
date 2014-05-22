@@ -266,7 +266,7 @@ void route(int variation, char dbg_flag)
             _argc = 1;
             pid = exec(executable, _argc, _argv);
             if (pid <= 0) {
-                LOG("++FILESYSCALL: failed to exec %s \n", executable); 
+                LOG("++FILESYSCALL VAR4: failed to exec %s \n", executable); 
                 exit(-1);
             }
             LOG("++FILESYSCALL VAR4: Child process id is %d\n", pid);
@@ -285,11 +285,17 @@ void route(int variation, char dbg_flag)
             LOG("++FILESYSCALL VAR5: [STARTED]\n");
             LOG("++FILESYSCALL VAR5: open %s\n", INPUTFILE);
             fds[0] = open(INPUTFILE);
+            if (fds[0] == -1) {
+                LOG("++FILESYSCALL: failed to open %s \n", INPUTFILE); 
+                exit(-1);
+            }
 
+            LOG("++FILESYSCALL VAR5: file handle %d \n", fds[0]);
             LOG("++FILESYSCALL VAR5: invoke read/write in a loop\n");
             while((amount = read(fds[0], buf, BUFSIZE)) > 0) {
                 write(1, buf, amount);
             }
+            close(fds[0]); 
 
             LOG("++FILESYSCALL VAR5: Please check above content manually that read from %s\n", INPUTFILE);
             LOG("++FILESYSCALL VAR5: END\n");
@@ -305,17 +311,45 @@ void route(int variation, char dbg_flag)
             /*                                                             */
             /***************************************************************/
             LOG("++FILESYSCALL VAR6: [STARTED]\n");
-            LOG("++FILESYSCALL VAR5: open %s\n", INPUTFILE);
+            LOG("++FILESYSCALL VAR6: open %s\n", INPUTFILE);
             fds[0] = open(INPUTFILE);
-
-            LOG("++FILESYSCALL VAR5: invoke read/write in a loop\n");
-            while((amount = read(fds[0], buf, BUFSIZE)) > 0) {
-                write(1, buf, amount);
+            if (fds[0] == -1) {
+                LOG("++FILESYSCALL: failed to open %s \n", INPUTFILE); 
+                exit(-1);
             }
 
-            LOG("++FILESYSCALL VAR5: SUCCESS\n");
+            LOG("++FILESYSCALL VAR6: file handle %d \n", fds[0]);
 
-             
+            fds[1] = open(OUTPUTFILE);
+            if (fds[1] == -1) {
+                LOG("++FILESYSCALL: failed to open %s \n", OUTPUTFILE); 
+                exit(-1);
+            }
+
+            LOG("++FILESYSCALL VAR6: file handle %d \n", fds[1]);
+
+
+            LOG("++FILESYSCALL VAR6: invoke read/write in a loop\n");
+            while((amount = read(fds[0], buf, BUFSIZE)) > 0) {
+                write(fds[1], buf, amount);
+            }
+
+            executable = "openfile.coff";
+            _argv[0] = executable;
+            _argv[1] = NULL;
+            _argc = 1;
+            pid = exec(executable, _argc, _argv);
+            if (pid <= 0) {
+                LOG("++FILESYSCALL VAR6: failed to exec %s \n", executable); 
+                exit(-1);
+            }
+            LOG("++FILESYSCALL VAR6: Child process id is %d\n", pid);
+
+            close(fds[0]);
+            close(fds[1]);
+
+            LOG("++FILESYSCALL VAR6: SUCCESS\n");
+
             break;
 
         case 7:

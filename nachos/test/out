@@ -89,6 +89,7 @@
 ++FILESYSCALL Run the                                5th variations
 ++FILESYSCALL VAR5: [STARTED]
 ++FILESYSCALL VAR5: open mv.c
+++FILESYSCALL VAR5: file handle                                2 
 ++FILESYSCALL VAR5: invoke read/write in a loop
 #include "syscall.h"
 #include "stdio.h"
@@ -133,6 +134,13 @@ int main(int argc, char** argv)
 ++FILESYSCALL VAR5: Please check above content manually that read from mv.c
 ++FILESYSCALL VAR5: END
 ++FILESYSCALL Run the                                6th variations
+++FILESYSCALL VAR6: [STARTED]
+++FILESYSCALL VAR6: open mv.c
+++FILESYSCALL VAR6: file handle                                2 
+++FILESYSCALL VAR6: file handle                                3 
+++FILESYSCALL VAR6: invoke read/write in a loop
+++FILESYSCALL VAR6: Child process id is                                3
+++FILESYSCALL VAR6: SUCCESS
 ++FILESYSCALL Run the                                7th variations
 ++FILESYSCALL Run the                                8th variations
 ++FILESYSCALL Run the                                9th variations

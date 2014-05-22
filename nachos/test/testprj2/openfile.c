@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
 
     LOG("++OPENFILE: [END]\n");
 
-    /*exit(0);*/
+    exit(0);
 }
 
 

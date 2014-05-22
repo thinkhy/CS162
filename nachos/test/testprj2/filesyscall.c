@@ -26,6 +26,7 @@
 #define TESTFILE       "testVar1.txt"
 #define TESTFILE2      "testVar2.txt"
 #define INPUTFILE      "mv.c"
+#define OUTPUTFILE     "test.out"
 #define MAXRUN         10
 #define BUFSIZE        1024
 
@@ -281,7 +282,6 @@ void route(int variation, char dbg_flag)
             /* tests your syscall read by reading some bytes from a file   */
             /*                                                             */
             /***************************************************************/
-            
             LOG("++FILESYSCALL VAR5: [STARTED]\n");
             LOG("++FILESYSCALL VAR5: open %s\n", INPUTFILE);
             fds[0] = open(INPUTFILE);
@@ -290,12 +290,32 @@ void route(int variation, char dbg_flag)
             while((amount = read(fds[0], buf, BUFSIZE)) > 0) {
                 write(1, buf, amount);
             }
+
             LOG("++FILESYSCALL VAR5: Please check above content manually that read from %s\n", INPUTFILE);
             LOG("++FILESYSCALL VAR5: END\n");
 
             break;
    
         case 6:
+            /***************************************************************/
+            /*                                                             */
+            /* Variation 5:                                                */ 
+            /*  tests that each of your processes's file descriptors are   */
+            /*   descriptors are independent from other processes          */
+            /*                                                             */
+            /***************************************************************/
+            LOG("++FILESYSCALL VAR6: [STARTED]\n");
+            LOG("++FILESYSCALL VAR5: open %s\n", INPUTFILE);
+            fds[0] = open(INPUTFILE);
+
+            LOG("++FILESYSCALL VAR5: invoke read/write in a loop\n");
+            while((amount = read(fds[0], buf, BUFSIZE)) > 0) {
+                write(1, buf, amount);
+            }
+
+            LOG("++FILESYSCALL VAR5: SUCCESS\n");
+
+             
             break;
 
         case 7:

@@ -305,7 +305,7 @@ void route(int variation, char dbg_flag)
         case 6:
             /***************************************************************/
             /*                                                             */
-            /* Variation 5:                                                */ 
+            /* Variation 6:                                                */ 
             /*  tests that each of your processes's file descriptors are   */
             /*   descriptors are independent from other processes          */
             /*                                                             */
@@ -327,7 +327,6 @@ void route(int variation, char dbg_flag)
             }
 
             LOG("++FILESYSCALL VAR6: file handle %d \n", fds[1]);
-
 
             LOG("++FILESYSCALL VAR6: invoke read/write in a loop\n");
             while((amount = read(fds[0], buf, BUFSIZE)) > 0) {
@@ -353,21 +352,50 @@ void route(int variation, char dbg_flag)
             break;
 
         case 7:
+            /****************************************************************/
+            /*                                                              */
+            /* Variation 7:                                                 */ 
+            /*  copies between files, tests creat, open, read, write, close */
+            /*                                                              */
+            /****************************************************************/
             break;
 
         case 8:
+            /**************************************************************************/
+            /*                                                                        */
+            /* Variation 8:                                                           */ 
+            /*  tests that write fails gracefully on bad arguements (e.g. bad address)*/
+            /*                                                                        */
+            /**************************************************************************/
             break;
 
         case 9:
+            /**************************************************************************/
+            /*                                                                        */
+            /* Variation 9:                                                           */ 
+            /*  tests that read fails gracefully on bad arguments                     */
+            /*  (e.g. writing back to a readonly part of virtual memory)              */
+            /*                                                                        */
+            /**************************************************************************/
             break;
 
+
         case 10:
+            /**************************************************************************/
+            /*                                                                        */
+            /* Variation 10:                                                          */ 
+            /*  tests that stdin uses console                                         */
+            /*                                                                        */
+            /**************************************************************************/
             break;
 
         case 11:
-            break;
-
-        case 12:
+            /**************************************************************************/
+            /*                                                                        */
+            /* Variation 11:                                                          */ 
+            /*  tests stdout                                                          */
+            /*                                                                        */
+            /**************************************************************************/
             break;
 
         default:

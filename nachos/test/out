@@ -142,8 +142,12 @@ int main(int argc, char** argv)
 ++FILESYSCALL VAR6: Child process id is                                3
 ++FILESYSCALL VAR6: SUCCESS
 ++FILESYSCALL Run the                                7th variations
+++FILESYSCALL VAR7: [STARTED]
 ++FILESYSCALL Run the                                8th variations
-++FILESYSCALL Run the                                9th variations
-++FILESYSCALL Run the                               10th variations
-++FILESYSCALL Run the                               11th variations
-++FILESYSCALL: End of this run
+++FILESYSCALL VAR8: [STARTED]
+++FILESYSCALL VAR8: open mv.c
+++FILESYSCALL VAR8: file handle                                2 
+++FILESYSCALL VAR8: file handle                                3 
+++FILESYSCALL VAR8: invoke read/write some times
+++FILESYSCALL VAR8: invoke write as buf address is NULL
+++FILESYSCALL VAR8: failed to 

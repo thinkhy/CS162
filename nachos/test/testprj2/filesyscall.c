@@ -26,6 +26,8 @@
 #define TESTFILE       "testVar1.txt"
 #define TESTFILE2      "testVar2.txt"
 #define INPUTFILE      "mv.c"
+#define VAR7IN         "cp.in"
+#define VAR7OUT        "cp.out"
 #define OUTPUTFILE     "test.out"
 #define MAXRUN         10
 #define BUFSIZE        1024
@@ -358,6 +360,37 @@ void route(int variation, char dbg_flag)
             /*  copies between files, tests creat, open, read, write, close */
             /*                                                              */
             /****************************************************************/
+            /* TODO: fix this case                                          */
+            LOG("++FILESYSCALL VAR7: [STARTED]\n");
+            break;
+            LOG("++FILESYSCALL VAR7: copies between files, tests creat, open, read, write, close\n");
+            LOG("++FILESYSCALL VAR7: invoke syscall exec cp.coff\n");
+            executable = "cp.coff";
+            _argv[0] = executable;
+            _argv[1] = VAR7IN;
+            _argv[2] = VAR7OUT;
+            _argc = 3;
+            pid = exec(executable, _argc, _argv);
+            if (pid <= 0) {
+                LOG("++FILESYSCALL VAR7: failed to exec %s \n", executable); 
+                exit(-1);
+            }
+
+            fds[0] = open(VAR7OUT);
+            if (fds[0] == -1) {
+                LOG("++FILESYSCALL VAR7: failed to open %s \n", VAR7OUT); 
+                exit(-1);
+            }
+             
+            retval = unlink(VAR7OUT); 
+            if (retval == -1) {
+                LOG("++FILESYSCALL VAR7: failed to unlink %s \n", VAR7OUT); 
+                exit(-1);
+            }
+                       
+            LOG("++FILESYSCALL VAR7: Child process id is %d\n", pid);
+            LOG("++FILESYSCALL VAR7: SUCCESS\n");
+            
             break;
 
         case 8:
@@ -367,6 +400,53 @@ void route(int variation, char dbg_flag)
             /*  tests that write fails gracefully on bad arguements (e.g. bad address)*/
             /*                                                                        */
             /**************************************************************************/
+            LOG("++FILESYSCALL VAR8: [STARTED]\n");
+            LOG("++FILESYSCALL VAR8: open %s\n", INPUTFILE);
+            fds[0] = open(INPUTFILE);
+            if (fds[0] == -1) {
+                LOG("++FILESYSCALL VAR8: failed to open %s \n", INPUTFILE); 
+                exit(-1);
+            }
+
+            LOG("++FILESYSCALL VAR8: file handle %d \n", fds[0]);
+
+            fds[1] = open(OUTPUTFILE);
+            if (fds[1] == -1) {
+                LOG("++FILESYSCALL VAR8: failed to open %s \n", OUTPUTFILE); 
+                exit(-1);
+            }
+
+            LOG("++FILESYSCALL VAR8: file handle %d \n", fds[1]);
+
+            LOG("++FILESYSCALL VAR8: invoke read/write some times\n");
+
+            LOG("++FILESYSCALL VAR8: invoke write as buf address is NULL\n");
+            amount = read(fds[0], buf, BUFSIZE);
+            write(fds[1], NULL, amount);
+            if (fds[1] != -1) {
+                LOG("++FILESYSCALL VAR8: failed to \n");
+                exit(-1);
+            }
+            
+            LOG("++FILESYSCALL VAR8: invoke write as amount is a negative number\n");
+            amount = read(fds[0], buf, BUFSIZE);
+            write(fds[1], buf, -1);
+            if (fds[1] != -1) {
+                LOG("++FILESYSCALL VAR8: failed to \n");
+                exit(-1);
+            }
+
+            LOG("++FILESYSCALL VAR8: invoke write with wrong file handle\n");
+            amount = read(fds[0], buf, BUFSIZE);
+            write(fds[1], buf, amount);
+            if (fds[1] != -1) {
+                LOG("++FILESYSCALL VAR8: failed to \n");
+                exit(-1);
+            }
+
+            close(fds[0]);    
+            close(fds[1]);    
+
             break;
 
         case 9:

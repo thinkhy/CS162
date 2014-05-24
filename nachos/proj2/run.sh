@@ -20,6 +20,9 @@ touch ../test/test2.in
 touch ../test/test3.in
 touch ../test/test.out
 
+echo "FileSyscall.c VAR 7">../test/cp.in
+
+
 rm ../test/testVar1.txt
 java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x filesyscall.coff   -d as
 

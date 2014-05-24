@@ -63,6 +63,10 @@ start.o: start.s syscall.h
 %.coff: %.o $(NLIB)
 	$(LD) $(LDFLAGS) -o $@ $< start.o -lnachos
 
+filesyscall.coff: ./testprj2/filesyscall.c
+	$(CC) $(CFLAGS)  -c $<
+	$(LD) $(LDFLAGS) -o filesyscall.coff filesyscall.o start.o -lnachos
+
 test.coff: ./testprj2/exittest.c ./testprj2/loopawhile.c ./testprj2/exception.c ./testprj2/openfile.c
 	$(CC) $(CFLAGS)  -c $?
 	$(LD) $(LDFLAGS) -o exittest.coff exittest.o start.o -lnachos
@@ -74,7 +78,4 @@ isprmgr.coff: ./testprj2/isprmgr.c
 	$(CC) $(CFLAGS)  -c $<
 	$(LD) $(LDFLAGS) -o isprmgr.coff isprmgr.o start.o -lnachos
 
-filesyscall.coff: ./testprj2/filesyscall.c
-	$(CC) $(CFLAGS)  -c $<
-	$(LD) $(LDFLAGS) -o filesyscall.coff filesyscall.o start.o -lnachos
 

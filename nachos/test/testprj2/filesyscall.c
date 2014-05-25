@@ -422,25 +422,25 @@ void route(int variation, char dbg_flag)
 
             LOG("++FILESYSCALL VAR8: invoke write as buf address is NULL\n");
             amount = read(fds[0], buf, BUFSIZE);
-            write(fds[1], NULL, amount);
-            if (fds[1] != -1) {
-                LOG("++FILESYSCALL VAR8: failed to \n");
+            retval = write(fds[1], NULL, amount);
+            if (retval != -1) {
+                LOG("++FILESYSCALL VAR8: failed \n");
                 exit(-1);
             }
             
             LOG("++FILESYSCALL VAR8: invoke write as amount is a negative number\n");
             amount = read(fds[0], buf, BUFSIZE);
-            write(fds[1], buf, -1);
-            if (fds[1] != -1) {
-                LOG("++FILESYSCALL VAR8: failed to \n");
+            retval = write(fds[1], buf, -1);
+            if (retval != -1) {
+                LOG("++FILESYSCALL VAR8: failed \n");
                 exit(-1);
             }
 
             LOG("++FILESYSCALL VAR8: invoke write with wrong file handle\n");
             amount = read(fds[0], buf, BUFSIZE);
-            write(fds[1], buf, amount);
-            if (fds[1] != -1) {
-                LOG("++FILESYSCALL VAR8: failed to \n");
+            retval = write(fds[1], buf, amount);
+            if (retval != -1) {
+                LOG("++FILESYSCALL VAR8: failed \n");
                 exit(-1);
             }
 
@@ -457,6 +457,43 @@ void route(int variation, char dbg_flag)
             /*  (e.g. writing back to a readonly part of virtual memory)              */
             /*                                                                        */
             /**************************************************************************/
+            LOG("++FILESYSCALL VAR9: [STARTED]\n");
+            LOG("++FILESYSCALL VAR9: open %s\n", INPUTFILE);
+            fds[0] = open(INPUTFILE);
+            if (fds[0] == -1) {
+                LOG("++FILESYSCALL VAR9: failed to open %s \n", INPUTFILE); 
+                exit(-1);
+            }
+
+            LOG("++FILESYSCALL VAR9: file handle %d \n", fds[0]);
+
+            LOG("++FILESYSCALL VAR9: file handle %d \n", fds[1]);
+
+            LOG("++FILESYSCALL VAR9: invoke read/write some times\n");
+
+            LOG("++FILESYSCALL VAR9: invoke read as buf address is NULL\n");
+            amount = read(fds[0], NULL, BUFSIZE);
+            if (amount != -1) {
+                LOG("++FILESYSCALL VAR9: failed \n");
+                exit(-1);
+            }
+            
+            LOG("++FILESYSCALL VAR9: invoke read as bufsize is a negative number\n");
+            amount = read(fds[0], buf, -1);
+            if (amount != -1) {
+                LOG("++FILESYSCALL VAR9: failed \n");
+                exit(-1);
+            }
+
+            LOG("++FILESYSCALL VAR9: invoke write with wrong file handle\n");
+            amount = read(999, buf, BUFSIZE);
+            if (amount != -1) {
+                LOG("++FILESYSCALL VAR9: failed \n");
+                exit(-1);
+            }
+
+            close(fds[0]);    
+
             break;
 
 
@@ -468,6 +505,7 @@ void route(int variation, char dbg_flag)
             /*                                                                        */
             /**************************************************************************/
             break;
+
 
         case 11:
             /**************************************************************************/

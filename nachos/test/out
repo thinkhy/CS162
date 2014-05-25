@@ -150,4 +150,4 @@ int main(int argc, char** argv)
 ++FILESYSCALL VAR8: file handle                                3 
 ++FILESYSCALL VAR8: invoke read/write some times
 ++FILESYSCALL VAR8: invoke write as buf address is NULL
-++FILESYSCALL VAR8: failed to 
+++FILESYSCALL VAR8: failed 

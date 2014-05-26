@@ -192,6 +192,9 @@ public class UserProcess {
 
     int ppn = entry.ppn;                                                    /* @BBA */
 	int paddr = (ppn*pageSize) + addressOffset;                             /* @BBA */
+    Lib.debug(dbgProcess,                                               /* @BBA */ 
+                "\tUserProcess.readVirtualMemory(): ppn "+ppn);      /* @BBA */
+
     // check if physical page number is out of range
     if (ppn < 0 || ppn >= processor.getNumPhysPages())  {                   /* @BBA */
         Lib.debug(dbgProcess,                                               /* @BBA */ 
@@ -652,8 +655,11 @@ public class UserProcess {
         byte[] buf = new byte[bufsize];                                   /*@BAA*/  
 
         int bytesRead = readVirtualMemory(vaddr, buf);                    /*@BAA*/
+	    Lib.debug(dbgProcess, "vaddr: " + vaddr                           /*@BAA*/ 
+                            + "\nbuf: "   + buf                           /*@BAA*/
+                            + "\nbytesRead: "   + bytesRead);             /*@BAA*/
 
-        // invoke read through stubFilesystem                             /*@BAA*/
+        // invoke write through stubFilesystem                             /*@BAA*/
         int retval = fd.file.write(fd.position, buf, 0, bytesRead);       /*@BAA*/
 
         if (retval < 0) {                                                 /*@BAA*/

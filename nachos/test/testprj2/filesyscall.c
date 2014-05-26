@@ -421,9 +421,9 @@ void route(int variation, char dbg_flag)
 
             LOG("++FILESYSCALL VAR8: invoke read/write some times\n");
 
-            LOG("++FILESYSCALL VAR8: invoke write as buf address is NULL\n");
+            LOG("++FILESYSCALL VAR8*: invoke write as buf address is NULL\n");
             amount = read(fds[0], buf, BUFSIZE);
-            retval = write(fds[1], NULL, amount);
+            retval = write(fds[1], -1, amount);
             if (retval != -1) {
                 LOG("++FILESYSCALL VAR8: failed \n");
                 exit(-1);
@@ -437,9 +437,9 @@ void route(int variation, char dbg_flag)
                 exit(-1);
             }
 
-            LOG("++FILESYSCALL VAR8: invoke write with wrong file handle\n");
+            LOG("++FILESYSCALL VAR8*: invoke write with wrong file handle\n");
             amount = read(fds[0], buf, BUFSIZE);
-            retval = write(fds[1], buf, amount);
+            retval = write(fds[1], -1, amount);
             if (retval != -1) {
                 LOG("++FILESYSCALL VAR8: failed \n");
                 exit(-1);
@@ -448,7 +448,7 @@ void route(int variation, char dbg_flag)
             close(fds[0]);    
             close(fds[1]);    
 
-            LOG("++FILESYSCALL VAR7: SUCCESS\n");
+            LOG("++FILESYSCALL VAR8: SUCCESS\n");
 
             break;
 
@@ -475,7 +475,7 @@ void route(int variation, char dbg_flag)
             LOG("++FILESYSCALL VAR9: invoke read/write some times\n");
 
             LOG("++FILESYSCALL VAR9: invoke read as buf address is NULL\n");
-            amount = read(fds[0], NULL, BUFSIZE);
+            amount = read(fds[0], 0, BUFSIZE);
             if (amount != -1) {
                 LOG("++FILESYSCALL VAR9: failed \n");
                 exit(-1);
@@ -509,13 +509,13 @@ void route(int variation, char dbg_flag)
             /*  tests that stdin uses console                                         */
             /*                                                                        */
             /**************************************************************************/
-            LOG("++FILESYSCALL VAR9: [STARTED]\n");
-            printf("input a number: %d");
+            LOG("++FILESYSCALL VAR10: [STARTED]\n");
+            printf("++FILESYSCALL VAR10: input a number: %d");
             tmp = fgetc(0);
             fgetc(0);
-            printf("\nthis number is %d\n", tmp);
+            printf("\n++FILESYSCALL VAR10: this number is %d\n", tmp);
 
-            LOG("++FILESYSCALL VAR7: SUCCESS\n");
+            LOG("++FILESYSCALL VAR10: SUCCESS\n");
 
             break;
 
@@ -527,6 +527,14 @@ void route(int variation, char dbg_flag)
             /*  tests stdout                                                          */
             /*                                                                        */
             /**************************************************************************/
+            LOG("++FILESYSCALL VAR11: [STARTED]\n");
+            strcpy(buf, "TESTTEST");
+            write(1, buf, strlen(buf));
+            printf("\n++FILESYSCALL VAR11: this number is %d\n", tmp);
+
+            LOG("++FILESYSCALL VAR11: SUCCESS\n");
+
+            break;
             break;
 
         default:

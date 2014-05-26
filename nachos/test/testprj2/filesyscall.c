@@ -39,6 +39,7 @@ int  retval;                    /* return value of system call                  
 int  fd;                        /* file handle                                           */        
 int  flag;                      /* condition variable: TRUE or FALSE                     */
 int  i;                         /* loop counter                                          */
+int  tmp;                         
 int  fds[MAXOPENFILES];         /* file hadle array                                      */
 int  pid;                       /* child process id                                      */
 
@@ -447,6 +448,8 @@ void route(int variation, char dbg_flag)
             close(fds[0]);    
             close(fds[1]);    
 
+            LOG("++FILESYSCALL VAR7: SUCCESS\n");
+
             break;
 
         case 9:
@@ -494,6 +497,8 @@ void route(int variation, char dbg_flag)
 
             close(fds[0]);    
 
+            LOG("++FILESYSCALL VAR7: SUCCESS\n");
+
             break;
 
 
@@ -504,6 +509,14 @@ void route(int variation, char dbg_flag)
             /*  tests that stdin uses console                                         */
             /*                                                                        */
             /**************************************************************************/
+            LOG("++FILESYSCALL VAR9: [STARTED]\n");
+            printf("input a number: %d");
+            tmp = fgetc(0);
+            fgetc(0);
+            printf("\nthis number is %d\n", tmp);
+
+            LOG("++FILESYSCALL VAR7: SUCCESS\n");
+
             break;
 
 

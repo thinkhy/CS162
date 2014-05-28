@@ -531,6 +531,10 @@ void route(int variation, char dbg_flag)
             strcpy(buf, "TESTTEST");
             write(1, buf, strlen(buf));
             printf("\n++FILESYSCALL VAR11: this number is %d\n", tmp);
+            i = 0;
+            while(i++ < 10000) {
+                printf("++FILESYSCALL VAR11: Test stdout\n");
+            }
 
             LOG("++FILESYSCALL VAR11: SUCCESS\n");
 

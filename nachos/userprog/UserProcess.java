@@ -202,17 +202,23 @@ public class UserProcess {
 	TranslationEntry entry = null;                                          /* @BBA */
     entry = pageTable[vpn];                                                 /* @BBA */
 
+    if (pageTable[vpn].valid == false) {
+        Lib.debug(dbgProcess,                                               /* @BFA */
+        "[UserProcess.readVirtualMemory] virtual page is invalid" + vpn);   /* @BFA */
+        return -1;                                                          /* @BFA */
+    }                                                                       /* @BFA */
+
 	entry.used = true;                                                      /* @BBA */
 
     int ppn = entry.ppn;                                                    /* @BBA */
 	int paddr = (ppn*pageSize) + addressOffset;                             /* @BBA */
     Lib.debug(dbgProcess,                                                   /* @BBA */ 
-                "\tUserProcess.readVirtualMemory(): ppn "+ppn);             /* @BBA */
+                "\tUserProcess.readVirtualMemory(): ppn " + ppn);           /* @BBA */
 
     // check if physical page number is out of range
     if (ppn < 0 || ppn >= processor.getNumPhysPages())  {                   /* @BBA */
         Lib.debug(dbgProcess,                                               /* @BBA */ 
-                "\t\t UserProcess.readVirtualMemory(): bad ppn "+ppn);      /* @BBA */
+                "\t\t UserProcess.readVirtualMemory(): bad ppn " + ppn);    /* @BBA */
         return 0;                                                           /* @BBA */
     }                                                                       /* @BBA */
 
@@ -663,10 +669,25 @@ public class UserProcess {
 
         // get data regarding to file descriptor
         if (handle < 0 || handle > MAXFD                                  /*@BAA*/
-                || fds[handle].file == null)                              /*@BAA*/
+                || fds[handle].file == null) {                            /*@BAA*/
+            Lib.debug(dbgProcess, "[UserProcess.handleWrite]"             /*@BAA*/
+                      + " file handle is invalid");                       /*@BAA*/
             return -1;                                                    /*@BAA*/
+        }                                                                 /*@BAA*/
 
         FileDescriptor fd = fds[handle];                                  /*@BAA*/
+
+        if (bufsize < 0) {                                                /*@BFA*/
+            Lib.debug(dbgProcess, "[UserProcess.handleWrite]"             /*@BFA*/
+                      + " bufsize is a negative number");                 /*@BFA*/
+            return  -1;                                                   /*@BFA*/
+        }                                                                 /*@BFA*/
+        else if (bufsize == 0) {                                          /*@BFA*/
+            Lib.debug(dbgProcess, "[UserProcess.handleWrite]"             /*@BFA*/
+                      + " bufsize is zero");                              /*@BFA*/
+            return 0;                                                     /*@BFA*/
+        }                                                                 /*@BFA*/
+
 
         byte[] buf = new byte[bufsize];                                   /*@BAA*/  
 

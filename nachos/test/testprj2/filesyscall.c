@@ -354,6 +354,7 @@ void route(int variation, char dbg_flag)
 
             break;
 
+
         case 7:
             /****************************************************************/
             /*                                                              */
@@ -394,6 +395,7 @@ void route(int variation, char dbg_flag)
             
             break;
 
+
         case 8:
             /**************************************************************************/
             /*                                                                        */
@@ -429,29 +431,48 @@ void route(int variation, char dbg_flag)
                 exit(-1);
             }
 
-
             LOG("++FILESYSCALL VAR8: invoke write as buf address is NULL\n");
             amount = read(fds[0], buf, BUFSIZE);
             retval = write(fds[1], NULL, amount);
-            if (retval != -1) {
-                LOG("++FILESYSCALL VAR8: failed \n");
+            if (retval != amount) {
+                LOG("++FILESYSCALL VAR8: failed, expected return value is %d \n", retval);
+                exit(-1);
+            }
+            
+            LOG("++FILESYSCALL VAR8: invoke write as amount is ZERO\n");
+            amount = read(fds[0], buf, BUFSIZE);
+            retval = write(fds[1], buf, 0);
+            /* it may reasonable to read zero address */
+            if (retval != 0) {
+                LOG("++FILESYSCALL VAR8: failed, expected return value is 0 \n");
                 exit(-1);
             }
 
-            
             LOG("++FILESYSCALL VAR8: invoke write as amount is a negative number\n");
             amount = read(fds[0], buf, BUFSIZE);
             retval = write(fds[1], buf, -1);
+            /* it may reasonable to read zero address */
             if (retval != -1) {
-                LOG("++FILESYSCALL VAR8: failed \n");
+                LOG("++FILESYSCALL VAR8: failed, expected return value is -1\n");
                 exit(-1);
             }
 
             LOG("++FILESYSCALL VAR8: invoke write with wrong file handle\n");
             amount = read(fds[0], buf, BUFSIZE);
-            retval = write(fds[1], -1, amount);
+            retval = write(-1, buf, 1);
             if (retval != -1) {
-                LOG("++FILESYSCALL VAR8: failed \n");
+                LOG("++FILESYSCALL VAR8: failed, "
+                        "actual return value is %d, "
+                        "expected return value is -1 \n", retval);
+                exit(-1);
+            }
+
+            amount = read(fds[0], buf, BUFSIZE);
+            retval = write(11, buf, 1);
+            if (retval != -1) {
+                LOG("++FILESYSCALL VAR8: failed, "
+                        "actual return value is %d, "
+                        "expected return value is -1 \n", retval);
                 exit(-1);
             }
 
@@ -519,6 +540,7 @@ void route(int variation, char dbg_flag)
             break;
 
 
+
         case 10:
             /**************************************************************************/
             /*                                                                        */
@@ -535,6 +557,7 @@ void route(int variation, char dbg_flag)
             LOG("++FILESYSCALL VAR10: SUCCESS\n");
 
             break;
+
 
 
         case 11:
@@ -556,10 +579,10 @@ void route(int variation, char dbg_flag)
             LOG("++FILESYSCALL VAR11: SUCCESS\n");
 
             break;
-            break;
 
         default:
             assert(0);;
+
     } /* switch */
 }
 

@@ -17,6 +17,7 @@ import java.io.EOFException;
  *  $BC=PROJECT2 TASK3, 140302, THINKHY: Implement system calls for process management
  *  $BD=PROJECT2 ISSUE #8, 140509, THINKHY: Hit "RuntimePermission createClassLoader" while long run ISPRMGR VAR9
  *  $BE=PROJECT2 ISSUE #11,140517, THINKHY: file handlers can't be closed(filesyscall.c VAR3 failed)
+ *  $BF=PROJECT2 ISSUE #13,140529, THINKHY: read fails ungracefully on bad arguments(filesyscall.c VAR8 failed)
  *                                                                        
  ******************************************************************************************************************/
 
@@ -186,14 +187,27 @@ public class UserProcess {
     int vpn = processor.pageFromAddress(vaddr);                             /* @BBA */
     int addressOffset = processor.offsetFromAddress(vaddr);                 /* @BBA */
 
+    Lib.debug(dbgProcess,                                                   /* @BFA */  
+            "[UserProcess.readVirtualMemory] vpn: " + vpn);                 /* @BFA */
+    /* do recovery if vpn is invalid                                                */
+    /* this method must not destroy the current process                             */ 
+    /* if an error occurs                                                           */ 
+    if (vpn >= numPages) {                                                  /* @BFA */
+        Lib.debug(dbgProcess,                                               /* @BFA */
+          "[UserProcess.readVirtualMemory] vpn "                            /* @BFA */
+             + vpn + " exceeds number of pages ");                          /* @BFA */
+        return -1;                                                          /* @BFA */
+    }                                                                       /* @BFA */
+
 	TranslationEntry entry = null;                                          /* @BBA */
     entry = pageTable[vpn];                                                 /* @BBA */
+
 	entry.used = true;                                                      /* @BBA */
 
     int ppn = entry.ppn;                                                    /* @BBA */
 	int paddr = (ppn*pageSize) + addressOffset;                             /* @BBA */
-    Lib.debug(dbgProcess,                                               /* @BBA */ 
-                "\tUserProcess.readVirtualMemory(): ppn "+ppn);      /* @BBA */
+    Lib.debug(dbgProcess,                                                   /* @BBA */ 
+                "\tUserProcess.readVirtualMemory(): ppn "+ppn);             /* @BBA */
 
     // check if physical page number is out of range
     if (ppn < 0 || ppn >= processor.getNumPhysPages())  {                   /* @BBA */
@@ -252,6 +266,7 @@ public class UserProcess {
 	// calculate virtual page number from the virtual address
     int vpn = processor.pageFromAddress(vaddr);                 /* @BBA */            
     int addressOffset = processor.offsetFromAddress(vaddr);     /* @BBA */
+
 
 	TranslationEntry entry = null;                              /* @BBA */
     entry = pageTable[vpn];                                     /* @BBA */
@@ -640,6 +655,7 @@ public class UserProcess {
         int handle = a0;                    /* a0 is file descriptor handle @BAA*/
         int vaddr = a1;                     /* a1 is buf address            @BAA*/
         int bufsize = a2;                   /* a2 is buf size               @BAA*/
+        int retval;                                                       /*@BAA*/  
 
 	    Lib.debug(dbgProcess, "handle: " + handle);                       /*@BAA*/
 	    Lib.debug(dbgProcess, "buf address: " + vaddr);                   /*@BAA*/
@@ -659,8 +675,12 @@ public class UserProcess {
                             + "\nbuf: "   + buf                           /*@BAA*/
                             + "\nbytesRead: "   + bytesRead);             /*@BAA*/
 
-        // invoke write through stubFilesystem                             /*@BAA*/
-        int retval = fd.file.write(fd.position, buf, 0, bytesRead);       /*@BAA*/
+        if (bytesRead < 0) {                                              /*@BFA*/
+            return -1;                                                    /*@BFA*/
+        }                                                                 /*@BFA*/
+
+        // invoke write through stubFilesystem                            /*@BAA*/
+        retval = fd.file.write(fd.position, buf, 0, bytesRead);           /*@BAA*/
 
         if (retval < 0) {                                                 /*@BAA*/
             return -1;                                                    /*@BAA*/

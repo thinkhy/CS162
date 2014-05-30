@@ -17,7 +17,8 @@ import java.io.EOFException;
  *  $BC=PROJECT2 TASK3, 140302, THINKHY: Implement system calls for process management
  *  $BD=PROJECT2 ISSUE #8, 140509, THINKHY: Hit "RuntimePermission createClassLoader" while long run ISPRMGR VAR9
  *  $BE=PROJECT2 ISSUE #11,140517, THINKHY: file handlers can't be closed(filesyscall.c VAR3 failed)
- *  $BF=PROJECT2 ISSUE #13,140529, THINKHY: read fails ungracefully on bad arguments(filesyscall.c VAR8 failed)
+ *  $BF=PROJECT2 ISSUE #13,140529, THINKHY: write fails ungracefully on bad arguments(filesyscall.c VAR8 failed)
+ *  $BG=PROJECT2 ISSUE #14,140529, THINKHY: read fails ungracefully on bad arguments(filesyscall.c VAR9 failed)
  *                                                                        
  ******************************************************************************************************************/
 
@@ -270,23 +271,35 @@ public class UserProcess {
     */
 
 	// calculate virtual page number from the virtual address
-    int vpn = processor.pageFromAddress(vaddr);                 /* @BBA */            
-    int addressOffset = processor.offsetFromAddress(vaddr);     /* @BBA */
+    int vpn = processor.pageFromAddress(vaddr);                 /*@BBA*/            
+    int addressOffset = processor.offsetFromAddress(vaddr);     /*@BBA*/
 
+    /* do recovery if vpn is invalid                                  */
+    /* this method must not destroy the current process               */ 
+    /* if an error occurs                                             */ 
+    if (vpn >= numPages) {                                      /*@BGA*/
+        Lib.debug(dbgProcess,                                   /*@BGA*/
+          "[UserProcess.writeVirtualMemory] vpn "               /*@BGA*/
+             + vpn + " exceeds number of pages ");              /*@BGA*/
+        return -1;                                              /*@BGA*/
+    }                                                           /*@BGA*/
 
-	TranslationEntry entry = null;                              /* @BBA */
-    entry = pageTable[vpn];                                     /* @BBA */
-	entry.used = true;                                          /* @BBA */
-	entry.dirty = true;                                         /* @BBA */
+	TranslationEntry entry = null;                              /*@BBA*/
+    entry = pageTable[vpn];                                     /*@BBA*/
 
-    int ppn = entry.ppn;                                        /* @BBA */
-	int paddr = (ppn*pageSize) + addressOffset;                 /* @BBA */
+    if (entry.readOnly) {                                       /*@BGA*/
+        Lib.debug(dbgProcess,                                   /*@BGA*/
+         "[UserProcess.writeVirtualMemory]: "              /*@BGA*/
+         + "write read-only page " + vpn);                      /*@BGA*/
+        return -1;                                              /*@BGA*/
+    }                                                           /*@BGA*/
 
-    if (entry.readOnly) {                                       /* @BBA */
-        Lib.debug(dbgProcess,                                   /* @BBA */
-                 "\t\t [UserProcess.writeVirtualMemory]: write read-only page "+ppn); /* @BBA */
-        return 0;                                               /* @BBA */
-    }                                                           /* @BBA */
+	entry.used = true;                                          /*@BBA*/
+	entry.dirty = true;                                         /*@BBA*/
+
+    int ppn = entry.ppn;                                        /*@BBA*/
+	int paddr = (ppn * pageSize) + addressOffset;                 /*@BBA*/
+
 
     // check if physical page number is out of range
     if (ppn < 0 || ppn >= processor.getNumPhysPages())  {       /* @BBA */
@@ -434,6 +447,7 @@ public class UserProcess {
         // translate virtual page number from physical page number
         TranslationEntry entry = pageTable[vpn];                                   /* @BBA */ 
         entry.readOnly = section.isReadOnly();                                     /* @BBA */ 
+
         int ppn = entry.ppn;                                                       /* @BBA */ 
         
         section.loadPage(i, ppn);                                                  /* @BBA */ 
@@ -618,19 +632,35 @@ public class UserProcess {
                 || fds[handle].file == null)                              /*@BAA*/
             return -1;                                                    /*@BAA*/
 
+        if (bufsize < 0) {                                                /*@BGA*/
+            Lib.debug(dbgProcess, "[UserProcess.handleRead]"              /*@BGA*/
+                      + " bufsize is a negative number");                 /*@BGA*/
+            return  -1;                                                   /*@BGA*/
+        }                                                                 /*@BGA*/
+        else if (bufsize == 0) {                                          /*@BGA*/
+            Lib.debug(dbgProcess, "[UserProcess.handleRead]"              /*@BGA*/
+                      + " bufsize is zero");                              /*@BGA*/
+            return 0;                                                     /*@BGA*/
+        }                                                                 /*@BGA*/
+
         FileDescriptor fd = fds[handle];                                  /*@BAA*/
         byte[] buf = new byte[bufsize];                                   /*@BAA*/
 
-        // invoke read through stubFilesystem
-        int retval = fd.file.read(fd.position, buf, 0, bufsize);          /*@BAA*/
+        /* invoke read through stubFilesystem                                   */
+        int readnum = fd.file.read(fd.position, buf, 0, bufsize);         /*@BGC*/
 
-        if (retval < 0) {                                                 /*@BAA*/
+        if (readnum < 0) {                                                /*@BGA*/
             return -1;                                                    /*@BAA*/
         }                                                                 /*@BAA*/
         else {                                                            /*@BAA*/
-            int number = writeVirtualMemory(vaddr, buf);                  /*@BAA*/
-            fd.position = fd.position + number;                           /*@BAA*/
-            return retval;                                                /*@BAA*/
+            int writenum = writeVirtualMemory(vaddr, buf, 0, readnum);    /*@BGC*/
+
+            if (writenum < 0) {                                           /*@BGA*/
+                return -1;                                                /*@BGA*/
+            }                                                             /*@BGA*/
+
+            fd.position = fd.position + writenum;                         /*@BAA*/
+            return writenum;                                              /*@BGC*/
         }                                                                 /*@BAA*/
     }                                                                     /*@BAA*/
     

@@ -506,9 +506,10 @@ void route(int variation, char dbg_flag)
             LOG("++FILESYSCALL VAR9: invoke read/write some times\n");
 
             LOG("++FILESYSCALL VAR9: invoke read as buf address is NULL\n");
-            amount = read(fds[0], 0, BUFSIZE);
+            amount = read(fds[0], 0, 1024*5);
             if (amount != -1) {
-                LOG("++FILESYSCALL VAR9: failed \n");
+                LOG("++FILESYSCALL VAR9: failed, actual value is %d,"
+                      " expected value is %d \n", amount, -1);
                 exit(-1);
             }
             
@@ -535,7 +536,7 @@ void route(int variation, char dbg_flag)
 
             close(fds[0]);    
 
-            LOG("++FILESYSCALL VAR7: SUCCESS\n");
+            LOG("++FILESYSCALL VAR9: SUCCESS\n");
 
             break;
 

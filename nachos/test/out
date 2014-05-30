@@ -162,4 +162,10 @@ int main(int argc, char** argv)
 ++FILESYSCALL VAR9: file handle                                3 
 ++FILESYSCALL VAR9: invoke read/write some times
 ++FILESYSCALL VAR9: invoke read as buf address is NULL
-++FILESYSCALL VAR9: failed 
+++FILESYSCALL VAR9: invoke read as buf address is a negative number
+++FILESYSCALL VAR9: invoke read as bufsize is a negative number
+++FILESYSCALL VAR9: invoke write with wrong file handle
+++FILESYSCALL VAR9: SUCCESS
+++FILESYSCALL Run the                               10th variations
+++FILESYSCALL VAR10: [STARTED]
+++FILESYSCALL VAR10: input a number:                            12288

@@ -549,6 +549,7 @@ void route(int variation, char dbg_flag)
             /*  tests that stdin uses console                                         */
             /*                                                                        */
             /**************************************************************************/
+            break;
             LOG("++FILESYSCALL VAR10: [STARTED]\n");
             printf("++FILESYSCALL VAR10: input a number: %d");
             tmp = fgetc(0);
@@ -573,7 +574,7 @@ void route(int variation, char dbg_flag)
             write(1, buf, strlen(buf));
             printf("\n++FILESYSCALL VAR11: this number is %d\n", tmp);
             i = 0;
-            while(i++ < 10000) {
+            while(i++ < 10) {
                 printf("++FILESYSCALL VAR11: Test stdout\n");
             }
 

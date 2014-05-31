@@ -80,9 +80,6 @@ public class SynchConsole {
 	writeLock.acquire();
 	console.writeByte(value);
 
-    // [Debug by Huang Ye 140203]
-    System.out.println("value: " + value + "\n");
-
 	writeWait.P();
 	writeLock.release();
     }
@@ -121,6 +118,8 @@ public class SynchConsole {
 	}
 
 	public int read(byte[] buf, int offset, int length) {
+        System.out.println("+++ + OK to read in console");
+
 	    if (!canRead)
 		return 0;
 

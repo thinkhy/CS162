@@ -19,6 +19,7 @@ import java.io.EOFException;
  *  $BE=PROJECT2 ISSUE #11,140517, THINKHY: file handlers can't be closed(filesyscall.c VAR3 failed)
  *  $BF=PROJECT2 ISSUE #13,140529, THINKHY: write fails ungracefully on bad arguments(filesyscall.c VAR8 failed)
  *  $BG=PROJECT2 ISSUE #14,140529, THINKHY: read fails ungracefully on bad arguments(filesyscall.c VAR9 failed)
+ *  $BH=PROJECT2 ISSUE #15,140531, THINKHY: stdout doesn't work(filesyscall.c VAR11 failed)
  *                                                                        
  ******************************************************************************************************************/
 
@@ -51,17 +52,16 @@ public class UserProcess {
     /* Create STDIN and STDOUT                                           @BAA */
     /**************************************************************************/
     fds[STDIN].file = UserKernel.console.openForReading();              /*@BAA*/
-    fds[STDIN].position = 0;
-	Lib.assertTrue(fds[STDIN] != null);                                    /*@BAA*/  
-    /* fds[STDOUT].file = UserKernel.console.openForWriting();*/        /*@BAA*/
-    /* fds[STDOUT].position = 0; */
-	/* Lib.assertTrue(fds[STDOUT] != null); */                          /*@BAA*/ 
-    // Just for TEST!!! [140203 hy]                                     /*@BAA*/
-    OpenFile retval  = UserKernel.fileSystem.open("out", false);        /*@BAA*/
+	Lib.assertTrue(fds[STDIN] != null);                                 /*@BAA*/  
 
-    int fileHandle = findEmptyFileDescriptor();                         /*@BAA*/ 
-    fds[fileHandle].file = retval;                                      /*@BAA*/
-    fds[fileHandle].position = 0;                                       /*@BAA*/
+    fds[STDOUT].file = UserKernel.console.openForWriting();             /*@BHA*/
+	Lib.assertTrue(fds[STDOUT] != null);                                /*@BHA*/ 
+
+    /* OpenFile retval  = UserKernel.fileSystem.open("out", false);        BHD*/
+
+    /*int fileHandle = findEmptyFileDescriptor();                         @BAD*/ 
+    /*fds[fileHandle].file = retval;                                      @BAD*/
+    /*fds[fileHandle].position = 0;                                       @BAD*/
 
 
     pid = UserKernel.getNextPid();                                      /*@BCA*/
@@ -541,7 +541,6 @@ public class UserProcess {
                 Lib.debug(dbgProcess,                                      /*@BAA*/
                     "handleCreate(): handle " + fileHandle);               /*@BAA*/
                 fds[fileHandle].file = retval;                             /*@BAA*/
-                fds[fileHandle].position = 0;                              /*@BAA*/
                 return fileHandle;                                         /*@BAA*/
             }                                                              /*@BAA*/ 
         }                                                                  /*@BAA*/
@@ -589,7 +588,6 @@ public class UserProcess {
             else {                                                         /*@BAA*/
                 fds[fileHandle].filename = filename;                       /*@BAA*/
                 fds[fileHandle].file = retval;                             /*@BAA*/
-                fds[fileHandle].position = 0;                              /*@BAA*/
                 return fileHandle;                                         /*@BAA*/
             }                                                              /*@BAA*/ 
         }                                                                  /*@BAA*/
@@ -646,8 +644,9 @@ public class UserProcess {
         FileDescriptor fd = fds[handle];                                  /*@BAA*/
         byte[] buf = new byte[bufsize];                                   /*@BAA*/
 
-        /* invoke read through stubFilesystem                                   */
-        int readnum = fd.file.read(fd.position, buf, 0, bufsize);         /*@BGC*/
+        /* invoke read through classOpenFileWithPosition                        */
+        /* rather than class StubFileSystem                                     */
+        int readnum = fd.file.read(buf, 0, bufsize);                      /*@BHC*/
 
         if (readnum < 0) {                                                /*@BGA*/
             return -1;                                                    /*@BAA*/
@@ -658,9 +657,10 @@ public class UserProcess {
             if (writenum < 0) {                                           /*@BGA*/
                 return -1;                                                /*@BGA*/
             }                                                             /*@BGA*/
-
-            fd.position = fd.position + writenum;                         /*@BAA*/
-            return writenum;                                              /*@BGC*/
+            else {                                                        /*@BHA*/
+            /*fd.position = fd.position + writenum;                         @BHD*/
+               return writenum;                                           /*@BGC*/
+            }                                                             /*@BHA*/
         }                                                                 /*@BAA*/
     }                                                                     /*@BAA*/
     
@@ -731,13 +731,14 @@ public class UserProcess {
         }                                                                 /*@BFA*/
 
         // invoke write through stubFilesystem                            /*@BAA*/
-        retval = fd.file.write(fd.position, buf, 0, bytesRead);           /*@BAA*/
+        retval = fd.file.write(buf, 0, bytesRead);                        /*@BHC*/
 
         if (retval < 0) {                                                 /*@BAA*/
             return -1;                                                    /*@BAA*/
         }                                                                 /*@BAA*/
         else {                                                            /*@BAA*/
-            fd.position = fd.position + retval;                           /*@BAA*/
+            /* classOpenFileWithPostion will maintain a position                */
+            /* fd.position = fd.position + retval;                        /*@BHD*/
             return retval;                                                /*@BAA*/
         }                                                                 /*@BAA*/
     }
@@ -770,7 +771,7 @@ public class UserProcess {
 
         FileDescriptor fd = fds[handle];                                  /*@BAA*/
 
-        fd.position = 0;                                                  /*@BAA*/
+        /*fd.position = 0;                                                  @BHD*/
         fd.file.close();                                                  /*@BAA*/
         fd.file = null;                                                   /*@BEA*/
 
@@ -1272,7 +1273,7 @@ public class UserProcess {
         }                                                         /*@BAA*/
         private  String   filename = "";   // opened file name    /*@BAA*/
         private  OpenFile file = null;     // opened file object  /*@BAA*/
-        private  int      position = 0;    // IO position         /*@BAA*/
+        /*private  int      position = 0;  // IO position           @BHA*/
 
         private  boolean  toRemove = false;// if need to remove   /*@BAA*/
                                            // this file           /*@BAA*/

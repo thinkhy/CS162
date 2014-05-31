@@ -184,6 +184,7 @@ public final class Machine {
 	if (Config.getBoolean("Machine.console"))
 	    console = new StandardConsole(privilege);
 
+
 	if (Config.getBoolean("Machine.stubFileSystem"))
 	    stubFileSystem = new StubFileSystem(privilege, testDirectory);
 

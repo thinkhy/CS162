@@ -21,6 +21,7 @@ touch ../test/test3.in
 touch ../test/test.out
 
 echo "FileSyscall.c VAR 7">../test/cp.in
+touch ../test/cp.out
 
 
 rm ../test/testVar1.txt

@@ -364,7 +364,6 @@ void route(int variation, char dbg_flag)
             /****************************************************************/
             /* TODO: fix this case                                          */
             LOG("++FILESYSCALL VAR7: [STARTED]\n");
-            break;
             LOG("++FILESYSCALL VAR7: copies between files, tests creat, open, read, write, close\n");
             LOG("++FILESYSCALL VAR7: invoke syscall exec cp.coff\n");
             executable = "cp.coff";
@@ -549,7 +548,6 @@ void route(int variation, char dbg_flag)
             /*  tests that stdin uses console                                         */
             /*                                                                        */
             /**************************************************************************/
-            break;
             LOG("++FILESYSCALL VAR10: [STARTED]\n");
             printf("++FILESYSCALL VAR10: input a number: %d");
             tmp = fgetc(0);

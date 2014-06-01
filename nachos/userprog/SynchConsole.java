@@ -118,8 +118,6 @@ public class SynchConsole {
 	}
 
 	public int read(byte[] buf, int offset, int length) {
-        System.out.println("+++ + OK to read in console");
-
 	    if (!canRead)
 		return 0;
 
@@ -138,9 +136,6 @@ public class SynchConsole {
 	public int write(byte[] buf, int offset, int length) {
 	    if (!canWrite)
 		return 0;
-	    
-        // [Debug by Huang Ye 140203]
-        System.out.println("inside SynchConsole.write: " + length);
 
 	    for (int i=0; i<length; i++)
 		SynchConsole.this.writeByte(buf[offset+i]);

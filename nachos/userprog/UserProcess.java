@@ -519,12 +519,12 @@ public class UserProcess {
      */
     private int handleCreate(int a0) {
         // private int handleCreate() {                                 
-	    Lib.debug(dbgProcess, "handleCreate()");                           /*@BAA*/
+	    Lib.debug(dbgProcess, "[handleCreate] Start ");                           /*@BAA*/
 
         // a0 is address of filename 
         String filename = readVirtualMemoryString(a0, MAXSTRLEN);          /*@BAA*/
 
-	    Lib.debug(dbgProcess, "filename: "+filename);                      /*@BAA*/
+	    Lib.debug(dbgProcess, "[handleCreate] filename: "+filename);                      /*@BAA*/
 
         // invoke open through stubFilesystem
         OpenFile retval  = UserKernel.fileSystem.open(filename, true);     /*@BAA*/
@@ -539,7 +539,7 @@ public class UserProcess {
             else {                                                         /*@BAA*/
                 fds[fileHandle].filename = filename;                       /*@BAA*/
                 Lib.debug(dbgProcess,                                      /*@BAA*/
-                    "handleCreate(): handle " + fileHandle);               /*@BAA*/
+                    "[handleCreate] handle " + fileHandle);               /*@BAA*/
                 fds[fileHandle].file = retval;                             /*@BAA*/
                 return fileHandle;                                         /*@BAA*/
             }                                                              /*@BAA*/ 

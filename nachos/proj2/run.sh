@@ -19,13 +19,18 @@ touch ../test/test1.in
 touch ../test/test2.in
 touch ../test/test3.in
 touch ../test/test.out
+echo "test">test.in
 
-echo "FileSyscall.c VAR 7">../test/cp.in
+echo "FileSyscall.c VAR 7 $$ ">../test/cp.in
 touch ../test/cp.out
 
+file="../test/testVar1.txt"
+if [ -e $file ]; then
+    rm $file
+fi
 
-rm ../test/testVar1.txt
-java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x filesyscall.coff   -d as
+#java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x filesyscall.coff   -d as < test.in
+java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x filesyscall.coff    < test.in
 
 
 

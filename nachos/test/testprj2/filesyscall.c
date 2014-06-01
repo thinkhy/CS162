@@ -22,6 +22,9 @@
 #define MAXOPENFILES   13             /* MaxOpenFiles=16, 16-3(stdin/stdout/stderr)=13*/
 #define LOG            printf
 #define TRUE           1
+#define STDIN          0
+#define STDOUT         1
+#define STDERR         2
 #define FALSE          0
 #define TESTFILE       "testVar1.txt"
 #define TESTFILE2      "testVar2.txt"
@@ -30,7 +33,7 @@
 #define VAR7OUT        "cp.out"
 #define OUTPUTFILE     "test.out"
 #define MAXRUN         10
-#define BUFSIZE        1024
+#define BUFSIZE        1024*20
 
 void log(char *format, ...);
 void route(int, char);
@@ -39,7 +42,7 @@ int  retval;                    /* return value of system call                  
 int  fd;                        /* file handle                                           */        
 int  flag;                      /* condition variable: TRUE or FALSE                     */
 int  i;                         /* loop counter                                          */
-int  tmp;                         
+int  cnt,tmp;                         
 int  fds[MAXOPENFILES];         /* file hadle array                                      */
 int  pid;                       /* child process id                                      */
 
@@ -47,6 +50,8 @@ char *executable;               /* executable file name for exec()              
 char *_argv[MAXARGC];           /* argv for testing executable                           */
 int  _argc;                     /* argc for testing executable                           */
 char buf[BUFSIZE];              /* IO buf for read/write                                 */
+char buf2[BUFSIZE];             /* The second buf that will be used to compare string    */
+char *p;                        /* buf pointer                                           */
 int  amount;                    /* amount(byte) per each read/write                      */
 
 
@@ -78,7 +83,7 @@ int main(int argc, char *argv[]) {
     if(argc > 1)
         variation = atoi(argv[1]);
 
-    LOG("++FILESYSCALL: Start this run");
+    LOG("++FILESYSCALL: Start this run\n");
     LOG("++FILESYSCALL: ARG[1] is %d \n", variation);
 
     if (variation) {
@@ -91,7 +96,7 @@ int main(int argc, char *argv[]) {
             route(i, dbg_flag);
         }
     }
-    LOG("++FILESYSCALL: End of this run");
+    LOG("++FILESYSCALL End of this run\n");
 
     return 0;
 }
@@ -333,7 +338,7 @@ void route(int variation, char dbg_flag)
 
             LOG("++FILESYSCALL VAR6: invoke read/write in a loop\n");
             while((amount = read(fds[0], buf, BUFSIZE)) > 0) {
-                write(fds[1], buf, amount);
+                write(STDOUT, buf, amount);
             }
 
             executable = "openfile.coff";
@@ -362,7 +367,6 @@ void route(int variation, char dbg_flag)
             /*  copies between files, tests creat, open, read, write, close */
             /*                                                              */
             /****************************************************************/
-            /* TODO: fix this case                                          */
             LOG("++FILESYSCALL VAR7: [STARTED]\n");
             LOG("++FILESYSCALL VAR7: copies between files, tests creat, open, read, write, close\n");
             LOG("++FILESYSCALL VAR7: invoke syscall exec cp.coff\n");
@@ -377,9 +381,41 @@ void route(int variation, char dbg_flag)
                 exit(-1);
             }
 
+            p = buf;
+            cnt = 0;
+
             fds[0] = open(VAR7OUT);
             if (fds[0] == -1) {
                 LOG("++FILESYSCALL VAR7: failed to open %s \n", VAR7OUT); 
+                exit(-1);
+            }
+
+            while((amount = read(fds[0], p, 1024)) > 0) {
+                p += amount;
+                cnt += amount;
+            }
+
+            fds[1] = open(VAR7IN);
+            if (fds[1] == -1) {
+                LOG("++FILESYSCALL VAR7: failed to open %s \n", VAR7IN); 
+                exit(-1);
+            }
+
+            p = buf2;
+            cnt = 0;
+            while((amount = read(fds[1], p, 1024)) > 0) {
+                p += amount;
+                cnt += amount;
+            }
+
+            buf[BUFSIZE]  = '\0';
+            buf2[BUFSIZE] = '\0';
+
+            LOG("++FILESYSCALL VAR7: DST: %s \n", buf); 
+            LOG("++FILESYSCALL VAR7: SRC: %s \n", buf2); 
+
+            if (strcmp(buf, buf2) != 0) {
+                LOG("++FILESYSCALL VAR7: failed to copy file \n");
                 exit(-1);
             }
              
@@ -389,6 +425,9 @@ void route(int variation, char dbg_flag)
                 exit(-1);
             }
                        
+            close(fds[0]);
+            close(fds[1]);
+
             LOG("++FILESYSCALL VAR7: Child process id is %d\n", pid);
             LOG("++FILESYSCALL VAR7: SUCCESS\n");
             
@@ -424,7 +463,7 @@ void route(int variation, char dbg_flag)
 
             LOG("++FILESYSCALL VAR8: invoke write as buf address is a negative number\n");
             amount = read(fds[0], buf, BUFSIZE);
-            retval = write(fds[1], -1, amount);
+            retval = write(fds[1], (void*)(-1), amount);
             if (retval != -1) {
                 LOG("++FILESYSCALL VAR8: failed \n");
                 exit(-1);
@@ -549,7 +588,7 @@ void route(int variation, char dbg_flag)
             /*                                                                        */
             /**************************************************************************/
             LOG("++FILESYSCALL VAR10: [STARTED]\n");
-            printf("++FILESYSCALL VAR10: input a number: %d");
+            printf("++FILESYSCALL VAR10: input a number: %d\n");
             tmp = fgetc(0);
             fgetc(0);
             printf("\n++FILESYSCALL VAR10: this number is %d\n", tmp);
@@ -557,6 +596,7 @@ void route(int variation, char dbg_flag)
             LOG("++FILESYSCALL VAR10: SUCCESS\n");
 
             break;
+            
 
 
 

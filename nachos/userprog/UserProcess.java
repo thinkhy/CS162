@@ -20,6 +20,7 @@ import java.io.EOFException;
  *  $BF=PROJECT2 ISSUE #13,140529, THINKHY: write fails ungracefully on bad arguments(filesyscall.c VAR8 failed)
  *  $BG=PROJECT2 ISSUE #14,140529, THINKHY: read fails ungracefully on bad arguments(filesyscall.c VAR9 failed)
  *  $BH=PROJECT2 ISSUE #15,140531, THINKHY: stdout doesn't work(filesyscall.c VAR11 failed)
+ *  $BI=PROJECT2 ISSUE #16,140531, THINKHY: stdout doesn't work(filesyscall.c VAR7 failed)
  *                                                                        
  ******************************************************************************************************************/
 
@@ -214,7 +215,8 @@ public class UserProcess {
     int ppn = entry.ppn;                                                    /* @BBA */
 	int paddr = (ppn*pageSize) + addressOffset;                             /* @BBA */
     Lib.debug(dbgProcess,                                                   /* @BBA */ 
-                "\tUserProcess.readVirtualMemory(): ppn " + ppn);           /* @BBA */
+                "[UserProcess.readVirtualMemory] ppn " + ppn,               /* @BBA */
+                "paddr " + ppn);           /* @BBA */
 
     // check if physical page number is out of range
     if (ppn < 0 || ppn >= processor.getNumPhysPages())  {                   /* @BBA */

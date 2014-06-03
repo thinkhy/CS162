@@ -15,11 +15,6 @@ int main(int argc, char** argv)
     return 1;
   }
 
-  printf("++cp: I'm OK now\n");
-  printf("++cp: arg0 %s\n", argv[0]);
-  printf("++cp: arg1 %s\n", argv[1]);
-  printf("++cp: arg2 %s\n", argv[2]);
-
   src = open(argv[1]);
   if (src==-1) {
     printf("++cp: Unable to open %s\n", argv[1]);

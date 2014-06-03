@@ -40,6 +40,7 @@ void route(int, char);
 
 int  retval;                    /* return value of system call                           */
 int  fd;                        /* file handle                                           */        
+int  exitstatus;                /* exit status of child process                          */
 int  flag;                      /* condition variable: TRUE or FALSE                     */
 int  i;                         /* loop counter                                          */
 int  cnt,tmp;                         
@@ -49,8 +50,8 @@ int  pid;                       /* child process id                             
 char *executable;               /* executable file name for exec()                       */
 char *_argv[MAXARGC];           /* argv for testing executable                           */
 int  _argc;                     /* argc for testing executable                           */
-char buf[BUFSIZE];              /* IO buf for read/write                                 */
-char buf2[BUFSIZE];             /* The second buf that will be used to compare string    */
+char buf[BUFSIZE+1];            /* IO buf for read/write                                 */
+char buf2[BUFSIZE+1];           /* The second buf that will be used to compare string    */
 char *p;                        /* buf pointer                                           */
 int  amount;                    /* amount(byte) per each read/write                      */
 
@@ -381,37 +382,52 @@ void route(int variation, char dbg_flag)
                 exit(-1);
             }
 
+            retval = join(pid, &exitstatus);
+            if (retval != 0) {
+                LOG("++FILESYSCALL VAR7: failed to exec cp command \n");
+                exit(-1);
+            }
+
             p = buf;
             cnt = 0;
 
+            LOG("++FILESYSCALL VAR7: open %s \n", VAR7OUT); 
             fds[0] = open(VAR7OUT);
             if (fds[0] == -1) {
                 LOG("++FILESYSCALL VAR7: failed to open %s \n", VAR7OUT); 
                 exit(-1);
             }
 
+            LOG("++FILESYSCALL VAR7: read content from %s \n", VAR7OUT); 
             while((amount = read(fds[0], p, 1024)) > 0) {
                 p += amount;
                 cnt += amount;
             }
 
+            LOG("++FILESYSCALL VAR7: open %s \n", VAR7IN); 
             fds[1] = open(VAR7IN);
             if (fds[1] == -1) {
                 LOG("++FILESYSCALL VAR7: failed to open %s \n", VAR7IN); 
                 exit(-1);
             }
 
+            close(fds[0]);
+
+
             p = buf2;
             cnt = 0;
+            LOG("++FILESYSCALL VAR7: read content from %s \n", VAR7IN); 
             while((amount = read(fds[1], p, 1024)) > 0) {
                 p += amount;
                 cnt += amount;
             }
 
+            close(fds[1]);
+
             buf[BUFSIZE]  = '\0';
             buf2[BUFSIZE] = '\0';
 
-            LOG("++FILESYSCALL VAR7: DST: %s \n", buf); 
+            LOG("++FILESYSCALL VAR7: DST4: %s \n", buf); 
             LOG("++FILESYSCALL VAR7: SRC: %s \n", buf2); 
 
             if (strcmp(buf, buf2) != 0) {
@@ -425,8 +441,6 @@ void route(int variation, char dbg_flag)
                 exit(-1);
             }
                        
-            close(fds[0]);
-            close(fds[1]);
 
             LOG("++FILESYSCALL VAR7: Child process id is %d\n", pid);
             LOG("++FILESYSCALL VAR7: SUCCESS\n");

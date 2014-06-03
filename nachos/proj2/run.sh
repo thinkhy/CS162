@@ -29,8 +29,13 @@ if [ -e $file ]; then
     rm $file
 fi
 
-#java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x filesyscall.coff   -d as < test.in
-java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x filesyscall.coff    < test.in
+file="../test/cp.out"
+if [ -e $file ]; then
+    rm $file
+fi
+
+java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x filesyscall.coff   -d as < test.in
+#java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x filesyscall.coff    < test.in
 
 
 

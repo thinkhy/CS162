@@ -190,7 +190,9 @@ public class UserProcess {
     int addressOffset = processor.offsetFromAddress(vaddr);                 /* @BBA */
 
     Lib.debug(dbgProcess,                                                   /* @BFA */  
-            "[UserProcess.readVirtualMemory] vpn: " + vpn);                 /* @BFA */
+         "[UserProcess.readVirtualMemory] vaddr: " + vaddr                  /* @BFA */
+            + "  vpn:" + vpn);                                              /* @BFA */
+
     /* do recovery if vpn is invalid                                                */
     /* this method must not destroy the current process                             */ 
     /* if an error occurs                                                           */ 
@@ -309,10 +311,10 @@ public class UserProcess {
         return 0;                                               /* @BBA */
     }                                                           /* @BBA */
 
-	int amount = Math.min(length, memory.length-vaddr);
+	int amount = Math.min(length, memory.length - paddr);       /* @BIC */
     Lib.debug(dbgProcess, 
-            "[UserProcess.writeVirtualMemory]: arrary copy amount: "+amount);
-	System.arraycopy(data, offset, memory, vaddr, amount);
+            "[UserProcess.writeVirtualMemory]: arrary copy amount: " + amount);
+	System.arraycopy(data, offset, memory, paddr, amount);      /* @BIC */
 
 	return amount;
     }
@@ -937,12 +939,12 @@ public class UserProcess {
      *
      *  + if argc is less than 1
         +   return -1
-        +if filename doesn't have the ".coff" extension
+        + if filename doesn't have the ".coff" extension
         +   return -1;
         get args from address of argv
         create a new process by invoking UserProcess.newUserProcess()
         allocate an unique pid for child process
-        * copy file descriptors to the new process. [NOT required in this]
+        * copy file descriptors to the new process. [NOT required in this version]
         set new process's parent to this process.
         add new process into this process's children list.
         register this new process in UserKernel

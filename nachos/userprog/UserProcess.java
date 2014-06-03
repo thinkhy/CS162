@@ -20,7 +20,7 @@ import java.io.EOFException;
  *  $BF=PROJECT2 ISSUE #13,140529, THINKHY: write fails ungracefully on bad arguments(filesyscall.c VAR8 failed)
  *  $BG=PROJECT2 ISSUE #14,140529, THINKHY: read fails ungracefully on bad arguments(filesyscall.c VAR9 failed)
  *  $BH=PROJECT2 ISSUE #15,140531, THINKHY: stdout doesn't work(filesyscall.c VAR11 failed)
- *  $BI=PROJECT2 ISSUE #16,140531, THINKHY: stdout doesn't work(filesyscall.c VAR7 failed)
+ *  $BI=PROJECT2 ISSUE #16,140603, THINKHY: failed to invoke syscall exec cp.coff(filesyscall.c VAR7 failed)
  *                                                                        
  ******************************************************************************************************************/
 
@@ -215,10 +215,10 @@ public class UserProcess {
     int ppn = entry.ppn;                                                    /* @BBA */
 	int paddr = (ppn*pageSize) + addressOffset;                             /* @BBA */
     Lib.debug(dbgProcess,                                                   /* @BBA */ 
-                "[UserProcess.readVirtualMemory] ppn " + ppn,               /* @BBA */
-                "paddr " + ppn);           /* @BBA */
+                "[UserProcess.readVirtualMemory] ppn " + ppn                /* @BIC */
+                + ",paddr: " + paddr);                                      /* @BIA */
 
-    // check if physical page number is out of range
+    /* check if physical page number is out of range                                */ 
     if (ppn < 0 || ppn >= processor.getNumPhysPages())  {                   /* @BBA */
         Lib.debug(dbgProcess,                                               /* @BBA */ 
                 "\t\t UserProcess.readVirtualMemory(): bad ppn " + ppn);    /* @BBA */
@@ -386,7 +386,7 @@ public class UserProcess {
     pageTable = new TranslationEntry[numPages];                                        /* @BBA */
     for (int i = 0; i < numPages; i++) {                                               /* @BBA */
         int ppn = UserKernel.getFreePage();                                            /* @BBA */
-	    Lib.debug(dbgProcess, "get physical page " + ppn + "\n");
+	    /* Lib.debug(dbgProcess, "get physical page " + ppn + "\n");                      @BID */  
         pageTable[i] =  new TranslationEntry(i, ppn, true, false, false, false);       /* @BBA */
     }                                                                                  /* @BBA */
 
@@ -406,12 +406,14 @@ public class UserProcess {
 	    entryOffset += 4;
 	    Lib.assertTrue(writeVirtualMemory(stringOffset, argv[i]) ==
 		       argv[i].length);
+        Lib.debug(dbgProcess,                                                        /*@BIA*/
+              "[UserProcess.load] args[" + i + "] vaddr: " + stringOffset);          /*@BIA*/
 	    stringOffset += argv[i].length;
 	    Lib.assertTrue(writeVirtualMemory(stringOffset,new byte[] { 0 }) == 1);
 	    stringOffset += 1;
 
-        Lib.debug(dbgProcess,                                                   /*@BCA*/
-              "[UserProcess.load] args[" + i + "]: " + args[i]);                /*@BCA*/
+        Lib.debug(dbgProcess,                                                        /*@BCA*/
+              "[UserProcess.load] args[" + i + "]: " + args[i]);                     /*@BCA*/
 	}
 
 	return true;
@@ -441,18 +443,17 @@ public class UserProcess {
 	    for (int i=0; i<section.getLength(); i++) {
 		int vpn = section.getFirstVPN()+i;
 
-        /** removed by hy [3/1/2014] @BBD
+        /** removed by thinkhy [3/1/2014]                                            @BBD*/
 		// for now, just assume virtual addresses=physical addresses
 		// section.loadPage(i, vpn);
-        */
          
         // translate virtual page number from physical page number
-        TranslationEntry entry = pageTable[vpn];                                   /* @BBA */ 
-        entry.readOnly = section.isReadOnly();                                     /* @BBA */ 
+        TranslationEntry entry = pageTable[vpn];                                   /*@BBA*/ 
+        entry.readOnly = section.isReadOnly();                                     /*@BBA*/ 
 
-        int ppn = entry.ppn;                                                       /* @BBA */ 
+        int ppn = entry.ppn;                                                       /*@BBA*/ 
         
-        section.loadPage(i, ppn);                                                  /* @BBA */ 
+        section.loadPage(i, ppn);                                                  /*@BBA*/ 
 	    }
 	}
 	

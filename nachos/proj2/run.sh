@@ -19,7 +19,7 @@ touch ../test/test1.in
 touch ../test/test2.in
 touch ../test/test3.in
 touch ../test/test.out
-echo "test">test.in
+echo "0 test#########################################################################################################################################################################################################################################################################################################################################################################################################################################################################">test.in
 
 echo "FileSyscall.c VAR 7 $$ ">../test/cp.in
 touch ../test/cp.out
@@ -34,8 +34,9 @@ if [ -e $file ]; then
     rm $file
 fi
 
-java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x filesyscall.coff   -d as < test.in
+#java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x filesyscall.coff   -d as < test.in
 #java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x filesyscall.coff    < test.in
+java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x filesyscall.coff   < test.in
 
 
 

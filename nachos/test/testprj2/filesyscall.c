@@ -33,7 +33,7 @@
 #define VAR7OUT        "cp.out"
 #define OUTPUTFILE     "test.out"
 #define MAXRUN         10
-#define BUFSIZE        1024*20
+#define BUFSIZE        100
 
 void log(char *format, ...);
 void route(int, char);
@@ -403,6 +403,7 @@ void route(int variation, char dbg_flag)
                 p += amount;
                 cnt += amount;
             }
+            buf[cnt] = '\0';
 
             LOG("++FILESYSCALL VAR7: open %s \n", VAR7IN); 
             fds[1] = open(VAR7IN);
@@ -421,13 +422,14 @@ void route(int variation, char dbg_flag)
                 p += amount;
                 cnt += amount;
             }
+            buf2[cnt] = '\0';
 
             close(fds[1]);
 
             buf[BUFSIZE]  = '\0';
             buf2[BUFSIZE] = '\0';
 
-            LOG("++FILESYSCALL VAR7: DST4: %s \n", buf); 
+            LOG("++FILESYSCALL VAR7: DST: %s \n", buf); 
             LOG("++FILESYSCALL VAR7: SRC: %s \n", buf2); 
 
             if (strcmp(buf, buf2) != 0) {
@@ -601,13 +603,19 @@ void route(int variation, char dbg_flag)
             /*  tests that stdin uses console                                         */
             /*                                                                        */
             /**************************************************************************/
+            LOG("++FILESYSCALL VAR10: tests that stdin uses console\n");
             LOG("++FILESYSCALL VAR10: [STARTED]\n");
-            printf("++FILESYSCALL VAR10: input a number: %d\n");
+
+            printf("++FILESYSCALL VAR10: invoke fgetc:\n");
             tmp = fgetc(0);
             fgetc(0);
-            printf("\n++FILESYSCALL VAR10: this number is %d\n", tmp);
 
-            LOG("++FILESYSCALL VAR10: SUCCESS\n");
+            /* fgetc(0); */
+            printf("\n++FILESYSCALL VAR10: input character is %c\n", tmp);
+            printf("++FILESYSCALL VAR10: invoke readline to input a line :\n");
+            readline(buf, 80); 
+
+            LOG("++FILESYSCALL VAR10: END\n");
 
             break;
             

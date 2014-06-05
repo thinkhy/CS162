@@ -6,6 +6,17 @@ import java.util.TreeSet;
 import java.util.HashSet;
 import java.util.Iterator;
 
+/******************************************************************************
+ *
+ * 01* CHANGE-ACTIVITY:
+ *
+ * $B=PROJECT2 TASK4, 140605, THINKHY: Implement lottery scheduler 
+ *
+ *
+ *
+ *****************************************************************************/
+
+
 /**
  * A scheduler that chooses threads using a lottery.
  *
@@ -31,7 +42,9 @@ public class LotteryScheduler extends PriorityScheduler {
      * Allocate a new lottery scheduler.
      */
     public LotteryScheduler() {
+
     }
+
     
     /**
      * Allocate a new lottery thread queue.
@@ -42,7 +55,9 @@ public class LotteryScheduler extends PriorityScheduler {
      * @return	a new lottery thread queue.
      */
     public ThreadQueue newThreadQueue(boolean transferPriority) {
+
 	// implement me
+    //
 	return null;
     }
 }

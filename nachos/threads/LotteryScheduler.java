@@ -10,7 +10,7 @@ import java.util.Iterator;
  *
  * 01* CHANGE-ACTIVITY:
  *
- * $B=PROJECT2 TASK4, 140605, THINKHY: Implement lottery scheduler 
+ * $B4=PROJECT2 TASK4, 140605, THINKHY: Implement lottery scheduler 
  *
  *
  *
@@ -59,4 +59,22 @@ public class LotteryScheduler extends PriorityScheduler {
 
 	return null;
     }
+
+
+    /**
+     * Return the next thread that <tt>nextThread()</tt> would return,
+     * without modifying the state of this queue.
+     *
+     * @return	the next thread that <tt>nextThread()</tt> would
+     *		return.
+     */
+    protected KThread pickNextThread() {                      /*@B4A*/
+
+    }                                                         /*@B4A*/
+
+
+
+
 }
+
+

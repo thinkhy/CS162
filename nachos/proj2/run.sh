@@ -34,10 +34,22 @@ if [ -e $file ]; then
     rm $file
 fi
 
-#java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x filesyscall.coff   -d as < test.in
-#java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x filesyscall.coff    < test.in
-java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x filesyscall.coff   < test.in
+#java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x ../test..coff   -d as < test.in
+java -Dsun.reflect.inflationThreshold=500 nachos.machine.Machine  -x isprmgr.coff
+exit 0
+#java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x filesyscall.coff   < test.in > filesyscall.log
 
+cat filesyscall.log|grep "++FILESYSCALL End of this run"
+if [ $? -ne 0 ]; then
+    echo "Failed to test file system call" 
+    exit -1
+else
+    echo "Test file system call successfully" 
+fi
+
+java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -d t
+
+exit 0
 
 
 

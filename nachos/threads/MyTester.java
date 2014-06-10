@@ -7,10 +7,10 @@ import java.util.Random;
 public class MyTester {
 
     public static void selfTest() {
-        // TestPrioprityScheduler()
+        TestPrioprityScheduler()
          
         // Test Boating solution
-        TestBoatingSolution();
+        // TestBoatingSolution();
     }
 
     public static void TestBoatingSolution() {

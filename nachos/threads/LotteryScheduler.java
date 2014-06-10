@@ -61,6 +61,9 @@ public class LotteryScheduler extends PriorityScheduler {
     }
 
 
+
+    protected class LotteryQueue extends ThreadQueue {      /*@B4A*/
+
     /**
      * Return the next thread that <tt>nextThread()</tt> would return,
      * without modifying the state of this queue.
@@ -72,8 +75,7 @@ public class LotteryScheduler extends PriorityScheduler {
 
     }                                                         /*@B4A*/
 
-
-
+    }                                                         /*@B4A*/
 
 }
 

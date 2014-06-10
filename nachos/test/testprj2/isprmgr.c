@@ -352,7 +352,9 @@ void route(int variation, char dbg_flag)
             LOG("++ISPRMGR VAR9: tests that your exit syscall releases all resources\n");
 
 
-            while(1) {
+            i = 0;
+
+            while(i++ < MAXPROCESS) {
                 executable = "exittest.coff";
                 _argv[0] = executable;
                 _argv[1] = NULL;

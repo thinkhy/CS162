@@ -4,21 +4,29 @@ import nachos.machine.*;
 
 import java.util.Random;
 
+/******************************************************************************
+ *
+ * 01* CHANGE-ACTIVITY:
+ *
+ * $B4=PROJECT2 TASK4, 140611, THINKHY: Implement lottery scheduler 
+ *
+ *
+ *
+ *****************************************************************************/
+
 public class MyTester {
 
     public static void selfTest() {
-        TestPrioprityScheduler()
+        //TestPrioprityScheduler();
          
         // Test Boating solution
         // TestBoatingSolution();
+        TestLotteryScheduler();                                        /*@B4A*/
     }
 
     public static void TestBoatingSolution() {
-
         System.out.println("\n***  Enter TestBoatingSolution");
-
         Boat.selfTest();
-
         System.out.println("\n***  Leave TestBoatingSolution");
     }
 
@@ -30,7 +38,12 @@ public class MyTester {
         PriopritySchedulerVAR4();
         Lib.debug(dbgFlag, "Leave TestPrioprityScheduler");
     }
-                                                            
+
+    public static void TestLotteryScheduler() {                        /*@B4A*/
+        Lib.debug(dbgFlag, "Enter TestLotteryScheduler");              /*@B4A*/
+        LotterySchedulerVAR1();                                        /*@B4A*/
+        Lib.debug(dbgFlag, "Leave TestLotteryScheduler");              /*@B4A*/
+    }                                                                  /*@B4A*/
 
     /**
      *  VAR1: Create several(>2) threads, verify these threads can be run successfully.
@@ -231,6 +244,10 @@ public class MyTester {
         KThread.currentThread().yield();
     }
      
+    public static void LotterySchedulerVAR1() {                       /*@B4A*/
+        System.out.print("PriopritySchedulerVAR4\n");                 /*@B4A*/
+    }                                                                 /*@B4A*/
+
     static private char dbgFlag = 't';
 }
 

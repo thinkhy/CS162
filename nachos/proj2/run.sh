@@ -35,8 +35,7 @@ if [ -e $file ]; then
 fi
 
 #java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x ../test..coff   -d as < test.in
-java -Dsun.reflect.inflationThreshold=500 nachos.machine.Machine  -x isprmgr.coff
-exit 0
+#java -Dsun.reflect.inflationThreshold=500 nachos.machine.Machine  -x isprmgr.coff>isprmgr.log
 #java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x filesyscall.coff   < test.in > filesyscall.log
 
 cat filesyscall.log|grep "++FILESYSCALL End of this run"

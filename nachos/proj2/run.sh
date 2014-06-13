@@ -51,6 +51,7 @@ java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -d t
 exit 0
 
 
+# 6/13/2014 Reading paper about lottery Scheduling
 
 
 

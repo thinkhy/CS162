@@ -34,8 +34,12 @@ if [ -e $file ]; then
     rm $file
 fi
 
+# For option of sun.reflect.inflationThreshold, it's suggested to set to 0
+# Refer to: http://www-01.ibm.com/support/docview.wss?uid=swg21636746
+
+
 #java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x ../test..coff   -d as < test.in
-#java -Dsun.reflect.inflationThreshold=500 nachos.machine.Machine  -x isprmgr.coff>isprmgr.log
+java -Dsun.reflect.inflationThreshold=0 nachos.machine.Machine  -x isprmgr.coff>isprmgr.log
 #java -Dsun.reflect.inflationThreshold=50 nachos.machine.Machine  -x filesyscall.coff   < test.in > filesyscall.log
 
 cat filesyscall.log|grep "++FILESYSCALL End of this run"

@@ -60,6 +60,11 @@ public class LotteryScheduler extends PriorityScheduler {
 	return null;
     }
 
+    /**
+     * The max number of tickets                                     
+     */
+    public static final int maxTicketsNumber = Integer.MAX_VALUE;   /*@B4A*/
+
 
 
 }

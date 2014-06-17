@@ -189,7 +189,6 @@ public class PriorityScheduler extends Scheduler {
             //this.print(); // debug
 
             // System.out.print("Inside 'pickNextThread:' transferPriority: " + transferPriority + "\n"); // debug
-
             for (Iterator<KThread> ts = waitQueue.iterator(); ts.hasNext();) {  
                 KThread thread = ts.next(); 
                 int priority = getThreadState(thread).getEffectivePriority();

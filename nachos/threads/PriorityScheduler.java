@@ -285,6 +285,8 @@ public class PriorityScheduler extends Scheduler {
      */
     protected class ThreadState {
 
+	public ThreadState() {
+    }
 	/**
 	 * Allocate a new <tt>ThreadState</tt> object and associate it with the
 	 * specified thread.

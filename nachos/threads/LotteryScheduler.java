@@ -45,6 +45,20 @@ public class LotteryScheduler extends PriorityScheduler {
 
     }
 
+    /**
+     * Return the next thread that <tt>nextThread()</tt> would return,
+     * without modifying the state of this queue.
+     * Overwrite this function for lottery scheduler
+     *
+     * @return	the next thread that <tt>nextThread()</tt> would
+     *		return.
+     */
+    protected KThread pickNextThread() {                                /*@B4A*/
+        KThread nextThread = null;                                      /*@B4A*/
+        /* TODO 140619 */ 
+        return nextThread;
+    }                                                                   /*@B4A*/
+
     
     /**
      * Allocate a new lottery thread queue.
@@ -56,14 +70,23 @@ public class LotteryScheduler extends PriorityScheduler {
      */
     public ThreadQueue newThreadQueue(boolean transferPriority) {
 
-
 	return null;
     }
+
+    
+    protected class ThreadState1 extends PriorityScheduler.ThreadState { /*@B4A*/
+
+    public ThreadState1(KThread thread) {                                /*@B4A*/
+        super(thread);                                                   /*@B4A*/
+    }                                                                    /*@B4A*/
+
+    }                                                                    /*@B4A*/
+
 
     /**
      * The max number of tickets                                     
      */
-    public static final int maxTicketsNumber = Integer.MAX_VALUE;   /*@B4A*/
+    public static final int maxTicketsNumber = Integer.MAX_VALUE;       /*@B4A*/
 
 
 

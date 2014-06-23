@@ -17,11 +17,11 @@ import java.util.Random;
 public class MyTester {
 
     public static void selfTest() {
-        //TestPrioprityScheduler();
+        // TestPrioprityScheduler();                              /*@B4D*/
          
-        // Test Boating solution
-        // TestBoatingSolution();
-        TestLotteryScheduler();                                        /*@B4A*/
+        // Test Boating solution                                  /*@B4D*/
+        // TestBoatingSolution();                                 /*@B4D*/
+        TestLotteryScheduler();                                   /*@B4A*/
     }
 
     public static void TestBoatingSolution() {
@@ -39,11 +39,7 @@ public class MyTester {
         Lib.debug(dbgFlag, "Leave TestPrioprityScheduler");
     }
 
-    public static void TestLotteryScheduler() {                        /*@B4A*/
-        Lib.debug(dbgFlag, "Enter TestLotteryScheduler");              /*@B4A*/
-        LotterySchedulerVAR1();                                        /*@B4A*/
-        Lib.debug(dbgFlag, "Leave TestLotteryScheduler");              /*@B4A*/
-    }                                                                  /*@B4A*/
+                                                            
 
     /**
      *  VAR1: Create several(>2) threads, verify these threads can be run successfully.
@@ -95,7 +91,7 @@ public class MyTester {
         KThread.selfTest();
         Communicator.selfTest();
         Condition2.selfTest();
-        Alarm.selfTest();
+        // Alarm.selfTest();
         Semaphore.selfTest();
     }
 
@@ -243,13 +239,94 @@ public class MyTester {
 
         KThread.currentThread().yield();
     }
+
+    public static void TestLotteryScheduler() {                                /*@B4A*/
+        Lib.debug(dbgFlag, "++MyTester Enter TestLotteryScheduler");           /*@B4A*/
+        LotterySchedulerVAR1();                                                /*@B4A*/
+        LotterySchedulerVAR2();                                                /*@B4A*/
+        Lib.debug(dbgFlag, "++MyTester Leave TestLotteryScheduler");           /*@B4A*/
+    }                                                                          /*@B4A*/
      
-    public static void LotterySchedulerVAR1() {                       /*@B4A*/
-        System.out.print("PriopritySchedulerVAR4\n");                 /*@B4A*/
-    }                                                                 /*@B4A*/
+    public static void LotterySchedulerVAR1() {                                /*@B4A*/
+        System.out.print("++MyTester LotterySchedulerVAR1\n");                 /*@B4A*/
 
-    static private char dbgFlag = 't';
+        Runnable myrunnable1 = new Runnable() {                                /*@B4A*/
+            public void run() {                                                /*@B4A*/
+                int i = 0;                                                     /*@B4A*/
+                while(i < 10) {                                                /*@B4A*/
+                    System.out.println("*** in while1 loop " + i + " ***");    /*@B4A*/
+                    i++;                                                       /*@B4A*/
+                } /*yield();*/                                                 /*@B4A*/
+            }                                                                  /*@B4A*/
+        };                                                                     /*@B4A*/
+
+        KThread testThread;                                                    /*@B4A*/
+        testThread = new KThread(myrunnable1);                                 /*@B4A*/
+        testThread.setName("child 1");                                         /*@B4A*/
+
+        testThread.fork();                                                     /*@B4A*/
+        testThread.join();                                                     /*@B4A*/
+
+        KThread testThread2;                                                   /*@B4A*/
+        testThread2 = new KThread(myrunnable1);                                /*@B4A*/
+        testThread2.setName("child 2");                                        /*@B4A*/
+
+        testThread2.fork();                                                    /*@B4A*/
+        KThread.yield();                                                       /*@B4A*/
+        testThread2.join();                                                    /*@B4A*/
+
+        Random rand = new Random();                                            /*@B4A*/
+
+        KThread t[] = new KThread[10];                                         /*@B4A*/
+        for (int i=0; i<10; i++) {                                             /*@B4A*/
+             t[i] = new KThread(myrunnable1);                                  /*@B4A*/
+             // ThreadedKernel.scheduler.setPriority(testThread, Lib.random(10));
+             //ThreadedKernel.scheduler.setPriority(testThread, (1+rand.nextInt(10)));
+             ThreadedKernel.scheduler.setPriority(testThread, 3);              /*@B4A*/
+             t[i].setName("Thread" + i).fork();                                /*@B4A*/
+        }                                                                      /*@B4A*/
+
+        KThread.yield();                                                       /*@B4A*/
+
+        for (int i=0; i<10; i++) {                                             /*@B4A*/
+            t[i].join();                                                       /*@B4A*/
+        }                                                                      /*@B4A*/
+    }                                                                          /*@B4A*/
+
+    public static void LotterySchedulerVAR2() {                                /*@B4A*/
+        System.out.print("PriopritySchedulerVAR4\n");                          /*@B4A*/
+
+        Lock lock = new Lock();                                                /*@B4A*/
+
+        // low priority thread closes the door
+        KThread low = new KThread(new Runnable1(lock, false));                 /*@B4A*/
+        low.fork();                                                            /*@B4A*/
+        low.setName("low");                                                    /*@B4A*/
+        ThreadedKernel.scheduler.setPriority(low, 1);                          /*@B4A*/ 
+        KThread.currentThread().yield();                                       /*@B4A*/
+
+        // High priority thread "high" waits for low priority thread "low" because they use the same lock.
+        
+        // high priority thread opens the door
+        KThread high = new KThread(new Runnable2(lock));                       /*@B4A*/ 
+        high.fork();                                                           /*@B4A*/
+        high.setName("high");                                                  /*@B4A*/
+        ThreadedKernel.scheduler.setPriority(high, 7);                         /*@B4A*/
+
+        // medium priority thread waits for closing the door
+        KThread medium = new KThread(new Runnable3());                         /*@B4A*/
+        medium.fork();                                                         /*@B4A*/
+        medium.setName("medium");                                              /*@B4A*/
+        ThreadedKernel.scheduler.setPriority(medium, 6);                       /*@B4A*/
+
+        KThread.yield();                                                       /*@B4A*/
+        low.join();                                                            /*@B4A*/
+        medium.join();                                                         /*@B4A*/
+        high.join();                                                           /*@B4A*/       
+
+        // KThread.currentThread().yield();
+    }
+
+    static private char dbgFlag = 't';                                         /*@B4A*/
 }
-
-
 

@@ -5,6 +5,7 @@ import nachos.machine.*;
 import java.util.TreeSet;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Random;
 
 /******************************************************************************
  *
@@ -42,54 +43,131 @@ public class LotteryScheduler extends PriorityScheduler {
      * Allocate a new lottery scheduler.
      */
     public LotteryScheduler() {
-
     }
-
-    /**
-     * Return the next thread that <tt>nextThread()</tt> would return,
-     * without modifying the state of this queue.
-     * Overwrite this function for lottery scheduler
-     *
-     * @return	the next thread that <tt>nextThread()</tt> would
-     *		return.
-     */
-    protected KThread pickNextThread() {                                /*@B4A*/
-        KThread nextThread = null;                                      /*@B4A*/
-        /* TODO 140619 */ 
-        return nextThread;
-    }                                                                   /*@B4A*/
-
     
     /**
      * Allocate a new lottery thread queue.
      *
-     * @param	transferPriority	<tt>true</tt> if this queue should
-     *					transfer tickets from waiting threads
-     *					to the owning thread.
-     * @return	a new lottery thread queue.
+     * @param   transferPriority    <tt>true</tt> if this queue should
+     *                  transfer tickets from waiting threads
+     *                  to the owning thread.
+     * @return  a new lottery thread queue.
      */
     public ThreadQueue newThreadQueue(boolean transferPriority) {
-
-	return null;
+    // implement me
+    return new LotteryQueue(transferPriority);
     }
 
-    
-    protected class ThreadState1 extends PriorityScheduler.ThreadState { /*@B4A*/
+    protected ThreadState getThreadState(KThread thread) {
+    if (thread.schedulingState == null)
+        thread.schedulingState = new ThreadState(thread);
 
-    public ThreadState1(KThread thread) {                                /*@B4A*/
-        super(thread);                                                   /*@B4A*/
-    }                                                                    /*@B4A*/
-
-    }                                                                    /*@B4A*/
+    return (ThreadState) thread.schedulingState;
+    }
 
 
-    /**
-     * The max number of tickets                                     
-     */
-    public static final int maxTicketsNumber = Integer.MAX_VALUE;       /*@B4A*/
+    protected class LotteryQueue extends PriorityQueue {
+       LotteryQueue(boolean transferPriority) {
+        super(transferPriority);
+       }
 
+       protected KThread pickNextThread() {
+            KThread nextThread = null;
+            int sum = 0;
+            KThread thread;
 
+            Lib.debug('t', "Inside pickNextThread"); 
+            print();
 
+            for (Iterator<KThread> ts = waitQueue.iterator(); ts.hasNext();) {  
+                thread = ts.next(); 
+                int priority = getThreadState(thread).getEffectivePriority();
+                System.out.print("Loop: Thread: " + thread 
+                                    + "\t  Priority: " + priority + "\n");
+                sum += priority;
+            }
+
+            Random rand = new Random();
+            int lotteryValue = rand.nextInt(sum) + 1;
+
+            Lib.debug(dbgFlag, "Lottery value: " + lotteryValue 
+                                    + "   Sum: " + sum);
+
+            sum = 0; 
+
+            for (Iterator<KThread> ts = waitQueue.iterator(); ts.hasNext();) {  
+                thread = ts.next(); 
+                int priority = getThreadState(thread).getEffectivePriority();
+                sum += priority;
+
+                if (sum >= lotteryValue) {
+                    nextThread = thread;    
+                    break;
+                }
+            }
+
+            Lib.assertTrue(nextThread != null);
+            return nextThread;
+       }
+
+       public int getEffectivePriority() {
+            System.out.println("Inside  LotteryQueue.getEffectivePriority");
+            print();
+            System.out.println("===========End of Queue=================");
+
+            if (transferPriority == false) {
+                return 0;
+            }
+            else {
+                if (dirty) {
+                    effectivePriority = 0; 
+
+                    for (Iterator<KThread> it = waitQueue.iterator(); it.hasNext();) {  
+                        KThread thread = it.next(); 
+                        int priority = getThreadState(thread).getEffectivePriority();
+                        effectivePriority += priority;
+                    }
+                }
+
+                dirty = false;
+                return effectivePriority;
+            } /* else */
+        } /* getEffectivePriority */
+    }
+
+    protected class ThreadState extends PriorityScheduler.ThreadState {
+
+        public ThreadState(KThread thread) {
+          super(thread);
+        }
+
+        public int getEffectivePriority() {
+            System.out.println("Inside  ThreadState.getEffectivePriority");
+
+            if (dirty) {
+                effectivePriority = this.priority;
+
+                for (Iterator<ThreadQueue> it = myResource.iterator(); it.hasNext();) {  
+                    System.out.println("Loop myResource inside ThreadState.getEffectivePriority");
+                    LotteryQueue lg = (LotteryQueue)(it.next()); 
+                    System.out.println("===========Start of Resource Queue=================");
+                    lg.print();
+                    System.out.println("===========End of Resource Queue=================");
+                    int waitQueuePriority = lg.getEffectivePriority();
+
+                    effectivePriority += waitQueuePriority;
+                }
+
+                dirty = false;
+            }
+
+            return effectivePriority;
+        } // ThreadState.getEffectivePriority
+
+    } // ThreadState
+
+    static private char dbgFlag = 't';
 }
+
 
 

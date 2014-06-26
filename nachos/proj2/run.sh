@@ -59,6 +59,7 @@ exit 0
 # 6/14/2014 Reading paper about lottery Scheduling: "Loottery Scheduling: Flexible Proportional-Share Resource Management
 # 6/15/2014 Reading paper "Loottery Scheduling: Flexible Proportional-Share Resource Management", almost got it!
 # 6/18/2014 Smash my 10k PB at Omlypic Park in Beijing, need to go to sleep now, will work on CS162 tomorrow morning 
+# 6/26/2014 Attend a technical meeting, so today I've no time to make a streak ...
 
 
 

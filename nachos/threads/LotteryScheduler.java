@@ -43,6 +43,7 @@ public class LotteryScheduler extends PriorityScheduler {
      * Allocate a new lottery scheduler.
      */
     public LotteryScheduler() {
+            Lib.debug('t', "++[Lottery Scheduler] Hellow, Lottery Scheduler"); 
     }
     
     /**
@@ -76,21 +77,21 @@ public class LotteryScheduler extends PriorityScheduler {
             int sum = 0;
             KThread thread;
 
-            Lib.debug('t', "Inside pickNextThread"); 
+            Lib.debug('t', "[Lottery Scheduler] Inside pickNextThread"); 
             print();
 
             for (Iterator<KThread> ts = waitQueue.iterator(); ts.hasNext();) {  
                 thread = ts.next(); 
                 int priority = getThreadState(thread).getEffectivePriority();
-                System.out.print("Loop: Thread: " + thread 
-                                    + "\t  Priority: " + priority + "\n");
+                Lib.debug('t', ("[Lottery Scheduler] Loop: Thread: " + thread 
+                                    + "\t  Priority: " + priority + "\n"));
                 sum += priority;
             }
 
             Random rand = new Random();
             int lotteryValue = rand.nextInt(sum) + 1;
 
-            Lib.debug(dbgFlag, "Lottery value: " + lotteryValue 
+            Lib.debug(dbgFlag, "[Lottery Scheduler] Lottery value: " + lotteryValue 
                                     + "   Sum: " + sum);
 
             sum = 0; 
@@ -111,9 +112,9 @@ public class LotteryScheduler extends PriorityScheduler {
        }
 
        public int getEffectivePriority() {
-            System.out.println("Inside  LotteryQueue.getEffectivePriority");
+            Lib.debug(dbgFlag, "[Lottery Scheduler] Inside  LotteryQueue.getEffectivePriority"); 
             print();
-            System.out.println("===========End of Queue=================");
+            Lib.debug(dbgFlag, "[Lottery Scheduler] ===========End of Queue================="); 
 
             if (transferPriority == false) {
                 return 0;
@@ -142,17 +143,18 @@ public class LotteryScheduler extends PriorityScheduler {
         }
 
         public int getEffectivePriority() {
-            System.out.println("Inside  ThreadState.getEffectivePriority");
+            Lib.debug(dbgFlag, "[Lottery Scheduler] Inside  ThreadState.getEffectivePriority"); 
 
             if (dirty) {
                 effectivePriority = this.priority;
+                 
 
                 for (Iterator<ThreadQueue> it = myResource.iterator(); it.hasNext();) {  
-                    System.out.println("Loop myResource inside ThreadState.getEffectivePriority");
+                    Lib.debug(dbgFlag, "[Lottery Scheduler] Loop myResource inside ThreadState.getEffectivePriority"); 
                     LotteryQueue lg = (LotteryQueue)(it.next()); 
-                    System.out.println("===========Start of Resource Queue=================");
+                    Lib.debug(dbgFlag, "[Lottery Scheduler] ===========Start of Resource Queue================="); 
                     lg.print();
-                    System.out.println("===========End of Resource Queue=================");
+                    Lib.debug(dbgFlag, "[Lottery Scheduler] ===========End of Resource Queue================="); 
                     int waitQueuePriority = lg.getEffectivePriority();
 
                     effectivePriority += waitQueuePriority;

@@ -8,6 +8,16 @@ import java.util.TreeSet;
 import java.util.HashSet;
 import java.util.Iterator;
 
+/******************************************************************************
+ *
+ * 01* CHANGE-ACTIVITY:
+ *
+ * $B4=PROJECT2 TASK4, 140605, THINKHY: Implement lottery scheduler 
+ *
+ *
+ *
+ *****************************************************************************/
+
 /**
  * A scheduler that chooses threads based on their priorities.
  *
@@ -111,7 +121,7 @@ public class PriorityScheduler extends Scheduler {
      * The maximum priority that a thread can have. Do not change this value.
      */
     // public static final int priorityMaximum = 7;    
-    public static final int priorityMaximum = Integer.MAX_VALUE;    
+    public static final int priorityMaximum = Integer.MAX_VALUE;                /*@B4C*/
 
     /**
      * Return the scheduling state of the specified thread.
@@ -401,8 +411,9 @@ public class PriorityScheduler extends Scheduler {
 
         Lib.debug('t', 
                         "add waitQueue to myResource inside ThreadState.acquire(PriorityQueue waitQueue)" ); 
+        Lib.debug('t',  "==============Start=====================");
         waitQueue.print();
-        Lib.debug('t',  "===================================");
+        Lib.debug('t',  "==============End=====================");
 
         myResource.add(waitQueue);
         

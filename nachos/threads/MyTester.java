@@ -147,6 +147,7 @@ public class MyTester {
         KThread.yield();
     }
 
+    // Runnalbe class for low priority thread
     private static class Runnable1 implements Runnable  {
 
         Runnable1(Lock lock, boolean isOpen) {
@@ -156,6 +157,8 @@ public class MyTester {
 
         public void run() { 
             lock.acquire();
+            this.isRun = true;
+            System.out.print("Low thread has got the lock.\n");
             while (this.isOpen == false) {
                 System.out.print("Low thread is blocked, please open the door.\n");
                 KThread.currentThread().yield();
@@ -167,8 +170,10 @@ public class MyTester {
 
         Lock lock;
         static public boolean isOpen = false;
+        static public boolean isRun  = false;
     } 
 
+    // Runnalbe class for high priority thread
     private static class Runnable2 implements Runnable  {
 
         Runnable2(Lock lock) {
@@ -176,6 +181,10 @@ public class MyTester {
         }
 
         public void run() { 
+            while (Runnable1.isRun != true) {
+                KThread.currentThread().yield();
+            }
+
             Runnable1.isOpen = true;
 
             lock.acquire();
@@ -193,6 +202,7 @@ public class MyTester {
         static public boolean isOpen = false;
     } 
 
+    // Runnalbe class for medium priority thread
     private static class Runnable3 implements Runnable  {
         Runnable3() {
         }
@@ -294,7 +304,7 @@ public class MyTester {
     }                                                                          /*@B4A*/
 
     public static void LotterySchedulerVAR2() {                                /*@B4A*/
-        System.out.print("PriopritySchedulerVAR4\n");                          /*@B4A*/
+        System.out.print("LotterySchedulerVAR2\n");                          /*@B4A*/
 
         Lock lock = new Lock();                                                /*@B4A*/
 
@@ -302,7 +312,7 @@ public class MyTester {
         KThread low = new KThread(new Runnable1(lock, false));                 /*@B4A*/
         low.fork();                                                            /*@B4A*/
         low.setName("low");                                                    /*@B4A*/
-        ThreadedKernel.scheduler.setPriority(low, 1);                          /*@B4A*/ 
+        ThreadedKernel.scheduler.setPriority(low, 5);                          /*@B4A*/ 
         KThread.currentThread().yield();                                       /*@B4A*/
 
         // High priority thread "high" waits for low priority thread "low" because they use the same lock.
@@ -319,7 +329,7 @@ public class MyTester {
         medium.setName("medium");                                              /*@B4A*/
         ThreadedKernel.scheduler.setPriority(medium, 6);                       /*@B4A*/
 
-        KThread.yield();                                                       /*@B4A*/
+        // KThread.yield();                                                       /*@B4A*/
         low.join();                                                            /*@B4A*/
         medium.join();                                                         /*@B4A*/
         high.join();                                                           /*@B4A*/       

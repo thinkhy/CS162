@@ -407,14 +407,6 @@ public class PriorityScheduler extends Scheduler {
         // [end] hy, 9/20/2013
         
         // add waitQueue to myResource list
-        
-
-        Lib.debug('t', 
-                        "add waitQueue to myResource inside ThreadState.acquire(PriorityQueue waitQueue)" ); 
-        Lib.debug('t',  "==============Start=====================");
-        waitQueue.print();
-        Lib.debug('t',  "==============End=====================");
-
         myResource.add(waitQueue);
         
         // clean waitingOn if waitQueue is just waiting on

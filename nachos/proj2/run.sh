@@ -76,8 +76,8 @@ do
 
         "Task 4: Lottery Scheduler")
             echo "Test Project2-Task4 - Lottery Scheduler"
-            #java -Dsun.reflect.inflationThreshold=0 nachos.machine.Machine  -d t -[] task4.conf
-            java -Dsun.reflect.inflationThreshold=0 nachos.machine.Machine  -[] task4.conf
+            java -Dsun.reflect.inflationThreshold=0 nachos.machine.Machine  -d t -[] task4.conf
+            #java -Dsun.reflect.inflationThreshold=0 nachos.machine.Machine  -[] task4.conf
             ;;
 
         "Quit")

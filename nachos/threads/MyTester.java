@@ -313,7 +313,7 @@ public class MyTester {
         low.fork();                                                            /*@B4A*/
         low.setName("low");                                                    /*@B4A*/
         ThreadedKernel.scheduler.setPriority(low, 5);                          /*@B4A*/ 
-        KThread.currentThread().yield();                                       /*@B4A*/
+        // KThread.currentThread().yield();                                       /*@B4A*/
 
         // High priority thread "high" waits for low priority thread "low" because they use the same lock.
         

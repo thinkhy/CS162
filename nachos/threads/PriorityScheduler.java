@@ -13,6 +13,7 @@ import java.util.Iterator;
  * 01* CHANGE-ACTIVITY:
  *
  * $B4=PROJECT2 TASK4, 140605, THINKHY: Implement lottery scheduler 
+ * $B20=PROJECT2 TASK4, 140705, THINKHY: Count tickets number incorrectly 
  *
  *
  *
@@ -59,24 +60,23 @@ public class PriorityScheduler extends Scheduler {
     }
 
     public int getPriority(KThread thread) {
-    Lib.assertTrue(Machine.interrupt().disabled());
                
     return getThreadState(thread).getPriority();
     }
 
     public int getEffectivePriority(KThread thread) {
-    Lib.assertTrue(Machine.interrupt().disabled());
 
     return getThreadState(thread).getEffectivePriority();
     }
 
     public void setPriority(KThread thread, int priority) {
-    Lib.assertTrue(Machine.interrupt().disabled());
+    boolean intStatus = Machine.interrupt().disabled();
                
     Lib.assertTrue(priority >= priorityMinimum &&
                        priority <= priorityMaximum);
     
     getThreadState(thread).setPriority(priority);
+    Machine.interrupt().restore(intStatus);
     }
 
     public boolean increasePriority() {
@@ -85,8 +85,10 @@ public class PriorityScheduler extends Scheduler {
     KThread thread = KThread.currentThread();
 
     int priority = getPriority(thread);
-    if (priority == priorityMaximum)
+    if (priority == priorityMaximum) {
+        Machine.interrupt().restore(intStatus);
         return false;
+    }
 
     setPriority(thread, priority+1);
 
@@ -100,8 +102,10 @@ public class PriorityScheduler extends Scheduler {
     KThread thread = KThread.currentThread();
 
     int priority = getPriority(thread);
-    if (priority == priorityMinimum)
+    if (priority == priorityMinimum) {
+        Machine.interrupt().restore(intStatus);
         return false;
+    }
 
     setPriority(thread, priority-1);
 
@@ -145,12 +149,13 @@ public class PriorityScheduler extends Scheduler {
         }
 
         public void waitForAccess(KThread thread) {
-            Lib.assertTrue(Machine.interrupt().disabled());
+            boolean intStatus = Machine.interrupt().disabled();
             getThreadState(thread).waitForAccess(this);
+            // Machine.interrupt().restore(intStatus);
         }
 
         public void acquire(KThread thread) {
-            Lib.assertTrue(Machine.interrupt().disabled());
+            boolean intStatus = Machine.interrupt().disabled();
                 
             ThreadState state = getThreadState(thread); // hy+
              
@@ -163,27 +168,34 @@ public class PriorityScheduler extends Scheduler {
             this.holder = state;              // hy+
              
             state.acquire(this);
+            // Machine.interrupt().restore(intStatus);
         }
 
         public KThread nextThread() {
-            Lib.assertTrue(Machine.interrupt().disabled());
             
-            if (waitQueue.isEmpty())
+            boolean intStatus = Machine.interrupt().disabled();
+
+            if (waitQueue.isEmpty()) {
+                // Machine.interrupt().restore(intStatus);
                 return null;
+            }
+            
             
             // if I have a holder and I transfer priority, 
             // remove myself from the holder's resource list
             if (this.holder != null && this.transferPriority)  
             {
                 this.holder.myResource.remove(this);
+                this.holder = null;
             }
 
             KThread pickedThread = pickNextThread();
             if (pickedThread != null) {
                 waitQueue.remove(pickedThread);
-                getThreadState(pickedThread).acquire(this);
+                this.acquire(pickedThread);          /* @B20C */
             }
             
+            //Machine.interrupt().restore(intStatus);
             return pickedThread;
         }
 
@@ -255,7 +267,6 @@ public class PriorityScheduler extends Scheduler {
         }
 
         public void print() {
-            Lib.assertTrue(Machine.interrupt().disabled());
             // implement me (if you want)
             for (Iterator<KThread> it = waitQueue.iterator(); it.hasNext();) {  
                 KThread currentThread = it.next(); 
@@ -370,7 +381,6 @@ public class PriorityScheduler extends Scheduler {
      */
     public void waitForAccess(PriorityQueue waitQueue) {
         
-        Lib.assertTrue(Machine.interrupt().disabled());
         Lib.assertTrue(waitQueue.waitQueue.indexOf(thread) == -1);
 
         waitQueue.waitQueue.add(thread);
@@ -384,7 +394,7 @@ public class PriorityScheduler extends Scheduler {
         // When will this IF statement be executed?
         if (myResource.indexOf(waitQueue) != -1) {
             myResource.remove(waitQueue);
-            waitQueue.holder = null;
+            waitQueue.holder = null;                /* @B20A */
         }
     }
 
@@ -402,8 +412,7 @@ public class PriorityScheduler extends Scheduler {
         // implement me
         
         // [begin] hy, 9/20/2013
-        Lib.assertTrue(Machine.interrupt().disabled());
-        // Lib.assertTrue(waitQueue.waitQueue.isEmpty());
+        Lib.assertTrue(waitQueue.waitQueue.indexOf(this.thread) == -1);
         // [end] hy, 9/20/2013
         
         // add waitQueue to myResource list

@@ -83,14 +83,16 @@ public class LotteryScheduler extends PriorityScheduler {
             for (Iterator<KThread> ts = waitQueue.iterator(); ts.hasNext();) {  
                 thread = ts.next(); 
                 int priority = getThreadState(thread).getEffectivePriority();
+                Lib.debug(dbgFlag, "[LotteryQueue.pickNextThread] Thread: " + thread 
+                                    + "   Priority: " + priority);
                 sum += priority;
             }
 
             Random rand = new Random();
             int lotteryValue = rand.nextInt(sum) + 1;
 
-            Lib.debug(dbgFlag, "[Lottery Scheduler] Lottery value: " + lotteryValue 
-                                    + "   Sum: " + sum);
+            Lib.debug(dbgFlag, "[LotteryQueue.pickNextThread] Sum: " + sum 
+                                    + "   LotteryValue: " + lotteryValue);
 
             sum = 0; 
 
@@ -115,18 +117,22 @@ public class LotteryScheduler extends PriorityScheduler {
                 return 0;
             }
             else {
-                if (dirty) {
+                //if (dirty) {
+                if (true) {
                     effectivePriority = 0; 
 
+                    //Lib.debug(dbgFlag, "[ThreadState.getEffectivePriority] thread: " + this.thread); 
                     for (Iterator<KThread> it = waitQueue.iterator(); it.hasNext();) {  
                         KThread thread = it.next(); 
                         int priority = getThreadState(thread).getEffectivePriority();
+                        Lib.debug(dbgFlag, "[LotteryQueue.getEffectivePriority] controlled thread: " + thread +  " priority: " +  priority ); 
                         effectivePriority += priority;
                     }
                 }
 
                 dirty = false;
                 return effectivePriority;
+
             } /* else */
         } /* getEffectivePriority */
     }
@@ -139,14 +145,16 @@ public class LotteryScheduler extends PriorityScheduler {
 
         public int getEffectivePriority() {
 
+            Lib.debug(dbgFlag, "[ThreadState.getEffectivePriority] holder thread: " + this.thread + " Size: " + this.myResource.size()); 
             if (dirty) {
                 effectivePriority = this.priority;
                  
-
-                for (Iterator<ThreadQueue> it = myResource.iterator(); it.hasNext();) {  
+                for (Iterator<ThreadQueue> it = this.myResource.iterator(); it.hasNext();) {  
+                    Lib.debug(dbgFlag, "[ThreadState.getEffectivePriority] holder thread: " + this.thread); 
                     LotteryQueue lg = (LotteryQueue)(it.next()); 
                     int waitQueuePriority = lg.getEffectivePriority();
-
+                    Lib.debug(dbgFlag, "[ThreadState.getEffectivePriority] waitQueue priority: " + waitQueuePriority); 
+                
                     effectivePriority += waitQueuePriority;
                 }
 

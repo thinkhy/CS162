@@ -14,7 +14,7 @@ import java.util.Iterator;
  *
  * $B4=PROJECT2 TASK4, 140605, THINKHY: Implement lottery scheduler 
  * $B20=PROJECT2 TASK4, 140705, THINKHY: Count tickets number incorrectly 
- *
+ * $A21=PROJECT1 TASK5, 140705, THINKHY: ThreadState.myResource didn't remove holder 
  *
  *
  *****************************************************************************/
@@ -157,13 +157,16 @@ public class PriorityScheduler extends Scheduler {
         public void acquire(KThread thread) {
             boolean intStatus = Machine.interrupt().disabled();
                 
+            Lib.debug('t', "[PriorityQueue.acquire] thread: " + thread
+                        + " holder: " + this.holder );
             ThreadState state = getThreadState(thread); // hy+
              
             // If I have a holder and I transfer priority
             // remove myself from the holder's resource list
-            if (this.holder != null && this.transferPriority) {
-                this.holder.myResource.remove(this);
-            }
+            // if (this.holder != null && this.transferPriority) {  /* @A21D */
+            //if (this.transferPriority) {  /* @A21D */
+            //    this.holder.myResource.remove(this); /* @A21D */
+            // }  /* @A21D */
              
             this.holder = state;              // hy+
              
@@ -183,7 +186,8 @@ public class PriorityScheduler extends Scheduler {
             
             // if I have a holder and I transfer priority, 
             // remove myself from the holder's resource list
-            if (this.holder != null && this.transferPriority)  
+            // if (this.holder != null && this.transferPriority)  /* @A21D */
+            if (this.transferPriority)  /* @A21A */
             {
                 this.holder.myResource.remove(this);
                 this.holder = null;
@@ -411,9 +415,9 @@ public class PriorityScheduler extends Scheduler {
     public void acquire(PriorityQueue waitQueue) {
         // implement me
         
-        // [begin] hy, 9/20/2013
+        // [begin] hy, 9/20/2013 
         Lib.assertTrue(waitQueue.waitQueue.indexOf(this.thread) == -1);
-        // [end] hy, 9/20/2013
+        Lib.assertTrue(myResource.indexOf(waitQueue) == -1);
         
         // add waitQueue to myResource list
         myResource.add(waitQueue);

@@ -250,6 +250,20 @@ public class MyTester {
         KThread.currentThread().yield();
     }
 
+/***********************************************************************************************************************
+ * Test Strategy **
+ * TestID 1: Forks off some threads with different numbers of tickets and verifies that 
+             the lottery scheduler picks them with the right probabilities.
+ * TestID 2: The total number of tickets in the system is guaranteed not to exceed Integer.MAX_VALUE.
+ * TestID 3: Test ThreadGrader7 (no ticket transfers (priority donation))
+ * TestID 4: Tests Lottery Scheduler with a couple waiters in the queue
+ * TestID 5: Tests Lottery Scheduler with a few waiters in the queue
+ * TestID 6: Tests Lottery Scheduler with a many waiters in the queue
+ * TestID 7: Test ThreadGrader6a (with ticket transfers (priority donation))
+ * TestID 8: Small lottery scheduler test with priority donation
+ * TestID 9: Medium lottery scheduler test with priority donation
+ * TestID 10: Big lottery scheduler test with priority donation
+ ***********************************************************************************************************************/
     public static void TestLotteryScheduler() {                                /*@B4A*/
         Lib.debug(dbgFlag, "++MyTester Enter TestLotteryScheduler");           /*@B4A*/
         LotterySchedulerVAR1();                                                /*@B4A*/

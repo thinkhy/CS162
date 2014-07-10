@@ -11,8 +11,8 @@ import java.util.Random;
  *
  * 01* CHANGE-ACTIVITY:
  *
- * $B4=PROJECT2 TASK4, 140605, THINKHY: Implement lottery scheduler 
- *
+ * $B4=PROJECT2 TASK4,      140605, THINKHY: Implement lottery scheduler 
+ * $B22=PROJECT2 Issue #22, 140710, THINKHY: The total tickets shouldn't exceed Integer.MAX_VALUE
  *
  *
  *****************************************************************************/
@@ -85,7 +85,8 @@ public class LotteryScheduler extends PriorityScheduler {
                 int priority = getThreadState(thread).getEffectivePriority();
                 Lib.debug(dbgFlag, "[LotteryQueue.pickNextThread] Thread: " + thread 
                                     + "   Priority: " + priority);
-                sum += priority;
+
+                sum = safeAdd(sum, priority);                                 /* @B22C */
             }
 
             Random rand = new Random();
@@ -99,7 +100,8 @@ public class LotteryScheduler extends PriorityScheduler {
             for (Iterator<KThread> ts = waitQueue.iterator(); ts.hasNext();) {  
                 thread = ts.next(); 
                 int priority = getThreadState(thread).getEffectivePriority();
-                sum += priority;
+
+                sum = safeAdd(sum, priority);                                /* @B22C */
 
                 if (sum >= lotteryValue) {
                     nextThread = thread;    
@@ -153,18 +155,40 @@ public class LotteryScheduler extends PriorityScheduler {
                     Lib.debug(dbgFlag, "[ThreadState.getEffectivePriority] holder thread: " + this.thread); 
                     LotteryQueue lg = (LotteryQueue)(it.next()); 
                     int waitQueuePriority = lg.getEffectivePriority();
-                    Lib.debug(dbgFlag, "[ThreadState.getEffectivePriority] waitQueue priority: " + waitQueuePriority); 
+                    Lib.debug(dbgFlag, "[ThreadState.getEffectivePriority] waitQueue priority: " 
+                               + waitQueuePriority); 
                 
-                    effectivePriority += waitQueuePriority;
+                    effectivePriority = safeAdd(effectivePriority, waitQueuePriority);   /* @B22C */ 
                 }
 
                 dirty = false;
             }
 
             return effectivePriority;
-        } // ThreadState.getEffectivePriority
+        } /* ThreadState.getEffectivePriority */
 
-    } // ThreadState
+    } /* ThreadState */
+
+    /**
+     * @B22A 
+     * Detect and prevent integer overflow for plus of two integers 
+     *
+     * @param	left	    left value of integer
+     * @param	right	    right value of integer
+     *
+     * @return  a integer, sum of left and right value
+     */
+    static final int safeAdd(int left, int right)                       /* @B22A */
+                 throws ArithmeticException {                           /* @B22A */
+
+     if (right > 0 ? left > Integer.MAX_VALUE - right                   /* @B22A */
+               : left < Integer.MIN_VALUE - right) {                    /* @B22A */
+        /* throw new ArithmeticException("Integer overflow");                    */
+         return Integer.MAX_VALUE;                                      /* @B22A */
+     }                                                                  /* @B22A */
+    
+     return left + right;                                               /* @B22A */
+    }
 
     static private char dbgFlag = 't';
 }

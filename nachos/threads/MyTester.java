@@ -266,8 +266,9 @@ public class MyTester {
  ***********************************************************************************************************************/
     public static void TestLotteryScheduler() {                                /*@B4A*/
         Lib.debug(dbgFlag, "++MyTester Enter TestLotteryScheduler");           /*@B4A*/
-        LotterySchedulerVAR1();                                                /*@B4A*/
-        LotterySchedulerVAR2();                                                /*@B4A*/
+        //LotterySchedulerVAR1();                                                /*@B4A*/
+        //LotterySchedulerVAR2();                                                /*@B4A*/
+        LotterySchedulerVAR3();                                                /*@B4A*/
         Lib.debug(dbgFlag, "++MyTester Leave TestLotteryScheduler");           /*@B4A*/
     }                                                                          /*@B4A*/
      
@@ -350,6 +351,31 @@ public class MyTester {
 
         // KThread.currentThread().yield();
     }
+
+    /* TestID 2: The total number of tickets in the system is guaranteed not to exceed Integer.MAX_VALUE. */
+    public static void LotterySchedulerVAR3() {                                /*@B4A*/
+        System.out.print("++MyTester LotterySchedulerVAR3\n");                 /*@B4A*/
+
+        Runnable myrunnable1 = new Runnable() {                                /*@B4A*/
+            public void run() {                                                /*@B4A*/
+                int i = 0;                                                     /*@B4A*/
+                i++;
+            } /*yield();*/                                                     /*@B4A*/
+        };                                                                     /*@B4A*/
+
+        KThread t[] = new KThread[100];                                        /*@B4A*/
+        for (int i = 0; i < 100; i++) {
+            t[i] = new KThread(myrunnable1);                                   /*@B4A*/
+            t[i].setName("Child thread " + i);                                 /*@B4A*/
+            ThreadedKernel.scheduler.setPriority(t[i], 0x1FFFFFFF);            /*@B4A*/
+            t[i].fork();
+        }                                                                      /*@B4A*/
+
+        for (int i = 0; i < 100; i++) {
+            t[i].join();
+        }
+    };                                                                         /*@B4A*/
+            
 
     static private char dbgFlag = 't';                                         /*@B4A*/
 }

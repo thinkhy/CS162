@@ -264,11 +264,18 @@ public class MyTester {
  * TestID 9: Medium lottery scheduler test with priority donation
  * TestID 10: Big lottery scheduler test with priority donation
  ***********************************************************************************************************************/
+
+
+/************************************************************************************************************************
+ * TestID 1: Forks off some threads with different numbers of tickets and verifies that 
+ *           the lottery scheduler picks them with the right probabilities.         
+ ***********************************************************************************************************************/
     public static void TestLotteryScheduler() {                                /*@B4A*/
         Lib.debug(dbgFlag, "++MyTester Enter TestLotteryScheduler");           /*@B4A*/
-        //LotterySchedulerVAR1();                                                /*@B4A*/
-        //LotterySchedulerVAR2();                                                /*@B4A*/
+        LotterySchedulerVAR1();                                                /*@B4A*/
+        LotterySchedulerVAR2();                                                /*@B4A*/
         LotterySchedulerVAR3();                                                /*@B4A*/
+        LotterySchedulerVAR4();                                                /*@B4A*/
         Lib.debug(dbgFlag, "++MyTester Leave TestLotteryScheduler");           /*@B4A*/
     }                                                                          /*@B4A*/
      
@@ -353,8 +360,9 @@ public class MyTester {
     }
 
     /* TestID 2: The total number of tickets in the system is guaranteed not to exceed Integer.MAX_VALUE. */
+    /* Issue #22 opened for this VAR                                                                      */
     public static void LotterySchedulerVAR3() {                                /*@B4A*/
-        System.out.print("++MyTester LotterySchedulerVAR3\n");                 /*@B4A*/
+        System.out.print("++MyTester: enter LotterySchedulerVAR3\n");          /*@B4A*/
 
         Runnable myrunnable1 = new Runnable() {                                /*@B4A*/
             public void run() {                                                /*@B4A*/
@@ -374,8 +382,21 @@ public class MyTester {
         for (int i = 0; i < 100; i++) {
             t[i].join();
         }
+
+        System.out.print("++MyTester: leave LotterySchedulerVAR3\n");          /*@B4A*/
     };                                                                         /*@B4A*/
             
+    /* TestID 3: Test ThreadGrader7 (no ticket transfers (priority donation))        */
+    public static void LotterySchedulerVAR4() {                                /*@B4A*/
+        System.out.print("++MyTester: enter LotterySchedulerVAR4\n");          /*@B4A*/
+
+        PriopritySchedulerVAR1();                                              /*@B4A*/
+        PriopritySchedulerVAR2();                                              /*@B4A*/
+        PriopritySchedulerVAR3();                                              /*@B4A*/
+        PriopritySchedulerVAR4();                                              /*@B4A*/
+
+        System.out.print("++MyTester: leave LotterySchedulerVAR4\n");          /*@B4A*/
+    }
 
     static private char dbgFlag = 't';                                         /*@B4A*/
 }

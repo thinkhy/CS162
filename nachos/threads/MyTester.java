@@ -272,9 +272,9 @@ public class MyTester {
  ***********************************************************************************************************************/
     public static void TestLotteryScheduler() {                                /*@B4A*/
         Lib.debug(dbgFlag, "++MyTester Enter TestLotteryScheduler");           /*@B4A*/
-        LotterySchedulerVAR1();                                                /*@B4A*/
-        LotterySchedulerVAR2();                                                /*@B4A*/
-        LotterySchedulerVAR3();                                                /*@B4A*/
+        //LotterySchedulerVAR1();                                                /*@B4A*/
+        //LotterySchedulerVAR2();                                                /*@B4A*/
+        //LotterySchedulerVAR3();                                                /*@B4A*/
         LotterySchedulerVAR4();                                                /*@B4A*/
         Lib.debug(dbgFlag, "++MyTester Leave TestLotteryScheduler");           /*@B4A*/
     }                                                                          /*@B4A*/
@@ -390,10 +390,12 @@ public class MyTester {
     public static void LotterySchedulerVAR4() {                                /*@B4A*/
         System.out.print("++MyTester: enter LotterySchedulerVAR4\n");          /*@B4A*/
 
-        PriopritySchedulerVAR1();                                              /*@B4A*/
-        PriopritySchedulerVAR2();                                              /*@B4A*/
-        PriopritySchedulerVAR3();                                              /*@B4A*/
-        PriopritySchedulerVAR4();                                              /*@B4A*/
+        Communicator.selfTest();
+        
+        // PriopritySchedulerVAR1();                                              /*@B4A*/
+        // PriopritySchedulerVAR2();                                              /*@B4A*/
+        // PriopritySchedulerVAR3();                                              /*@B4A*/
+        // PriopritySchedulerVAR4();                                              /*@B4A*/
 
         System.out.print("++MyTester: leave LotterySchedulerVAR4\n");          /*@B4A*/
     }
